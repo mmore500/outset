@@ -3,11 +3,11 @@ requires = ["flit"]
 build-backend = "flit.buildapi"
 
 [project]
-name =  "py-project-toml"
+name =  "outset"
 authors = [
-    {name = "Daniel Ciborowski", email = "dciborow@microsoft.com"},
+    {name = "Matthew Andres Moreno", email = "m.more500@gmail.com"},
 ]
-description = "Sample Python Project for creating a new Python Module"
+description = " Easily indicate zoom plot areas in Matplotlib"
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
