@@ -10,7 +10,7 @@ def compose_zoom_trapezoid(
     rect_ylim: typing.Tuple[float, float],
     ax_xlim: typing.Tuple[float, float],
     ax_ylim: typing.Tuple[float, float],
-    stretch: float = 0.14,
+    stretch: float,
 ):
     """Decide shape, size, and position of trapezoidal zoom effect decoration.
 
@@ -43,8 +43,8 @@ def compose_zoom_trapezoid(
         The x-axis limits (min, max) of the axis.
     ax_ylim : typing.Tuple[float, float]
         The y-axis limits (min, max) of the axis.
-    stretch : float, optional
-        The stretch factor for the zoom effect, by default 0.14.
+    stretch : float
+        The stretch factor for the zoom effect.
 
     Returns
     -------
