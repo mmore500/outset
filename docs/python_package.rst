@@ -15,7 +15,7 @@ Submodules
 python\_package.setup module
 ----------------------------
 
-.. automodule:: python_package.setup
+.. automodule:: outset.setup
    :members:
    :undoc-members:
    :show-inheritance:
@@ -23,7 +23,7 @@ python\_package.setup module
 Module contents
 ---------------
 
-.. automodule:: python_package
+.. automodule:: outset
    :members:
    :undoc-members:
    :show-inheritance:
