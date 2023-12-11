@@ -87,7 +87,7 @@ def mark_inlaid_asterisk(
         if query == "color":
             return color
         elif query == "color_accent":
-            return color
+            return color_accent
         elif isinstance(query, tuple):
             if not query:
                 raise ValueError("color tuple must have at least one element")
@@ -95,7 +95,7 @@ def mark_inlaid_asterisk(
             if first == "color":
                 return (color, *rest)
             elif first == "color_accent":
-                return (color, *rest)
+                return (color_accent, *rest)
             else:
                 return query
         else:
