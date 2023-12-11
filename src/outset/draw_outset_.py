@@ -74,6 +74,8 @@ def draw_outset(
         Line width for the zoom indication's edges.
     leader_stretch : float, default 0.1
         Stretch factor for the callout leader extending from the frame.
+
+        Set `leader_stretch` 0 to collapse away the leader.
     zorder : float, default 0
         Z-order for layering plot elements; higher values are drawn on top.
 

@@ -59,6 +59,9 @@ def compose_callout_leader(
     ):
         raise ValueError("Limits must be provided as (min, max).")
 
+    if stretch < 0.0:
+        raise ValueError("Leader stretch must be non-negative.")
+
     ax_width, ax_height = (
         ax_xlim[1] - ax_xlim[0],
         ax_ylim[1] - ax_ylim[0],

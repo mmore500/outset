@@ -13,4 +13,5 @@ __all__ = [
     "mark_arrow",
     "mark_inlaid_asterisk",
     "mark_magnifying_glass",
+    "outsetplot",
 ]
