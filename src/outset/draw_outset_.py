@@ -1,141 +1,134 @@
 import typing
 
-from matplotlib import axes as mpl_axes
-from matplotlib import patches as mpl_patches
-from matplotlib import pyplot as plt
-from matplotlib import colors as mpl_colors
+import frozendict
 import numpy as np
+from matplotlib import axes as mpl_axes
+from matplotlib import pyplot as plt
 
-from ._auxlib.compose_zoom_trapezoid_ import compose_zoom_trapezoid
-from ._auxlib.get_vertices_extent_ import get_vertices_extent
-from ._auxlib.find_intersection_ import find_intersection
-from ._auxlib.make_radial_gradient_ import make_radial_gradient
-from ._auxlib.minimal_perimeter_permutation_ import (
-    minimal_perimeter_permutation,
-)
+from ._auxlib.draw_callout_ import draw_callout
+from ._auxlib.draw_frame_ import draw_frame
+from .mark_magnifying_glass_ import mark_magnifying_glass
 
 
 def draw_outset(
-    xlim: typing.Tuple[float, float],
-    ylim: typing.Tuple[float, float],
+    frame_xlim: typing.Tuple[float, float],
+    frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
+    *,
     color: str = "blue",
-    box_facecolor: str = "white",
-    box_linewidth: float = 0.5,
+    frame_facealpha: float = 0.1,
+    frame_linewidth: float = 1,
     clip_on: bool = False,
     hide_outer_spines: bool = True,
-    markersize: float = 15,
-    zoom_linestyle: str = ":",
-    zoom_linewidth: int = 2,
-    stretch: float = 0.14,
+    mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
+    mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
+    mark_retract: float = 0.1,
+    frame_inner_pad: float = 0.0,
+    leader_linestyle: str = ":",
+    leader_linewidth: int = 2,
+    leader_stretch: float = 0.1,
+    zorder: float = 0,
 ) -> mpl_axes.Axes:
-    """Mark the boundary of a rectangular region and annotate with a flyout
-    "zoom" indication upwards and to the right.
+    """Mark a rectangular region as outset, framing it and adding a
+    "zoom"-effect callout up and to the right.
+
+    The callout is capped by a customizable glyph, default as a magnifying
+    glass.
 
     Parameters
     ----------
-    xlim : Tuple[float, float]
-        The x-limits of the rectangular boundary in the form (xmin, xmax).
-    ylim : Tuple[float, float]
-        The y-limits of the rectangular boundary in the form (ymin, ymax).
+    frame_xlim : Tuple[float, float]
+        The x-limits (xmin, xmax) of the area to be marked outset.
+    frame_ylim : Tuple[float, float]
+        The y-limits (ymin, ymax) of the area to be marked outset.
     ax : matplotlib.axes.Axes, optional
-        The axes object on which to draw. If None, the current active axes will
-        be used.
+        The axes object on which to draw the outset.
+
+        Defaults to `plt.gca()`.
     color : str, default "blue"
-        The color of the box's edge and the zoom indication's lines.
-    box_facecolor : str, default "white"
-        The fill color of the rectangular boundary.
-    box_linewidth : float, default 0.5
-        The line width of the rectangular boundary's edge.
+        Color for the frame's edge and the lines of the zoom indication.
+    frame_facealpha : float, default 0.1
+        Alpha value for the frame's fill color, controlling its transparency.
+    frame_linewidth : float, default 1
+        Line width of the frame's edge.
     clip_on : bool, default False
-        If True, the drawing elements are clipped to the axes bounding box.
+        Determines if drawing elements should be clipped to the axes bounding
+        box.
     hide_outer_spines : bool, default True
-        If True, hides the right and top spines of the axes.
-    markersize : float, default 15
-        The size of the marker at the intersection of the zoom indication's
-        edges.
-    zoom_linestyle : str, default ":"
-        The line style for the zoom indication (e.g., solid, dashed, dotted).
-    zoom_linewidth : int, default 2
-        The line width of the zoom indication's edges.
-    stretch : float, default 0.14
-        How far should zoom indication stretch upwards and to the right?
+        If True, hides the top and right spines of the axes.
+    mark_glyph : Optional[Callable], optional
+        A callable to draw a glyph at the end of the callout.
+
+        Defaults to a magnifying glass. Outset also provides implementations
+        for arrow, asterisk, and letter/number glyphs.
+    mark_glyph_kwargs : Dict, default frozendict.frozendict()
+        Keyword arguments for the mark_glyph callable.
+    mark_retract : float, default 0.1
+        Retraction factor for the glyph placement from the outer vertex of the
+        callout.
+    frame_inner_pad : float, default 0.0
+        Padding factor for the inner margin of the frame.
+    leader_linestyle : str, default ":"
+        Line style for the zoom indication (e.g., solid, dashed, dotted).
+    leader_linewidth : int, default 2
+        Line width for the zoom indication's edges.
+    leader_stretch : float, default 0.1
+        Stretch factor for the callout leader extending from the frame.
+    zorder : float, default 0
+        Z-order for layering plot elements; higher values are drawn on top.
 
     Returns
     -------
     mpl_axes.Axes
-        The modified matplotlib axes object with the drawing elements added.
+        The axes object with the outset and annotations added.
     """
     if ax is None:
         ax = plt.gca()
 
-    # Outline zoom regions with rectangle
+    pad_x = (ax.get_xlim()[1] - ax.get_xlim()[0]) * frame_inner_pad
+    frame_xlim = np.array(frame_xlim) + np.array([-pad_x, pad_x])
+    pad_y = (ax.get_ylim()[1] - ax.get_ylim()[0]) * frame_inner_pad
+    frame_ylim = np.array(frame_ylim) + np.array([-pad_y, pad_y])
+
+    # tweak zorder to ensure multiple outset annotations layer properly
+    ax_width = ax.get_xlim()[1] - ax.get_xlim()[0]
+    ax_height = ax.get_ylim()[1] - ax.get_ylim()[0]
+    ax_diag = np.sqrt(ax_width**2 + ax_height**2)
+    upper_right_drop_x = ax.get_ylim()[1] - frame_xlim[1]
+    upper_right_drop_y = ax.get_ylim()[1] - frame_ylim[1]
+    upper_right_drop = np.sqrt(
+        upper_right_drop_x**2 + upper_right_drop_y**2
+    )
+    zorder += 0.25 * upper_right_drop / ax_diag
+
+    # Frame outset region
     ###########################################################################
-    rect = mpl_patches.Rectangle(
-        (xlim[0], ylim[0]),  # lower left corner
-        xlim[1] - xlim[0],  # width
-        ylim[1] - ylim[0],  # height
-        linewidth=box_linewidth,
+    draw_frame(
+        frame_xlim,
+        frame_ylim,
+        ax=ax,
+        clip_on=clip_on,
         edgecolor=color,
-        facecolor=box_facecolor,
-        clip_on=clip_on,
+        facecolor=(color, frame_facealpha),
+        linewidth=frame_linewidth,
+        zorder=zorder,
     )
-    ax.add_patch(rect)
 
-    # Draw zoom trapezoid...
+    # Draw callout
     ###########################################################################
-    trapezoid_vertices = compose_zoom_trapezoid(
-        xlim, ylim, ax.get_xlim(), ax.get_ylim(), stretch=stretch
-    )
-    trapezoid_vertices = minimal_perimeter_permutation(trapezoid_vertices)
-    # ... outline
-    trapezoid = mpl_patches.Polygon(
-        trapezoid_vertices,
-        closed=True,
-        facecolor="none",
-        edgecolor=color,
-        linestyle=zoom_linestyle,
-        linewidth=zoom_linewidth,
-        zorder=-3,
+    draw_callout(
+        frame_xlim,
+        frame_ylim,
+        ax,
+        color=color,
         clip_on=clip_on,
-    )
-    ax.add_patch(trapezoid)
-
-    # ... gradient fill, clipped insidetrapezoid
-    img = ax.imshow(
-        make_radial_gradient(),
-        extent=get_vertices_extent(trapezoid_vertices),
-        interpolation="nearest",
-        aspect="auto",
-        cmap=mpl_colors.LinearSegmentedColormap.from_list(
-            "gradient",
-            ["white", color],
-        ),
-    )
-    if not clip_on:
-        img.set_clip_box(ax.bbox.shrunk(10, 10))  # grow axis clipping box
-    img.set_clip_path(trapezoid)
-
-    # Add circle and asterisk at point where trapezoid edges meet...
-    ###########################################################################
-    rotated_vertices = _rotate_vertices(trapezoid_vertices)
-    center = find_intersection(*rotated_vertices)
-
-    plt.plot(  # ...white underlay for asterisk
-        *center,
-        marker="o",
-        markeredgecolor="none",
-        markerfacecolor="white",
-        markersize=markersize * 1.66,
-        clip_on=clip_on,
-    )
-    plt.plot(  # ...asterisk
-        *center,
-        marker=(6, 2, 0),  # six-pointed asterisk
-        markeredgecolor=color,
-        markerfacecolor="none",
-        markersize=markersize,
-        clip_on=clip_on,
+        linewidth=leader_linewidth,
+        linestyle=leader_linestyle,
+        mark_glyph=mark_glyph,
+        mark_glyph_kwargs=mark_glyph_kwargs,
+        mark_retract=mark_retract,
+        leader_stretch=leader_stretch,
+        zorder=zorder,
     )
 
     # Finalize
@@ -143,26 +136,3 @@ def draw_outset(
     ax.set_axisbelow(True)  # ensure annotations above if outside bounds
     if hide_outer_spines:
         ax.spines[["right", "top"]].set_visible(False)
-
-
-def _rotate_vertices(trapezoid_vertices: np.ndarray) -> np.ndarray:
-    # need to roll trapezoid_vertices so that the rectangle-corner vertices
-    # are in first and last positions
-    assert len(trapezoid_vertices) == 4
-
-    xs = np.array(trapezoid_vertices)[:, 0]
-    ys = np.array(trapezoid_vertices)[:, 1]
-    rect_upper_left_idx, rect_lower_right_idx = np.argmin(xs), np.argmin(ys)
-
-    gap = (rect_lower_right_idx - rect_upper_left_idx) % 4
-    if gap == 1:
-        rotated = np.roll(trapezoid_vertices, -rect_lower_right_idx, axis=0)
-    elif gap == 3:
-        rotated = np.roll(trapezoid_vertices, -rect_upper_left_idx, axis=0)
-    else:
-        assert False, (gap, trapezoid_vertices)
-
-    assert np.argmin(np.array(rotated)[:, 0]) in (0, 3)
-    assert np.argmin(np.array(rotated)[:, 1]) in (0, 3)
-
-    return rotated

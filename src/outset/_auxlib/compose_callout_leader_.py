@@ -2,19 +2,20 @@ import typing
 
 import numpy as np
 
-from .minimal_perimeter_permutation_ import minimal_perimeter_permutation
 
-
-def compose_zoom_trapezoid(
-    rect_xlim: typing.Tuple[float, float],
-    rect_ylim: typing.Tuple[float, float],
+def compose_callout_leader(
+    frame_xlim: typing.Tuple[float, float],
+    frame_ylim: typing.Tuple[float, float],
     ax_xlim: typing.Tuple[float, float],
     ax_ylim: typing.Tuple[float, float],
     stretch: float,
-):
-    """Decide shape, size, and position of trapezoidal zoom effect decoration.
+) -> typing.List[typing.Tuple[float, float]]:
+    """Decide shape, size, and position of callout leader triangle.
 
-    Uses reflected right triangles similar to the proportions of the rectangle
+    Outer leader vertex placement is calculated relative to the upper right
+    frame vertex. The outer vertex is place
+
+        Uses reflected right triangle similar to the proportions of the rectangle
     to pick the upper points for the trapezoid, relative to the upper right
     corner of the rectangle. The trapezoid is then constructed to include
     the upper left corner of the rectangle and the lower right corner of the rectangle.
@@ -35,9 +36,9 @@ def compose_zoom_trapezoid(
 
     Parameters
     ----------
-    rect_xlim : typing.Tuple[float, float]
+    frame_xlim : typing.Tuple[float, float]
         The x-axis limits (min, max) of the rectangle.
-    rect_ylim : typing.Tuple[float, float]
+    frame_ylim : typing.Tuple[float, float]
         The y-axis limits (min, max) of the rectangle.
     ax_xlim : typing.Tuple[float, float]
         The x-axis limits (min, max) of the axis.
@@ -54,7 +55,7 @@ def compose_zoom_trapezoid(
     """
     if any(
         float.__gt__(*map(float, lim))
-        for lim in [rect_xlim, rect_ylim, ax_xlim, ax_ylim]
+        for lim in [frame_xlim, frame_ylim, ax_xlim, ax_ylim]
     ):
         raise ValueError("Limits must be provided as (min, max).")
 
@@ -62,30 +63,27 @@ def compose_zoom_trapezoid(
         ax_xlim[1] - ax_xlim[0],
         ax_ylim[1] - ax_ylim[0],
     )
-    rect_width, rect_height = (
-        rect_xlim[1] - rect_xlim[0],
-        rect_ylim[1] - rect_ylim[0],
+    frame_width, frame_height = (
+        frame_xlim[1] - frame_xlim[0],
+        frame_ylim[1] - frame_ylim[0],
     )
     (
-        (_rect_lower_left, rect_upper_right),
-        (rect_upper_left, rect_lower_right),
-    ) = zip(rect_xlim, rect_ylim), zip(rect_xlim, reversed(rect_ylim))
+        (_frame_lower_left, frame_upper_right),
+        (frame_upper_left, frame_lower_right),
+    ) = zip(frame_xlim, frame_ylim), zip(frame_xlim, reversed(frame_ylim))
 
-    rel_width = rect_width / ax_width
-    rel_height = rect_height / ax_height
-    mx = stretch / np.sqrt(rel_width**2 + rel_height**2)
-    offsets = np.array([mx * rect_height, mx * rect_width])
+    theta = np.arctan(frame_height / frame_width)
+    rel_height, rel_width = np.sin(theta) * stretch, np.cos(theta) * stretch
+    height, width = rel_height * ax_height, rel_width * ax_width
+    offsets = np.array([width, height])
 
-    trapezoid_top_left = np.array(rect_upper_right) + offsets
-    trapezoid_top_right = np.array(rect_upper_right) + np.flip(offsets)
+    leader_outer_vertex = tuple(np.array(frame_upper_right) + offsets)
 
-    trapezoid_points = [
-        rect_upper_left,
-        rect_lower_right,
-        trapezoid_top_right,
-        trapezoid_top_left,
+    leader_vertices = [
+        frame_upper_left,
+        frame_upper_right,
+        frame_lower_right,
+        leader_outer_vertex,
     ]
-    # ensure no "bow-tie" self intersection
-    trapezoid_sequence = minimal_perimeter_permutation(trapezoid_points)
 
-    return trapezoid_sequence
+    return leader_vertices

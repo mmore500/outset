@@ -22,8 +22,11 @@ classifiers = [
 requires-python = ">=3.8.1"
 dynamic = ["version"]
 dependencies = [
+    "frozendict",
     "matplotlib",
-    "numpy"
+    "numpy",
+    "pandas",
+    "seaborn"
 ]
 
 [project.optional-dependencies]
