@@ -1,4 +1,5 @@
 import pytest
+
 from outset._auxlib.get_vertices_extent_ import get_vertices_extent
 
 

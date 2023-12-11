@@ -1,6 +1,4 @@
-from outset._auxlib.make_radial_gradient_ import (
-    make_radial_gradient,
-)
+from outset._auxlib.make_radial_gradient_ import make_radial_gradient
 
 
 def test_gradient_shape():
