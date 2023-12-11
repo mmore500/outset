@@ -91,6 +91,8 @@ def mark_inlaid_asterisk(
             first, *rest = query
             if first == "color":
                 return (color, *rest)
+            else:
+                return query
         else:
             return query
 
