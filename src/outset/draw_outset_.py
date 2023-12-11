@@ -28,7 +28,7 @@ def draw_outset(
     leader_linewidth: int = 2,
     leader_stretch: float = 0.1,
     zorder: float = 0,
-) -> mpl_axes.Axes:
+) -> typing.Tuple[mpl_axes.Axes, typing.Tuple[float, float, float, float]]:
     """Mark a rectangular region as outset, framing it and adding a
     "zoom"-effect callout up and to the right.
 
@@ -81,7 +81,7 @@ def draw_outset(
 
     Returns
     -------
-    mpl_axes.Axes
+    Tuple[mpl_axes.Axes, Tuple[float, float, float, float]]
         The axes object with the outset and annotations added.
     """
     if ax is None:
@@ -138,3 +138,5 @@ def draw_outset(
     ax.set_axisbelow(True)  # ensure annotations above if outside bounds
     if hide_outer_spines:
         ax.spines[["right", "top"]].set_visible(False)
+
+    return ax, (*frame_xlim, *frame_ylim)  # unpacks into tuple ctor

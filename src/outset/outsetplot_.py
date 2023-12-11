@@ -20,7 +20,7 @@ def outsetplot(
     frame_inner_pad: float = 0.1,
     palette: typing.Optional[typing.Sequence] = None,
     **kwargs,
-) -> mpl_Axes:
+) -> typing.Tuple[mpl_Axes, typing.List[typing.Tuple[float, float]]]:
     """Creates outset annotation(s) containing specified x, y points from a
     pandas DataFrame, potentially within-color coded groups determined by a
     categorical column `hue`.
@@ -57,7 +57,7 @@ def outsetplot(
 
     Returns
     -------
-    matplotlib.axes.Axes
+    Tuple[matplotlib.axes.Axes, List[Tuple[float, float, float, float]]]
             The matplotlib axes containing the plot.
     """
     if ax is None:
@@ -78,13 +78,16 @@ def outsetplot(
         groups = [(None, data)]
 
     palette_lookup = dict(zip(hue_order, it.cycle(palette)))
+    frames = dict()
     for hue_value, subset in groups:
         assert len(subset)
+        if hue_value not in palette_lookup:
+            continue
 
         xlim = [subset[x].min(), subset[x].max()]
         ylim = [subset[y].min(), subset[y].max()]
         color = palette_lookup[hue_value]
-        draw_outset(
+        __, frame = draw_outset(
             xlim,
             ylim,
             ax,
@@ -92,5 +95,6 @@ def outsetplot(
             frame_inner_pad=frame_inner_pad,
             **kwargs,
         )
+        frames[hue_value] = frame
 
-    return ax
+    return ax, [frames[hue_value] for hue_value in hue_order]
