@@ -13,10 +13,11 @@ def mark_inlaid_asterisk(
     *,
     asterisk_edgewidth: float = 1,
     color: str = "black",
+    color_accent: str = "white",
     color_asterisk_edge: _color_t = ("color", 0.7),
     color_asterisk_face: _color_t = ("color", 0.7),
     color_badge: _color_t = ("color", 0.3),
-    color_underlay: _color_t = "white",
+    color_underlay: _color_t = "color_accent",
     marker: typing.Tuple = (6, 2, 0),  # 6 points, rotated 0 degrees
     marker_badge: str = "o",
     marker_underlay: str = "o",
@@ -85,11 +86,15 @@ def mark_inlaid_asterisk(
     def substitute_color(query: _color_t) -> _color_t:
         if query == "color":
             return color
+        elif query == "color_accent":
+            return color
         elif isinstance(query, tuple):
             if not query:
                 raise ValueError("color tuple must have at least one element")
             first, *rest = query
             if first == "color":
+                return (color, *rest)
+            elif first == "color_accent":
                 return (color, *rest)
             else:
                 return query

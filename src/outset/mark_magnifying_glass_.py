@@ -10,9 +10,9 @@ def mark_magnifying_glass(
     y: typing.Union[float, typing.Sequence[float]],
     ax: typing.Optional[mpl_axes.Axes] = None,
     *,
-    accent_color: str = "white",
     alpha: float = 1.0,
     color: str = "black",
+    color_accent: str = "white",
     linecolor: str = "none",
     markersize: float = 15,
     rotate_angle: float = 20,
@@ -34,7 +34,7 @@ def mark_magnifying_glass(
         The axes object on which to draw the markers.
 
         If None, `plt.gca()` will be used.
-    accent_color : str, default "white"
+    color_accent : str, default "white"
         The color used for the accent layer of the glyph, enhancing visibility.
     alpha : float, default 1.0
         The transparency level of the markers.
@@ -75,7 +75,7 @@ def mark_magnifying_glass(
         alpha=alpha,
         color=linecolor,
         marker=t,
-        markeredgecolor=accent_color,
+        markeredgecolor=color_accent,
         markeredgewidth=markersize / 3,
         markersize=markersize * handle_underlay_scale,
         **kwargs,
@@ -102,9 +102,9 @@ def mark_magnifying_glass(
         alpha=alpha,
         color="none",  # line rendering is handled above
         marker="o",
-        markeredgecolor=accent_color,
+        markeredgecolor=color_accent,
         markeredgewidth=markersize / 12,
-        markerfacecolor=accent_color,
+        markerfacecolor=color_accent,
         markersize=markersize * circle_scale,
         **kwargs,
     )

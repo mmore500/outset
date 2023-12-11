@@ -21,7 +21,7 @@ def test_mark_arrow_multiple():
     plt.clf()
     # Multiple calls to the function with different parameters
     mark_arrow(x=0.3, y=0.3, color="lavender")
-    mark_arrow(x=0.7, y=0.7, color="blue", accent_color="orange")
+    mark_arrow(x=0.7, y=0.7, color="blue", color_accent="orange")
 
     # Save and print the path of the output image
     outpath = "/tmp/test_mark_arrow_multiple.png"

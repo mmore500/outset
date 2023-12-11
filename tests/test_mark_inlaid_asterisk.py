@@ -20,7 +20,7 @@ def test_mark_inlaid_asterisk_single():
 def test_mark_inlaid_asterisk_multiple():
     plt.clf()
     # Multiple calls to the function with different parameters
-    mark_inlaid_asterisk(x=0.3, y=0.3, color_underlay="lavender")
+    mark_inlaid_asterisk(x=0.3, y=0.3, color_accent="lavender")
     mark_inlaid_asterisk(x=0.7, y=0.7, color="blue", color_badge="orange")
 
     # Save and print the path of the output image
