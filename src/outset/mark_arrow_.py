@@ -10,9 +10,9 @@ def mark_arrow(
     y: typing.Union[float, typing.Sequence[float]],
     ax: typing.Optional[mpl_axes.Axes] = None,
     *,
-    accent_color: str = "white",
     alpha: float = 1.0,
     color: str = "black",
+    color_accent: str = "white",
     linecolor: str = "none",
     markersize: float = 15,
     rotate_angle: float = 20,
@@ -32,12 +32,12 @@ def mark_arrow(
     ax : mpl_axes.Axes, optional
         The axes object on which to draw the markers. If None, `plt.gca()` will
         be used.
-    accent_color : str, default "white"
-        The color used for the accent layer of the glyph, enhancing visibility.
     alpha : float, default 1.0
         The transparency level of the markers.
     color : str, default "black"
         The primary color for the glyph components.
+    color_accent : str, default "white"
+        The color used for the accent layer of the glyph, enhancing visibility.
     linecolor : str, default "none"
         Color for connecting lines between markers, if any.
     markersize : float, default 15
@@ -77,7 +77,7 @@ def mark_arrow(
         alpha=alpha,
         color=linecolor,
         marker=stem_marker,
-        markeredgecolor=accent_color,
+        markeredgecolor=color_accent,
         markeredgewidth=markersize * 0.75,
         markersize=markersize * stem_scale,
         **kwargs,
@@ -104,9 +104,9 @@ def mark_arrow(
         alpha=alpha,
         color="none",  # line rendering is handled above
         marker=head_marker,
-        markeredgecolor=accent_color,
+        markeredgecolor=color_accent,
         markeredgewidth=markersize / 12,
-        markerfacecolor=accent_color,
+        markerfacecolor=color_accent,
         markersize=markersize,
         **kwargs,
     )
