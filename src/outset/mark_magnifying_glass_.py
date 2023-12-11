@@ -59,8 +59,10 @@ def mark_magnifying_glass(
 
     # rotated tickdown marker for handle
     # adapted from https://stackoverflow.com/a/49662573
-    t = mpl_markers.MarkerStyle(marker=3)  # TICKDOWN
-    t._transform = t.get_transform().rotate_deg(rotate_angle)
+    handle_marker = mpl_markers.MarkerStyle(marker=3)  # TICKDOWN
+    handle_marker._transform = handle_marker.get_transform().rotate_deg(
+        rotate_angle,
+    )
 
     # Scaling factors for different elements relative to markersize
     handle_underlay_scale = 1.5 / 1.5
@@ -74,7 +76,7 @@ def mark_magnifying_glass(
         y,
         alpha=alpha,
         color=linecolor,
-        marker=t,
+        marker=handle_marker,
         markeredgecolor=color_accent,
         markeredgewidth=markersize / 3,
         markersize=markersize * handle_underlay_scale,
@@ -87,7 +89,7 @@ def mark_magnifying_glass(
         y,
         alpha=0.8 * alpha,
         color="none",  # line rendering is handled above
-        marker=t,
+        marker=handle_marker,
         markeredgecolor=color,
         markeredgewidth=markersize / 6,
         markerfacecolor=color,
