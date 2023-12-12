@@ -106,6 +106,27 @@ def draw_outset(
     frame_xlim = np.array(frame_xlim) + np.array([-pad_x, pad_x])
     frame_ylim = np.array(frame_ylim) + np.array([-pad_y, pad_y])
 
+    # pad axis viewport out from frame
+    ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
+    # RE , see
+    # https://matplotlib.org/stable/users/faq.html#check-whether-a-figure-is-empty
+    if (
+        len(ax.get_children()) > 11  # 11 objs in empty ax
+        or ax.get_xlim() != (0.0, 1.0)  # in case axlim are already set...
+        or ax.get_ylim() != (0.0, 1.0)
+    ):  # if axes not empty or axlim already set, ensure no viewport shrink
+        ax.set_xlim(
+            min(frame_xlim[0] - pad_x, ax_xlim[0]),
+            max(frame_xlim[1] + pad_x, ax_xlim[1]),
+        )
+        ax.set_ylim(
+            min(frame_ylim[0] - pad_y, ax_ylim[0]),
+            max(frame_ylim[1] + pad_y, ax_ylim[1]),
+        )
+    else:  # ... axes are empty, so ignore current axis viewport
+        ax.set_xlim(frame_xlim[0] - pad_x, frame_xlim[1] + pad_x)
+        ax.set_ylim(frame_ylim[0] - pad_y, frame_ylim[1] + pad_y)
+
     # tweak zorder to ensure multiple outset annotations layer properly
     ax_width = ax.get_xlim()[1] - ax.get_xlim()[0]
     ax_height = ax.get_ylim()[1] - ax.get_ylim()[0]

@@ -49,6 +49,8 @@ def test_outsetplot_vs_draw_outset_split(
 
     # Expected output using draw_outset
     ax_ref = fig_ref.subplots()
+    ax_ref.set_xlim(*ax_test.get_xlim())
+    ax_ref.set_ylim(*ax_test.get_ylim())
     draw_outset(
         (1, 3),
         (1, 2),

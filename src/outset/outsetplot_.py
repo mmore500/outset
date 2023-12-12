@@ -69,6 +69,19 @@ def outsetplot(
     if palette is None:
         palette = sns.color_palette()
 
+    # grow axis limits to data, ensuring no shrink
+    if len(data) and outset is not None:
+        ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
+        ax.set_xlim(
+            min(data[x].min(), ax_xlim[0]),
+            max(data[x].max(), ax_xlim[1]),
+        )
+        ax.set_ylim(
+            min(data[y].min(), ax_ylim[0]),
+            max(data[y].max(), ax_ylim[1]),
+        )
+
+    # assemble data groups
     if outset is not None:
         if outset_order is None:
             outset_order = sorted(data[outset].unique())
