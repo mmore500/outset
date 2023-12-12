@@ -7,6 +7,7 @@ import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
 
 from .draw_outset_ import draw_outset
+from .MarkNumericalBadges_ import MarkNumericalBadges
 
 
 def outsetplot(
@@ -19,6 +20,9 @@ def outsetplot(
     ax: typing.Optional[mpl_Axes] = None,
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
+    mark_glyph: typing.Union[
+        typing.Callable, typing.Type, None
+    ] = MarkNumericalBadges,
     palette: typing.Optional[typing.Sequence] = None,
     **kwargs,
 ) -> typing.Tuple[mpl_Axes, typing.List[typing.Tuple[float, float]]]:
@@ -60,6 +64,13 @@ def outsetplot(
         determined relative to axis viewport. If specified as a tuple, the first
         value specifies absolute horizontal padding in axis units and the second
         specifies absolute vertical padding in axis units.
+    mark_glyph : Union[Callable, Type, None], optional
+        A callable to draw a glyph at the end of the callout.
+
+        Defaults to a magnifying glass. Outset also provides implementations
+        for arrow, asterisk, and letter/number glyphs. If a type is provided,
+        it will be default initialized prior to being called as a functor. If
+        None is provided, no glyph will be drawn.
     palette : Sequence, optional
         Color palette for plotting.
 
@@ -78,6 +89,9 @@ def outsetplot(
 
     if palette is None:
         palette = sns.color_palette()
+
+    if isinstance(mark_glyph, type):
+        mark_glyph = mark_glyph()
 
     # grow axis limits to data, ensuring no shrink
     if len(data) and outset is not None:
@@ -120,6 +134,7 @@ def outsetplot(
             color=kwargs.pop("color", color),
             frame_inner_pad=frame_inner_pad,
             frame_outer_pad=frame_outer_pad,
+            mark_glyph=mark_glyph,
             **kwargs,
         )
         frames[outset_value] = frame

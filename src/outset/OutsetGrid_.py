@@ -1,3 +1,4 @@
+import copy
 import typing
 
 import frozendict
@@ -11,6 +12,7 @@ from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
 from ._calc_outset_frames import calc_outset_frames
+from .MarkNumericalBadges_ import MarkNumericalBadges
 from .outsetplot_ import outsetplot
 
 
@@ -52,6 +54,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         frame_inner_pad: float = 0.1,
         frame_outer_pad: float = 0.1,
         leader_stretch_outplots: float = 0,
+        mark_glyph: typing.Union[
+            typing.Callable, typing.Type, None
+        ] = MarkNumericalBadges,
         outsetplot_kwargs: typing.Dict = frozendict.frozendict(),
         palette: typing.Optional[typing.Sequence] = None,
         sourceplot: bool = True,
@@ -101,6 +106,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Outer padding for the frame.
         leader_stretch_outplots : float, default 0
             Scales callout annotation in outplots, default collapsed.
+        mark_glyph : Union[Callable, Type, None], optional
+            A callable to draw a glyph at the end of the callout.
+
+            Defaults to a magnifying glass. Outset also provides implementations
+            for arrow, asterisk, and letter/number glyphs. If a type is
+            provided, it will be default initialized prior to being called as a
+            functor. If None is provided, no glyph will be drawn.
+
+            If a functor with state is provided, it should provide semantic
+            deep copy support.
         outsetplot_kwargs : dict, default frozendict.frozendict()
             Additional keyword arguments for outsetplot function over outset
             plots.
@@ -117,6 +132,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         **kwargs : dict
             Additional keyword arguments passed to seaborn's FacetGrid.
         """
+
+        if isinstance(mark_glyph, type):
+            mark_glyph = mark_glyph()
 
         # spoof data frame if outset frames are specified directly
         if not isinstance(data, pd.DataFrame):
@@ -193,6 +211,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 ax=self.sourceplot_axes,
                 frame_inner_pad=absolute_pads,
                 frame_outer_pad=frame_outer_pad,
+                mark_glyph=copy.deepcopy(mark_glyph),
                 **{
                     "color": color,
                     "palette": palette,
@@ -211,6 +230,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             y=y,
             frame_inner_pad=absolute_pads,
             frame_outer_pad=frame_outer_pad,
+            mark_glyph=mark_glyph,
             **{
                 "color": color,
                 "leader_stretch": leader_stretch_outplots,
