@@ -63,8 +63,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             The name of the column in `data` to be used for the x-axis values.
         y : str
             The name of the column in `data` to be used for the y-axis values.
-        outset : str, optional
-            Name of the categorical column in `data` to produce different-colored annotated subsets.
+        outset : str
+            Name of the categorical column in `data` to produce
+            different-colored annotated subsets.
 
             If provided, colors are chosen according to palette.
         outset_order : Sequence, optional
@@ -91,7 +92,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             If True, includes the source plot that outset plots are excerpted
             from as the first axis in the grid.
         sourceplot_kwargs : dict, default frozendict.frozendict()
-            Additional keyword arguments for outsetplot function over the source plot.
+            Additional keyword arguments for outsetplot function over the
+            source plot.
         **kwargs : dict
             Additional keyword arguments passed to seaborn's FacetGrid.
         """
