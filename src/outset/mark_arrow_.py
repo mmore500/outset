@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import axes as mpl_axes
 from matplotlib import markers as mpl_markers
 
+from ._auxlib.rotate_marker_ import rotate_marker
+
 
 def mark_arrow(
     x: typing.Union[float, typing.Sequence[float]],
@@ -57,14 +59,8 @@ def mark_arrow(
 
     # rotated tickdown marker for handle
     # adapted from https://stackoverflow.com/a/49662573
-    head_marker = mpl_markers.MarkerStyle(marker=10)  # CARETUP
-    head_marker._transform = head_marker.get_transform().rotate_deg(
-        rotate_angle,
-    )
-    stem_marker = mpl_markers.MarkerStyle(marker=3)  # TICKDOWN
-    stem_marker._transform = stem_marker.get_transform().rotate_deg(
-        rotate_angle,
-    )
+    head_marker = rotate_marker(10, rotate_angle)  # CARETUP
+    stem_marker = rotate_marker(3, rotate_angle)  # TICKDOWN
 
     # Scaling factors for different elements relative to markersize
     overlay_scale = 0.8

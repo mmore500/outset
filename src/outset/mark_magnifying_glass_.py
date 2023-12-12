@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib import axes as mpl_axes
 from matplotlib import markers as mpl_markers
 
+from ._auxlib.rotate_marker_ import rotate_marker
+
 
 def mark_magnifying_glass(
     x: typing.Union[float, typing.Sequence[float]],
@@ -57,12 +59,7 @@ def mark_magnifying_glass(
     if ax is None:
         ax = plt.gca()
 
-    # rotated tickdown marker for handle
-    # adapted from https://stackoverflow.com/a/49662573
-    handle_marker = mpl_markers.MarkerStyle(marker=3)  # TICKDOWN
-    handle_marker._transform = handle_marker.get_transform().rotate_deg(
-        rotate_angle,
-    )
+    handle_marker = rotate_marker(3, rotate_angle)  # TICKDOWN
 
     # Scaling factors for different elements relative to markersize
     handle_underlay_scale = 1.5 / 1.5
