@@ -7,6 +7,7 @@ from .draw_outset_ import draw_outset
 from .mark_arrow_ import mark_arrow
 from .mark_inlaid_asterisk_ import mark_inlaid_asterisk
 from .mark_magnifying_glass_ import mark_magnifying_glass
+from .MarkNumericalBadges_ import MarkNumericalBadges
 from .OutsetGrid_ import OutsetGrid
 from .outsetplot_ import outsetplot
 
@@ -15,6 +16,7 @@ __all__ = [
     "mark_arrow",
     "mark_inlaid_asterisk",
     "mark_magnifying_glass",
+    "MarkNumericalBadges",
     "OutsetGrid",
     "outsetplot",
 ]
