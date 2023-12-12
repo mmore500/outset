@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.testing import decorators as mpl_testing_decorators
 
-from outset import draw_outset, outsetplot
+from outset import draw_outset, mark_magnifying_glass, outsetplot
 
 # Sample data for testing
 data = pd.DataFrame(
@@ -15,7 +15,7 @@ data = pd.DataFrame(
 def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
     # Using outsetplot
     ax_test = fig_test.subplots()
-    outsetplot(data, x="x", y="y", ax=ax_test)
+    outsetplot(data, x="x", y="y", ax=ax_test, mark_glyph=mark_magnifying_glass)
 
     # Expected output using draw_outset
     ax_ref = fig_ref.subplots()
@@ -39,6 +39,7 @@ def test_outsetplot_vs_draw_outset_split(
         data,
         x="x",
         y="y",
+        mark_glyph=mark_magnifying_glass,
         outset="outset",
         outset_order=["A", "B"],
         ax=ax_test,
