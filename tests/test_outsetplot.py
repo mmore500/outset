@@ -23,8 +23,8 @@ def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
         (1, 4),
         (1, 3),
         ax=ax_ref,
-        frame_inner_pad=0.1,
         color=sns.color_palette()[0],
+        frame_inner_pad=0.1,
     )
 
 
