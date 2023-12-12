@@ -1,3 +1,4 @@
+import matplotlib.cbook as mpl_cbook
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -52,3 +53,23 @@ def test_OutsetGrid_with_sourceplot():
     outpath = "/tmp/test_OutsetGrid_with_sourceplot.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
+
+
+def test_OutsetGrid_broadcast():
+    plt.clf()
+
+    with mpl_cbook.get_sample_data("grace_hopper.jpg") as image_file:
+        image = plt.imread(image_file)
+
+    og = OutsetGrid(
+        data=[(40, 60, 60, 80), (10, 40, 14, 21)],
+        x="x",
+        y="y",
+        outset="outset",
+        sourceplot_xlim=(0, 100),
+        sourceplot_ylim=(0, 100),
+    )
+    og.broadcast(
+        plt.imshow, image, extent=(0, 100, 0, 100), origin="upper", zorder=-1
+    )
+    plt.savefig("/tmp/test_OutsetGrid_broadcast.png")

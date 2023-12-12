@@ -24,6 +24,7 @@ def draw_outset(
     frame_facealpha: float = 0.1,
     frame_linewidth: float = 1,
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
+    frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     label: typing.Optional[str] = None,
     leader_linestyle: str = ":",
     leader_linewidth: int = 2,
@@ -117,6 +118,15 @@ def draw_outset(
 
     # pad axis viewport out from frame
     ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
+    if isinstance(frame_outer_pad, tuple):
+        pad_x, pad_y = frame_outer_pad
+    elif isinstance(frame_outer_pad, numbers.Number):
+        pad_x = max(np.ptp(ax.get_xlim()), np.ptp(frame_xlim)) * frame_outer_pad
+        pad_y = max(np.ptp(ax.get_ylim()), np.ptp(frame_ylim)) * frame_outer_pad
+    else:
+        raise ValueError(
+            f"frame_outer_pad must be float or tuple, not {frame_outer_pad}",
+        )
     # RE , see
     # https://matplotlib.org/stable/users/faq.html#check-whether-a-figure-is-empty
     if (

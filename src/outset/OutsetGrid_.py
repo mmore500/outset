@@ -2,6 +2,7 @@ import typing
 
 import frozendict
 from matplotlib import axes as mpl_axes
+from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -36,21 +37,27 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
     def __init__(
         self: "OutsetGrid",
-        data: pd.DataFrame,
+        data: typing.Union[
+            pd.DataFrame,
+            typing.Sequence[typing.Tuple[float, float, float, float]],
+        ],
         *,
-        x: str,
-        y: str,
-        outset: str,
+        x: str = "x",
+        y: str = "y",
+        outset: str = "outset",
         outset_order: typing.Optional[typing.Sequence[str]] = None,
         equalize_aspect: bool = True,
         col_wrap: typing.Optional[int] = None,
         color: typing.Optional[str] = None,  # pass to override outset hues
         frame_inner_pad: float = 0.1,
+        frame_outer_pad: float = 0.1,
         leader_stretch_outplots: float = 0,
         outsetplot_kwargs: typing.Dict = frozendict.frozendict(),
         palette: typing.Optional[typing.Sequence] = None,
         sourceplot: bool = True,
         sourceplot_kwargs: typing.Dict = frozendict.frozendict(),
+        sourceplot_xlim: typing.Optional[typing.Tuple[float, float]] = None,
+        sourceplot_ylim: typing.Optional[typing.Tuple[float, float]] = None,
         **kwargs,
     ) -> None:
         """Create an OutsetGrid with specified configuration.
@@ -58,16 +65,23 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         Parameters
         ----------
         data : pd.DataFrame
-            The data frame containing the data to be plotted.
-        x : str
+            The data frame containing the data to be faceted per outplot or a
+            sequence of outest frames specified as (xmin, xmax, ymin, ymax)
+            tuples.
+        x : str, default "x"
             The name of the column in `data` to be used for the x-axis values.
-        y : str
+
+            Should not be provided if outset frames are specified directly.
+        y : str, default "y"
             The name of the column in `data` to be used for the y-axis values.
-        outset : str
+
+            Should not be provided if outset frames are specified directly.
+        outset : str, default "outset"
             Name of the categorical column in `data` to produce
             different-colored annotated subsets.
 
-            If provided, colors are chosen according to palette.
+            If provided, colors are chosen according to palette. Should not be
+            provided if outset frames are specified directly.
         outset_order : Sequence, optional
             Order to plot the categorical levels in.
 
@@ -81,6 +95,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Color for all outset annotations, overrides palette.
         frame_inner_pad : float, default 0.1
             Inner padding for the frame.
+
+            Set as zero if outset frames are specified directly.
+        frame_outer_pad : float, default 0.1
+            Outer padding for the frame.
         leader_stretch_outplots : float, default 0
             Scales callout annotation in outplots, default collapsed.
         outsetplot_kwargs : dict, default frozendict.frozendict()
@@ -94,9 +112,36 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         sourceplot_kwargs : dict, default frozendict.frozendict()
             Additional keyword arguments for outsetplot function over the
             source plot.
+        sourceplot_{x,y}lim : Optional[Tuple[float, float]], default None
+            The x and y limits for the source plot.
         **kwargs : dict
             Additional keyword arguments passed to seaborn's FacetGrid.
         """
+
+        # spoof data frame if outset frames are specified directly
+        if not isinstance(data, pd.DataFrame):
+            if x != "x" or y != "y" or outset != "outset":
+                raise ValueError(
+                    "x, y, and outset must be 'x', 'y', and 'outset' if outest "
+                    "frames are specified directly",
+                )
+            if outset_order is not None:
+                raise ValueError(
+                    "outset_order should not be provided if outset frames are "
+                    "specified directly",
+                )
+            data = pd.DataFrame.from_records(
+                [
+                    {
+                        "x": x,
+                        "y": y,
+                        "outset": i,
+                    }
+                    for i, (xmin, xmax, ymin, ymax) in enumerate(data)
+                    for x, y in [(xmin, ymin), (xmax, ymax)]
+                ],
+            )
+            frame_inner_pad = 0
 
         self.__data = data
 
@@ -135,6 +180,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         #######################################################################
         if sourceplot:
             self.sourceplot_axes = self.axes.flat[0]
+            if sourceplot_xlim is not None:
+                self.sourceplot_axes.set_xlim(*sourceplot_xlim)
+            if sourceplot_ylim is not None:
+                self.sourceplot_axes.set_ylim(*sourceplot_ylim)
             outsetplot(
                 data,
                 x=x,
@@ -143,6 +192,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 outset_order=outset_order,
                 ax=self.sourceplot_axes,
                 frame_inner_pad=absolute_pads,
+                frame_outer_pad=frame_outer_pad,
                 **{
                     "color": color,
                     "palette": palette,
@@ -160,6 +210,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             x=x,
             y=y,
             frame_inner_pad=absolute_pads,
+            frame_outer_pad=frame_outer_pad,
             **{
                 "color": color,
                 "leader_stretch": leader_stretch_outplots,
@@ -234,4 +285,46 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         if self.sourceplot_axes is not None:
             kwargs.pop("_outset_preserve_axlim", None)
             plotter(self.__data, *args, ax=self.sourceplot_axes, **kwargs)
+        return self
+
+    def broadcast(
+        self: "OutsetGrid",
+        plotter: typing.Callable,
+        *args,
+        **kwargs,
+    ) -> "OutsetGrid":
+        """Map a plotting function over all axes, including the source plot
+        axis (if present), but with the same data and arguments for all.
+
+        Parameters
+        ----------
+        plotter : Callable
+            The plotting function to be applied to each axis.
+        *args : tuple
+            Positional arguments passed to the plotting function.
+        **kwargs : dict
+            Keyword arguments passed to the plotting function.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+
+        Notes
+        -----
+        Does not use data stored from initialization. Data should be provided via argument to this method.
+
+        Preserves axis limits for all axes except the sourceplot, if present.
+        """
+        for i, ax in enumerate(self.axes.flat):
+            # store and restore axis limits, except for sourceplot if present
+            xlim, ylim = ax.get_xlim(), ax.get_ylim()
+            try:
+                plotter(*args, ax=ax, **kwargs)
+            except TypeError:
+                plt.sca(ax)
+                plotter(*args, **kwargs)
+            if i or self.sourceplot_axes is None:
+                ax.set_xlim(*xlim)
+                ax.set_ylim(*ylim)
         return self
