@@ -10,7 +10,7 @@ import seaborn as sns
 
 from ._auxlib.draw_callout_ import draw_callout
 from ._auxlib.draw_frame_ import draw_frame
-from ._auxlib.is_axis_unset_ import is_axis_unset
+from ._auxlib.is_axes_unset_ import is_axes_unset
 from .mark_magnifying_glass_ import mark_magnifying_glass
 
 
@@ -128,7 +128,7 @@ def draw_outset(
         raise ValueError(
             f"frame_outer_pad must be float or tuple, not {frame_outer_pad}",
         )
-    if is_axis_unset(ax):  # ... axes are empty, so ignore current axis viewport
+    if is_axes_unset(ax):  # ... axes are empty, so ignore current axis viewport
         if pad_x or np.ptp(frame_xlim):
             ax.set_xlim(frame_xlim[0] - pad_x, frame_xlim[1] + pad_x)
         if pad_y or np.ptp(frame_ylim):

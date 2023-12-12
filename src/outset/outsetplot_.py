@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
 
-from ._auxlib.is_axis_unset_ import is_axis_unset
+from ._auxlib.is_axes_unset_ import is_axes_unset
 from .draw_outset_ import draw_outset
 from .MarkNumericalBadges_ import MarkNumericalBadges
 
@@ -103,7 +103,7 @@ def outsetplot(
             if outset is not None and outset_order is not None
             else data
         )
-        if is_axis_unset(ax):  # disregard existing axlim
+        if is_axes_unset(ax):  # disregard existing axlim
             if np.ptp(plotted_data[x]):
                 ax.set_xlim(plotted_data[x].min(), plotted_data[x].max())
             if np.ptp(plotted_data[y]):
