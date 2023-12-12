@@ -75,7 +75,12 @@ def compose_callout_leader(
         (frame_upper_left, frame_lower_right),
     ) = zip(frame_xlim, frame_ylim), zip(frame_xlim, reversed(frame_ylim))
 
-    theta = np.arctan(frame_height / frame_width)
+    if frame_width:
+        theta = np.arctan(frame_height / frame_width)
+    elif frame_height:
+        theta = np.pi / 2
+    else:
+        theta = 0
     rel_height, rel_width = np.sin(theta) * stretch, np.cos(theta) * stretch
     height, width = rel_height * ax_height, rel_width * ax_width
     offsets = np.array([width, height])

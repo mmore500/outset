@@ -124,8 +124,10 @@ def draw_outset(
             max(frame_ylim[1] + pad_y, ax_ylim[1]),
         )
     else:  # ... axes are empty, so ignore current axis viewport
-        ax.set_xlim(frame_xlim[0] - pad_x, frame_xlim[1] + pad_x)
-        ax.set_ylim(frame_ylim[0] - pad_y, frame_ylim[1] + pad_y)
+        if pad_x or np.ptp(frame_xlim):
+            ax.set_xlim(frame_xlim[0] - pad_x, frame_xlim[1] + pad_x)
+        if pad_y or np.ptp(frame_ylim):
+            ax.set_ylim(frame_ylim[0] - pad_y, frame_ylim[1] + pad_y)
 
     # tweak zorder to ensure multiple outset annotations layer properly
     ax_width = ax.get_xlim()[1] - ax.get_xlim()[0]
