@@ -4,7 +4,9 @@ import typing
 import frozendict
 import numpy as np
 from matplotlib import axes as mpl_axes
+from matplotlib import patches as mpl_patches
 from matplotlib import pyplot as plt
+import seaborn as sns
 
 from ._auxlib.draw_callout_ import draw_callout
 from ._auxlib.draw_frame_ import draw_frame
@@ -16,12 +18,13 @@ def draw_outset(
     frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
     *,
-    color: str = "blue",
+    color: typing.Optional[str] = "blue",
     frame_facealpha: float = 0.1,
     frame_linewidth: float = 1,
     clip_on: bool = False,
     despine: bool = True,
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
+    label: typing.Optional[str] = None,
     leader_linestyle: str = ":",
     leader_linewidth: int = 2,
     leader_stretch: float = 0.1,
@@ -46,8 +49,10 @@ def draw_outset(
         The axes object on which to draw the outset.
 
         Defaults to `plt.gca()`.
-    color : str, default "blue"
+    color : typing.Optional[str], default "blue"
         Color for the frame's edge and the lines of the zoom indication.
+
+        If None, the first color of the seaborn color palette is used.
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding
         box.
@@ -64,6 +69,8 @@ def draw_outset(
         specifies absolute vertical padding in axis units.
     frame_linewidth : float, default 1
         Line width of the frame's edge.
+    label : Optional[str], optional
+        Used for legend creation.
     leader_linestyle : str, default ":"
         Line style for the zoom indication (e.g., solid, dashed, dotted).
     leader_linewidth : int, default 2
@@ -92,6 +99,8 @@ def draw_outset(
     """
     if ax is None:
         ax = plt.gca()
+    if color is None:
+        color = sns.color_palette()[0]
 
     # pad frame coordinates out from data
     if isinstance(frame_inner_pad, tuple):
@@ -174,5 +183,7 @@ def draw_outset(
     ax.set_axisbelow(True)  # ensure annotations above if outside bounds
     if despine:
         ax.spines[["right", "top"]].set_visible(False)
+    if label is not None:
+        ax.legend(handles=[mpl_patches.Patch(color=color, label=label)])
 
     return ax, (*frame_xlim, *frame_ylim)  # unpacks into tuple ctor
