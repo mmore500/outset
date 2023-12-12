@@ -125,3 +125,5 @@ def draw_callout(
                 **mark_glyph_kwargs,
             },
         )
+
+    return ax
