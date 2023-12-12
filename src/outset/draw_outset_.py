@@ -21,13 +21,13 @@ def draw_outset(
     frame_linewidth: float = 1,
     clip_on: bool = False,
     despine: bool = True,
-    mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
-    mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
-    mark_retract: float = 0.1,
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
     leader_linestyle: str = ":",
     leader_linewidth: int = 2,
     leader_stretch: float = 0.1,
+    mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
+    mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
+    mark_retract: float = 0.1,
     zorder: float = 0,
 ) -> typing.Tuple[mpl_axes.Axes, typing.Tuple[float, float, float, float]]:
     """Mark a rectangular region as outset, framing it and adding a
@@ -48,15 +48,30 @@ def draw_outset(
         Defaults to `plt.gca()`.
     color : str, default "blue"
         Color for the frame's edge and the lines of the zoom indication.
-    frame_facealpha : float, default 0.1
-        Alpha value for the frame's fill color, controlling its transparency.
-    frame_linewidth : float, default 1
-        Line width of the frame's edge.
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding
         box.
     despine : bool, default True
         Remove the top and right spines from the plots.
+    frame_facealpha : float, default 0.1
+        Alpha value for the frame's fill color, controlling its transparency.
+    frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
+        How far from data range should rectangular boundary fall?
+
+        If specified as a float value, horizontal and vertical padding is
+        determined relative to axis viewport. If specified as a tuple, the first
+        value specifies absolute horizontal padding in axis units and the second
+        specifies absolute vertical padding in axis units.
+    frame_linewidth : float, default 1
+        Line width of the frame's edge.
+    leader_linestyle : str, default ":"
+        Line style for the zoom indication (e.g., solid, dashed, dotted).
+    leader_linewidth : int, default 2
+        Line width for the zoom indication's edges.
+    leader_stretch : float, default 0.1
+        Stretch factor for the callout leader extending from the frame.
+
+        Set `leader_stretch` 0 to collapse away the leader.
     mark_glyph : Optional[Callable], optional
         A callable to draw a glyph at the end of the callout.
 
@@ -67,21 +82,6 @@ def draw_outset(
     mark_retract : float, default 0.1
         Retraction factor for the glyph placement from the outer vertex of the
         callout.
-    frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
-        How far from data range should rectangular boundary fall?
-
-        If specified as a float value, horizontal and vertical padding is
-        determined relative to axis viewport. If specified as a tuple, the first
-        value specifies absolute horizontal padding in axis units and the second
-        specifies absolute vertical padding in axis units.
-    leader_linestyle : str, default ":"
-        Line style for the zoom indication (e.g., solid, dashed, dotted).
-    leader_linewidth : int, default 2
-        Line width for the zoom indication's edges.
-    leader_stretch : float, default 0.1
-        Stretch factor for the callout leader extending from the frame.
-
-        Set `leader_stretch` 0 to collapse away the leader.
     zorder : float, default 0
         Z-order for layering plot elements; higher values are drawn on top.
 
