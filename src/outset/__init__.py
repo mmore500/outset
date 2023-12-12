@@ -9,6 +9,7 @@ from .mark_inlaid_asterisk_ import mark_inlaid_asterisk
 from .mark_magnifying_glass_ import mark_magnifying_glass
 from .MarkAlphabeticalBadges_ import MarkAlphabeticalBadges
 from .MarkNumericalBadges_ import MarkNumericalBadges
+from .MarkRomanBadges_ import MarkRomanBadges
 from .OutsetGrid_ import OutsetGrid
 from .outsetplot_ import outsetplot
 
@@ -19,6 +20,7 @@ __all__ = [
     "mark_magnifying_glass",
     "MarkAlphabeticalBadges",
     "MarkNumericalBadges",
+    "MarkRomanBadges",
     "OutsetGrid",
     "outsetplot",
 ]
