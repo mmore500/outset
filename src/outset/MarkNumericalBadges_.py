@@ -1,4 +1,3 @@
-import itertools as it
 import typing
 
 from matplotlib import axes as mpl_axes
