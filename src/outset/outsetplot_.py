@@ -98,20 +98,25 @@ def outsetplot(
 
     # pad axes out from data to ensure consistent outplot annotation sizing
     if len(data):
+        plotted_data = (
+            data[data[outset].isin(outset_order)]
+            if outset is not None and outset_order is not None
+            else data
+        )
         if is_axis_unset(ax):  # disregard existing axlim
-            if np.ptp(data[x]):
-                ax.set_xlim(data[x].min(), data[x].max())
-            if np.ptp(data[y]):
-                ax.set_ylim(data[y].min(), data[y].max())
+            if np.ptp(plotted_data[x]):
+                ax.set_xlim(plotted_data[x].min(), plotted_data[x].max())
+            if np.ptp(plotted_data[y]):
+                ax.set_ylim(plotted_data[y].min(), plotted_data[y].max())
         else:  # ensure no shrink of existing axlim
             ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
             ax.set_xlim(
-                min(data[x].min(), ax_xlim[0]),
-                max(data[x].max(), ax_xlim[1]),
+                min(plotted_data[x].min(), ax_xlim[0]),
+                max(plotted_data[x].max(), ax_xlim[1]),
             )
             ax.set_ylim(
-                min(data[y].min(), ax_ylim[0]),
-                max(data[y].max(), ax_ylim[1]),
+                min(plotted_data[y].min(), ax_ylim[0]),
+                max(plotted_data[y].max(), ax_ylim[1]),
             )
 
     if isinstance(frame_outer_pad, numbers.Number):
