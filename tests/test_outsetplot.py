@@ -19,12 +19,15 @@ def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
 
     # Expected output using draw_outset
     ax_ref = fig_ref.subplots()
+    ax_ref.set_xlim(*ax_test.get_xlim())
+    ax_ref.set_ylim(*ax_test.get_ylim())
     draw_outset(
         (1, 4),
         (1, 3),
         ax=ax_ref,
         color=sns.color_palette()[0],
         frame_inner_pad=0.1,
+        frame_outer_pad=0.0,
     )
 
 
@@ -44,6 +47,7 @@ def test_outsetplot_vs_draw_outset_split(
         outset_order=["A", "B"],
         ax=ax_test,
         frame_inner_pad=0.0,
+        frame_outer_pad=0.0,
         palette=palette,
     )
 
@@ -57,6 +61,7 @@ def test_outsetplot_vs_draw_outset_split(
         ax=ax_ref,
         color=palette[0],
         frame_inner_pad=0.0,
+        frame_outer_pad=0.0,
     )
     draw_outset(
         (2, 4),
@@ -64,7 +69,10 @@ def test_outsetplot_vs_draw_outset_split(
         ax=ax_ref,
         color=palette[1],
         frame_inner_pad=0.0,
+        frame_outer_pad=0.0,
     )
+    ax_ref.set_xlim(*ax_test.get_xlim())
+    ax_ref.set_ylim(*ax_test.get_ylim())
 
 
 def test_outsetplot_one():

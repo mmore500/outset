@@ -1,11 +1,14 @@
 import itertools as it
+import numbers
 import typing
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
 
+from ._auxlib.is_axis_unset_ import is_axis_unset
 from .draw_outset_ import draw_outset
 from .MarkNumericalBadges_ import MarkNumericalBadges
 
@@ -93,16 +96,30 @@ def outsetplot(
     if isinstance(mark_glyph, type):
         mark_glyph = mark_glyph()
 
-    # grow axis limits to data, ensuring no shrink
-    if len(data) and outset is not None:
-        ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
-        ax.set_xlim(
-            min(data[x].min(), ax_xlim[0]),
-            max(data[x].max(), ax_xlim[1]),
-        )
-        ax.set_ylim(
-            min(data[y].min(), ax_ylim[0]),
-            max(data[y].max(), ax_ylim[1]),
+    # pad axes out from data to ensure consistent outplot annotation sizing
+    if len(data):
+        if is_axis_unset(ax):  # disregard existing axlim
+            if np.ptp(data[x]):
+                ax.set_xlim(data[x].min(), data[x].max())
+            if np.ptp(data[y]):
+                ax.set_ylim(data[y].min(), data[y].max())
+        else:  # ensure no shrink of existing axlim
+            ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
+            ax.set_xlim(
+                min(data[x].min(), ax_xlim[0]),
+                max(data[x].max(), ax_xlim[1]),
+            )
+            ax.set_ylim(
+                min(data[y].min(), ax_ylim[0]),
+                max(data[y].max(), ax_ylim[1]),
+            )
+
+    if isinstance(frame_outer_pad, numbers.Number):
+        # convert to absolute units to prevent weird effects from
+        # successive calls to draw_outset
+        frame_outer_pad = (
+            frame_outer_pad * np.ptp(ax.get_xlim()),
+            frame_outer_pad * np.ptp(ax.get_ylim()),
         )
 
     # assemble data groups
