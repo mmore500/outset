@@ -45,7 +45,6 @@ def test_outsetplot_vs_draw_outset_split(
         frame_inner_pad=0.0,
         palette=palette,
     )
-    fig_test.savefig("/tmp/a.png")
 
     # Expected output using draw_outset
     ax_ref = fig_ref.subplots()
@@ -65,7 +64,6 @@ def test_outsetplot_vs_draw_outset_split(
         color=palette[1],
         frame_inner_pad=0.0,
     )
-    fig_ref.savefig("/tmp/b.png")
 
 
 def test_outsetplot_one():
