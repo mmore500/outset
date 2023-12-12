@@ -35,7 +35,8 @@ def outsetplot(
     y : str
         Name of the column in `data` to be used for y-axis values.
     outset : str, optional
-        Name of the categorical column in `data` to produce different-colored annotated subsets.
+        Name of the categorical column in `data` to produce different-colored
+        annotated subsets.
 
         If provided, colors are chosen according to palette.
     outset_order : Sequence, optional
@@ -43,7 +44,8 @@ def outsetplot(
 
         If None, outsets are assigned based on outset column sorted order.
     ax : matplotlib.axes.Axes, optional
-        Matplotlib Axes object to draw the plot on. If None, the current axes are used.
+        Matplotlib Axes object to draw the plot on. If None, the current axes
+        are used.
     frame_inner_pad : Union[float, Tuple[float, float]], default 0.1
         How far from data range should rectangular boundary fall?
 
