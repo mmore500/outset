@@ -113,10 +113,12 @@ class MarkAlphabeticalBadges:
             marker=f"$\mathrm{{{chr(self._counter)}}}$",
             marker_badge=marker_badge,
             marker_underlay=marker_underlay,
-            linecolor="none",
             markersize=markersize,
             scale_asterisk=scale_letter,
             scale_badge=scale_badge,
-            **kwargs,
+            **{
+                "linecolor": "none",
+                **kwargs,
+            },
         )
         self._counter += self._step

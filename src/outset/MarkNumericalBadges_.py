@@ -111,10 +111,12 @@ class MarkNumericalBadges:
             marker=f"${self._counter}$",
             marker_badge=marker_badge,
             marker_underlay=marker_underlay,
-            linecolor="none",
             markersize=markersize,
             scale_asterisk=scale_numeral,
             scale_badge=scale_badge,
-            **kwargs,
+            **{
+                "linecolor": "none",
+                **kwargs,
+            },
         )
         self._counter += self._step
