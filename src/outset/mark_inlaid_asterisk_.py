@@ -133,9 +133,10 @@ def mark_inlaid_asterisk(
     )
 
     # Asterisk
-    plt.plot(
+    ax.plot(
         x,
         y,
+        color="none",
         marker=marker,
         markeredgewidth=asterisk_edgewidth,
         markeredgecolor=colors["color_asterisk_edge"],
