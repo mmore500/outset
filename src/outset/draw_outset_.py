@@ -97,8 +97,8 @@ def draw_outset(
     if isinstance(frame_inner_pad, tuple):
         pad_x, pad_y = frame_inner_pad
     elif isinstance(frame_inner_pad, numbers.Number):
-        pad_x = (ax.get_xlim()[1] - ax.get_xlim()[0]) * frame_inner_pad
-        pad_y = (ax.get_ylim()[1] - ax.get_ylim()[0]) * frame_inner_pad
+        pad_x = np.ptp(ax.get_xlim()) * frame_inner_pad
+        pad_y = np.ptp(ax.get_ylim()) * frame_inner_pad
     else:
         raise ValueError(
             f"frame_inner_pad must be float or tuple, not {frame_inner_pad}",
@@ -130,8 +130,7 @@ def draw_outset(
             ax.set_ylim(frame_ylim[0] - pad_y, frame_ylim[1] + pad_y)
 
     # tweak zorder to ensure multiple outset annotations layer properly
-    ax_width = ax.get_xlim()[1] - ax.get_xlim()[0]
-    ax_height = ax.get_ylim()[1] - ax.get_ylim()[0]
+    ax_width, ax_height = np.ptp(ax.get_xlim()), np.ptp(ax.get_ylim())
     ax_diag = np.sqrt(ax_width**2 + ax_height**2)
     upper_right_drop_x = ax.get_ylim()[1] - frame_xlim[1]
     upper_right_drop_y = ax.get_ylim()[1] - frame_ylim[1]
