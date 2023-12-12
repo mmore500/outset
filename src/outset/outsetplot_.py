@@ -17,7 +17,7 @@ def outsetplot(
     outset: typing.Optional[str] = None,
     outset_order: typing.Optional[typing.Sequence] = None,
     ax: typing.Optional[mpl_Axes] = None,
-    frame_inner_pad: float = 0.1,
+    frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     palette: typing.Optional[typing.Sequence] = None,
     **kwargs,
 ) -> typing.Tuple[mpl_Axes, typing.List[typing.Tuple[float, float]]]:
@@ -43,10 +43,13 @@ def outsetplot(
         If None, outsets are assigned based on outset column sorted order.
      ax : matplotlib.axes.Axes, optional
         Matplotlib Axes object to draw the plot on. If None, the current axes are used.
-    frame_inner_pad : float, default 0.1
+    frame_inner_pad : Union[float, Tuple[float, float]], default 0.1
         How far from data range should rectangular boundary fall?
 
-        Padding is determined relative to axis viewport.
+        If specified as a float value, horizontal and vertical padding is
+        determined relative to axis viewport. If specified as a tuple, the first
+        value specifies absolute horizontal padding in axis units and the second
+        specifies absolute vertical padding in axis units.
     palette : Sequence, optional
         Color palette for plotting.
 

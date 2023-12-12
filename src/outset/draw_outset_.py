@@ -1,3 +1,4 @@
+import numbers
 import typing
 
 import frozendict
@@ -23,7 +24,7 @@ def draw_outset(
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
-    frame_inner_pad: float = 0.0,
+    frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
     leader_linestyle: str = ":",
     leader_linewidth: int = 2,
     leader_stretch: float = 0.1,
@@ -66,8 +67,13 @@ def draw_outset(
     mark_retract : float, default 0.1
         Retraction factor for the glyph placement from the outer vertex of the
         callout.
-    frame_inner_pad : float, default 0.0
-        Padding factor for the inner margin of the frame.
+    frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
+        How far from data range should rectangular boundary fall?
+
+        If specified as a float value, horizontal and vertical padding is
+        determined relative to axis viewport. If specified as a tuple, the first
+        value specifies absolute horizontal padding in axis units and the second
+        specifies absolute vertical padding in axis units.
     leader_linestyle : str, default ":"
         Line style for the zoom indication (e.g., solid, dashed, dotted).
     leader_linewidth : int, default 2
@@ -87,9 +93,17 @@ def draw_outset(
     if ax is None:
         ax = plt.gca()
 
-    pad_x = (ax.get_xlim()[1] - ax.get_xlim()[0]) * frame_inner_pad
+    # pad frame coordinates out from data
+    if isinstance(frame_inner_pad, tuple):
+        pad_x, pad_y = frame_inner_pad
+    elif isinstance(frame_inner_pad, numbers.Number):
+        pad_x = (ax.get_xlim()[1] - ax.get_xlim()[0]) * frame_inner_pad
+        pad_y = (ax.get_ylim()[1] - ax.get_ylim()[0]) * frame_inner_pad
+    else:
+        raise ValueError(
+            f"frame_inner_pad must be float or tuple, not {frame_inner_pad}",
+        )
     frame_xlim = np.array(frame_xlim) + np.array([-pad_x, pad_x])
-    pad_y = (ax.get_ylim()[1] - ax.get_ylim()[0]) * frame_inner_pad
     frame_ylim = np.array(frame_ylim) + np.array([-pad_y, pad_y])
 
     # tweak zorder to ensure multiple outset annotations layer properly
