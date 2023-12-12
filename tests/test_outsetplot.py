@@ -7,7 +7,7 @@ from outset import draw_outset, outsetplot
 
 # Sample data for testing
 data = pd.DataFrame(
-    {"x": [1, 2, 3, 4], "y": [1, 3, 2, 1], "hue": ["A", "B", "A", "B"]}
+    {"x": [1, 2, 3, 4], "y": [1, 3, 2, 1], "outset": ["A", "B", "A", "B"]}
 )
 
 
@@ -29,7 +29,7 @@ def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
 
 
 @mpl_testing_decorators.check_figures_equal()
-def test_outsetplot_vs_draw_outset_hue(
+def test_outsetplot_vs_draw_outset_split(
     fig_test: plt.Figure, fig_ref: plt.Figure
 ):
     palette = ["green", "red"]
@@ -39,8 +39,8 @@ def test_outsetplot_vs_draw_outset_hue(
         data,
         x="x",
         y="y",
-        hue="hue",
-        hue_order=["A", "B"],
+        outset="outset",
+        outset_order=["A", "B"],
         ax=ax_test,
         frame_inner_pad=0.0,
         palette=palette,
@@ -87,17 +87,26 @@ def test_outsetplot_several():
     _fig, ax = plt.subplots(figsize=(6, 4))
     ax.set_xlim(0, 4)
     ax.set_ylim(0, 4)
-    # Create sample data with a 'hue' column for grouping
+    # Create sample data with a 'outset' column for grouping
     data = pd.DataFrame(
         {
             "x": [0.825, 3.1, 0.5, 1.3, 2.2, 2],
             "y": [1.2, 0.8, 3.5, 2.3, 1.1, 3.7],
-            "hue": ["group1", "group1", "group2", "group2", "group3", "group3"],
+            "outset": [
+                "group1",
+                "group1",
+                "group2",
+                "group2",
+                "group3",
+                "group3",
+            ],
         }
     )
 
-    sns.scatterplot(data=data, x="x", y="y", hue="hue", ax=ax)
-    outsetplot(data=data, x="x", y="y", hue="hue", ax=ax, leader_stretch=0.0)
+    sns.scatterplot(data=data, x="x", y="y", hue="outset", ax=ax)
+    outsetplot(
+        data=data, x="x", y="y", outset="outset", ax=ax, leader_stretch=0.0
+    )
 
     outpath = "/tmp/test_outsetplot_several.png"
     plt.savefig(outpath)
