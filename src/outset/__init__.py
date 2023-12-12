@@ -12,6 +12,7 @@ from .MarkNumericalBadges_ import MarkNumericalBadges
 from .MarkRomanBadges_ import MarkRomanBadges
 from .OutsetGrid_ import OutsetGrid
 from .outsetplot_ import outsetplot
+from .stub_edge_mark_ import stub_edge_mark
 
 __all__ = [
     "draw_outset",
@@ -23,4 +24,5 @@ __all__ = [
     "MarkRomanBadges",
     "OutsetGrid",
     "outsetplot",
+    "stub_edge_mark",
 ]
