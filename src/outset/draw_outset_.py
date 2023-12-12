@@ -19,7 +19,7 @@ def draw_outset(
     frame_facealpha: float = 0.1,
     frame_linewidth: float = 1,
     clip_on: bool = False,
-    hide_outer_spines: bool = True,
+    despine: bool = True,
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
@@ -54,8 +54,8 @@ def draw_outset(
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding
         box.
-    hide_outer_spines : bool, default True
-        If True, hides the top and right spines of the axes.
+    despine : bool, default True
+        Remove the top and right spines from the plots.
     mark_glyph : Optional[Callable], optional
         A callable to draw a glyph at the end of the callout.
 
@@ -136,7 +136,7 @@ def draw_outset(
     # Finalize
     ###########################################################################
     ax.set_axisbelow(True)  # ensure annotations above if outside bounds
-    if hide_outer_spines:
+    if despine:
         ax.spines[["right", "top"]].set_visible(False)
 
     return ax, (*frame_xlim, *frame_ylim)  # unpacks into tuple ctor
