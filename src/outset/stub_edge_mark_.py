@@ -8,6 +8,7 @@ from matplotlib.collections import PathCollection as mpl_PathCollection
 from matplotlib.container import ErrorbarContainer as mpl_ErrorbarContainer
 
 from ._auxlib.align_marker_ import align_marker
+from ._auxlib.rotate_marker_ import rotate_marker
 
 
 def stub_edge_mark(
@@ -44,6 +45,17 @@ def stub_edge_mark(
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
     edge_x, edge_y, markers = x, y, list()
 
+    left_marker = lambda amount: align_marker(
+        rf"$\langle\!\langle\!\langle | \!\! \leftrightarrow \!\!|{{\times}}{amount}$",
+        halign="left",
+        pad=1.3,
+    )
+    right_marker = lambda amount: align_marker(
+        rf"$| \!\! \leftrightarrow \!\!|{{\times}}{amount}\rangle\!\rangle\!\rangle$",
+        halign="right",
+        pad=1.3,
+    )
+
     xwidth = np.ptp(xlim)
     ywidth = np.ptp(ylim)
     xoff = xwidth * offset
@@ -51,26 +63,19 @@ def stub_edge_mark(
     if x < xlim[0]:
         amount = int((xlim[0] - x) / xwidth)
         edge_x = xlim[0] - xoff
-        m = rf"$\langle\!\langle\!\langle | \!\! \leftrightarrow \!\!|{{\times}}{amount}$"
-        markers.append(align_marker(m, halign="left", pad=1.3))
+        markers.append(left_marker(amount))
     elif x > xlim[1]:
         amount = int((x - xlim[1]) / xwidth)
-        m = rf"$| \!\! \leftrightarrow \!\!|{{\times}}{amount}\rangle\!\rangle\!\rangle$"
         edge_x = xlim[1] + xoff
-        markers.append(align_marker(m, halign="right", pad=1.3))
-
+        markers.append(right_marker(amount))
     if y < ylim[0]:
-        edge_y = ylim[0] - yoff
         amount = int((ylim[0] - y) / ywidth)
-        m = rf"$\_\_ \!\!\!\!\!\!\!\!{{\widebar{{\updownarrow}}}} \!\! {{\times}}{amount} \!\! \mathbf{{\Downarrow}}\!\!\!\!\mathbf{{\Downarrow}}\!\!\!\!\mathbf{{\Downarrow}}$"
-        markers.append(align_marker(m, halign="right", pad=1.3))
-        # janky underline
+        edge_y = ylim[0] - yoff
+        markers.append(rotate_marker(right_marker(amount), 270))
     elif y > ylim[1]:
         amount = int((y - ylim[1]) / ywidth)
         edge_y = ylim[1] + yoff
-        m = rf"$\_\_ \!\!\!\!\!\!\!\!{{\widebar{{\updownarrow}}}} \!\! {{\times}}{amount} {{\widehat{{\widehat{{\widehat{{\,\,\,\_\,}}}}}}}}$"
-        markers.append(align_marker(m, halign="right", pad=1.3))
-        # janky underline
+        markers.append(rotate_marker(right_marker(amount), 90))
 
     for marker in markers:
         ax.plot(
