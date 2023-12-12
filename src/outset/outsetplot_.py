@@ -107,7 +107,7 @@ def outsetplot(
             xlim,
             ylim,
             ax,
-            color=kwargs.get("color", color),
+            color=kwargs.pop("color", color),
             frame_inner_pad=frame_inner_pad,
             **kwargs,
         )
