@@ -41,7 +41,6 @@ class MarkNumericalBadges:
         y: float,
         ax: typing.Optional[mpl_axes.Axes] = None,
         *,
-        numeral_edgewidth: float = 1,
         color: str = "black",
         color_accent: str = "white",
         color_numeral: _color_t = "color_accent",
@@ -50,6 +49,7 @@ class MarkNumericalBadges:
         marker_badge: str = "o",
         marker_underlay: str = "o",
         markersize: float = 22,
+        numeral_edgewidth: float = 1,
         scale_numeral: float = 0.4,
         scale_badge: float = 0.8,
         **kwargs,
@@ -67,8 +67,6 @@ class MarkNumericalBadges:
         ax : mpl_axes.Axes, optional
             The axes object on which to draw the marker. If None, plt.gca()
             will be used.
-        numeral_edgewidth : float, default 1
-            The edge width of the numeral marker.
         color : str, default "black"
             The primary color for the glyph.
         color_numeral : Union[str, tuple], default "white"
@@ -87,6 +85,8 @@ class MarkNumericalBadges:
             The marker style for the underlay.
         markersize : float, default 22
             Size for glyph's largest marker element.
+        numeral_edgewidth : float, default 1
+            The edge width of the numeral marker.
         scale_numeral : float, default 0.4
             The scaling factor for the numeral size.
         scale_badge : float, default 0.8
