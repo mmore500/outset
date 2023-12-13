@@ -180,6 +180,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             col_wrap=col_wrap,
             hue=outset if color is None else None,
             hue_order=outset_order if color is None else None,
+            palette=palette,
             **{
                 "legend_out": False,
                 "sharex": False,
