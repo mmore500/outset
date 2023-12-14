@@ -14,7 +14,8 @@ def draw_frame(
     frame_face_kwargs: typing.Dict = frozendict.frozendict(),
     **kwargs,
 ) -> mpl_axes.Axes:
-    """Mark rectangular region as outset.
+    """Mark a rectangular region with a frame border and an underlaid color
+    underlay fill.
 
     Parameters
     ----------
@@ -25,13 +26,19 @@ def draw_frame(
     ax : matplotlib.axes.Axes, optional
         The axes object on which to draw. If None, the current active axes will
         be used.
+    frame_edge_kwargs : Dict, default {}
+        Keyword arguments for customizing the frame's edge appearance.
+    frame_face_kwargs : Dict, default {}
+        Keyword arguments for customizing the frame's face appearance --- i.e.,
+        the underlaid solid fill.
     **kwargs
-        Additional keyword arguments leader matplotlib `Rectangle`.
+        Additional keyword arguments for the matplotlib `Rectangle` used to draw
+        the frame.
 
     Returns
     -------
     mpl_axes.Axes
-        The modified matplotlib axes object with the drawing elements added.
+        The modified matplotlib axes object with the frame drawing elements added.
     """
     if ax is None:
         ax = plt.gca()

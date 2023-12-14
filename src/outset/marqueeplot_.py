@@ -33,65 +33,57 @@ def marqueeplot(
     palette: typing.Optional[typing.Sequence] = None,
     tight_axlim: bool = False,
     **kwargs,
-) -> typing.Tuple[mpl_Axes, typing.List[typing.Tuple[float, float]]]:
-    """Creates outset annotation(s) containing specified x, y points from a
-    pandas DataFrame, potentially within-color coded groups determined by a
-    categorical column `outset`.
+) -> mpl_Axes:
+    """Plot marquee annotations to contain subsets of data from a pandas DataFrame.
 
-    Parameters
+    Provides a seaborn-like axis-level interface for `draw_marquee`. Details on
+    marquee annotation structure and configuration can be found in that
+    function's docstring.
+
+     Parameters
     ----------
     data : pd.DataFrame
-        DataFrame containing the data to be plotted.
+        DataFrame containing the data to be marquee-annotated.
     x : str
-        Name of the column in `data` to be used for x-axis values.
+        Column name in `data` for x-coordinate values of data positions.
     y : str
-        Name of the column in `data` to be used for y-axis values.
-    outset : str, optional
-        Name of the categorical column in `data` to produce different-colored
-        annotated subsets.
+        Column name in `data` for y-coordinate values of data positions.
+    hue : str, optional
+        Column name in `data` for grouping data by color.
 
         If provided, colors are chosen according to palette.
-    outset_order : Sequence, optional
-        Order to plot the categorical levels in.
-
-        If None, outsets are assigned based on outset column sorted order.
-    ax : matplotlib.axes.Axes, optional
-        Matplotlib Axes object to draw the plot on. If None, the current axes
-        are used.
-    color :
+    hue_order : Sequence[str], optional
+        Order for plotting the categorical levels of `hue`.
+    outset : str, optional
+        Column name in `data` for producing different-colored annotated subsets.
+    outset_order : Sequence[str], optional
+        Order for plotting the categorical levels of `outset`.
+    ax : mpl_axes.Axes, optional
+        Matplotlib Axes object to draw the plot on.
+    color : str, optional
+        Color for all elements in the plot, overriding the `palette`.
     frame_inner_pad : Union[float, Tuple[float, float]], default 0.1
-        How far from data range should rectangular boundary fall?
-
-        If specified as a float value, horizontal and vertical padding is
-        determined relative to data extent. If specified as a tuple, the first
-        value specifies absolute horizontal padding in axis units and the second
-        specifies absolute vertical padding in axis units.
+        Padding from data range to rectangular boundary.
     frame_outer_pad : Union[float, Tuple[float, float]], default 0.1
-        How far from frame boundary should axis viewport fall?
-
-        If specified as a float value, horizontal and vertical padding is
-        determined relative to axis viewport. If specified as a tuple, the first
-        value specifies absolute horizontal padding in axis units and the second
-        specifies absolute vertical padding in axis units.
+        Padding from frame boundary to axis viewport.
     mark_glyph : Union[Callable, Type, None], optional
-        A callable to draw a glyph at the end of the callout.
-
-        Defaults to a magnifying glass. Outset also provides implementations
-        for arrow, asterisk, and letter/number glyphs. If a type is provided,
-        it will be default initialized prior to being called as a functor. If
-        None is provided, no glyph will be drawn.
+        Callable or type to draw a glyph at the end of the callout.
     palette : Sequence, optional
-        Color palette for plotting.
-
-        If None, the default seaborn color palette is used. Passing `color`
-        kwarg overrides `palette`.
+        Color palette for plotting elements.
+    tight_axlim : bool, default False
+        Whether to shrink axes limits to fit data range.
     **kwargs
-        Additional keyword arguments forward to `draw_marquee`.
+        Additional keyword arguments forwarded to `draw_marquee`.
 
     Returns
     -------
-    Tuple[matplotlib.axes.Axes, List[Tuple[float, float, float, float]]]
-            The matplotlib axes containing the plot.
+    matplotlib.axes.Axes
+        The Matplotlib axes containing the plot with annotated regions.
+
+    See Also
+    --------
+    OutsetGrid
+        Figure-level interface for creating plots with marquee annotations.
     """
     if ax is None:
         ax = plt.gca()

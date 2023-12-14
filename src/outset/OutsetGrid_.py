@@ -22,16 +22,29 @@ class _SentryType:
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):
-    """Facilitates co-display of zoomed-in axis insets transplanted outside the
-     source plot ("outsets"), optionally with or without the original source
-    plot.
+    """Facilitates co-display of zoomed-in axis regions transplanted across a
+    subplot grid.
 
-    Mirrors the API of seaborn's FacetGrid.
+    Corresponding regions in the original ("source") plot and the zoomed-in,
+    "outset" regions are marked with corresponding "marquee" annotations. The
+    OutsetGrid may be configured to include the source plot on the first
+    subplot axis, or to only display outset regions on subplot axes.
+
+    Marquee annotation creation must be dispatched manually through
+    `marqueeplot`, `marqueeplot_outset`, and/or `marqueeplot_source`. This
+    mechanism allows for end-user control over plot sequencing (i.e., layering
+    order) and for adjustment of axis sizing prior to marquee rendering.
+    (Marquee layout dimensions are sensitive to axis rescaling.)
+
+    Inherits from seaborn's FacetGrid, so FacetGrad API components are
+    available, see <https://seaborn.pydata.org/generated/seaborn.FacetGrid.html>.
 
     Attributes
     ----------
     sourceplot_axes : Optional[mpl_axes.Axes]
         The axes object for the source plot, if present.
+    outplot_axes : Sequence[mpl_axes.Axes]
+        The axes objects for the outset plots.
     """
 
     __data: pd.DataFrame
@@ -39,7 +52,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     _marqueeplot_source: typing.Callable
 
     sourceplot_axes: typing.Optional[mpl_axes.Axes]
-    marqueeplot_axes: typing.Sequence[mpl_axes.Axes]
+    outplot_axes: typing.Sequence[mpl_axes.Axes]
 
     def __init__(
         self: "OutsetGrid",
@@ -68,66 +81,66 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     ) -> None:
         """Create an OutsetGrid with specified configuration.
 
+        The arguments `data`, `x`, `y`, `col`, `hue`, and `outset` follow
+        seaborn-like tidy data API convention. Note that the same value may
+        be specified for more than one of `col`, `hue, and `outset`. Marquee
+        annotations are created to contain each subset of x, y values with identical `col`, `hue`, and `outset` values.
+
+        Marquee frame coordinates may also be specified directly as a sequence
+        of four-element tuples `(x0, x1, y0, y1)`. In this case, each frame
+        will get its own hue and outset plot.
+
+        Marquee annotation creation must be dispatched manually after
+        initialization through `marqueeplot`, `marqueeplot_outset`, and/or
+        `marqueeplot_source`.
+
         Parameters
         ----------
-        data : pd.DataFrame
-            The data frame containing the data to be faceted per outplot or a
-            sequence of outest frames specified as (xmin, xmax, ymin, ymax)
-            tuples.
-        x : str, default "x"
-            The name of the column in `data` to be used for the x-axis values.
+        data : pd.DataFrame or Sequence of Tuple[float, float, float, float]
+            A DataFrame containing the data for plotting, or a sequence `(x0,
+            x1, y0, y1)` specifying the bounds of outset frames.
+        x : Optional[str], default None
+            Column name to be used for x-axis values. Not required if data is a sequence of outset frames.
+        y : Optional[str], default None
+            Column name to be used for y-axis values. Not required if data is a sequence of outset frames.
+        col : Union[str, bool, None], default None
+            Column name for categorical variable to facet across subaxes.
 
-            Should not be provided if outset frames are specified directly.
-        y : str, default "y"
-            The name of the column in `data` to be used for the y-axis values.
-
-            Should not be provided if outset frames are specified directly.
-        outset : str, default "outset"
-            Name of the categorical column in `data` to produce
-            different-colored annotated subsets.
-
-            If provided, colors are chosen according to palette. Should not be
-            provided if outset frames are specified directly.
-        outset_order : Sequence, optional
-            Order to plot the categorical levels in.
-
-            If None, outsets are assigned based on outset column sorted order.
-        equalize_aspect : bool, default True
-            If True, adjusts axis limits to enforce equal ylim height to xlim
-            width ration.
+            If None or True, set to match `outset` or `hue` if provided. If False, no faceting is performed.
+        col_order : Optional[Sequence[str]], default None
+            The order to arrange the columns in the grid.
         col_wrap : Optional[int], default None
-            The number of columns to wrap the grid into.
+            Number of columns where axes grid should wrap to a new row.
+        hue : Union[str, bool, None], default None
+            Column name for categorical variable to determine rendered color of
+            data's rendered marquee annotations.
+
+            If None or True, set to match `outset` if provided. If False, no faceting is performed.
+        hue_order : Optional[Sequence[str]], default None
+            The to assign palette colors to `hue` categorical values.
+
+            May contain all or a subset of `data[hue]` values.
+        outset : Optional[str], default None
+            Column name for categorical variable to segregate data between marquee annotations.
+        outset_order : Optional[Sequence[str]], default None
+            Order for plotting the outsets.
+
+            May contain all or a subset of `data[outset]` values.
         color : Optional[str], default None
-            Color for all outset annotations, overrides palette.
-        frame_inner_pad : float, default 0.1
-            Inner padding for the frame.
-
-            Set as zero if outset frames are specified directly.
-        leader_stretch_outplots : float, default 0
-            Scales callout annotation in outplots, default collapsed.
-        mark_glyph : Union[Callable, Type, None], optional
-            A callable to draw a glyph at the end of the callout.
-
-            Defaults to a magnifying glass. Outset also provides implementations
-            for arrow, asterisk, and letter/number glyphs. If a type is
-            provided, it will be default initialized prior to being called as a
-            functor. If None is provided, no glyph will be drawn.
-
-            If a functor with state is provided, it should provide semantic
-            deep copy support.
-        marqueeplot_kwargs : dict, default frozendict.frozendict()
-            Additional keyword arguments for marqueeplot function over outset
-            plots.
+            Color for all outset annotations. Overrides the palette.
+        include_sourceplot : bool, default True
+            Whether to include the original source plot in the grid.
+        marqueeplot_kwargs : Dict, default frozendict()
+            Additional marqueeplot keyword arguments  over all plots.
+        marqueeplot_outset_kwargs : Dict, default frozendict()
+            Additional marqueeplot keyword arguments specific to outset plots.
+        marqueeplot_source_kwargs : Dict, default frozendict()
+            Additional marqueeplot keyword specific to the source plot, if
+            present.
         palette : Optional[Sequence], default None
             Color palette for the outset hue sequence.
-        sourceplot : bool, default True
-            If True, includes the source plot that outset plots are excerpted
-            from as the first axis in the grid.
-        sourceplot_kwargs : dict, default frozendict.frozendict()
-            Additional keyword arguments for marqueeplot function over the
-            source plot.
-        sourceplot_{x,y}lim : Optional[Tuple[float, float]], default None
-            The x and y limits for the source plot.
+        zorder : float, default 0.0
+            The z-order for plotting elements.
         **kwargs : dict
             Additional keyword arguments passed to seaborn's FacetGrid.
         """
@@ -270,11 +283,11 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         )
 
         if include_sourceplot:
-            self.marqueeplot_axes = self.axes.flat[1:]
+            self.outplot_axes = self.axes.flat[1:]
             self.sourceplot_axes = self.axes.flat[0]
         else:
             self.sourceplot_axes = None
-            self.marqueeplot_axes = self.axes.flat[:]
+            self.outplot_axes = self.axes.flat[:]
 
         # draw sourceplot
         #######################################################################
@@ -399,8 +412,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         self._marqueeplot_outset = marqueeplot_outset
 
     def equalize_aspect(self: "OutsetGrid") -> "OutsetGrid":
-        """Adjust axes {x,y}lims to ensure an equal xlim-to-ylim ratio across
-        all axes.
+        """Adjust axes {x,y}lims to ensure an equal xlim-to-ylim ratio across all axes.
 
         Returns
         -------
@@ -418,6 +430,20 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     def marqueeplot(
         self: "OutsetGrid", equalize_aspect: bool = True
     ) -> "OutsetGrid":
+        """Dispatch marquee annotation rendering for all subplots --- outset as
+        well as source, if included.
+
+        Parameters
+        ----------
+        equalize_aspect : bool, optional, default: True
+            If True, adjusts axes limits to enforce equal ylim height to xlim
+            width ratio.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+        """
         self.marqueeplot_source(equalize_aspect=False)
         self.marqueeplot_outset(equalize_aspect=False)
         if equalize_aspect:
@@ -427,9 +453,22 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     def marqueeplot_outset(
         self: "OutsetGrid", equalize_aspect: bool = True
     ) -> "OutsetGrid":
+        """Dispatch marquee annotation rendering for outset plots only
+
+        Parameters
+        ----------
+        equalize_aspect : bool, optional, default: True
+            If True, adjusts axes limits to enforce equal ylim height to xlim
+            width ratio.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+        """
         self._marqueeplot_outset(self)
-        self._marqueeplot_source = lambda self_: warnings.Warn(
-            "redundant call to marqueeplot_outset, marquees were already drawn",
+        self._marqueeplot_source = lambda self_: warnings.warn(
+            "Redundant call to marqueeplot_outset, marquees were already drawn",
         )
         if equalize_aspect:
             self.equalize_aspect()
@@ -438,26 +477,49 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     def marqueeplot_source(
         self: "OutsetGrid", equalize_aspect: bool = True
     ) -> "OutsetGrid":
+        """Dispatch marquee annotation rendering for the source plot only, if
+        included.
+
+        Parameters
+        ----------
+        equalize_aspect : bool, optional, default: True
+            If True, adjusts axes limits to enforce equal ylim height to xlim
+            width ratio.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+        """
         self._marqueeplot_source(self)
-        self._marqueeplot_source = lambda self_: warnings.Warn(
-            "redundant call to marqueeplot_source, marquees were already drawn",
+        self._marqueeplot_source = lambda self_: warnings.warn(
+            "Redundant call to marqueeplot_source, marquees were already drawn",
         )
         if equalize_aspect:
             self.equalize_aspect()
         return self
 
-    def map(self) -> None:
+    def map(self: "OutsetGrid") -> None:
+        """Placeholder, raises NotImplementedError."""
         raise NotImplementedError()
 
-    def map_outset(self) -> None:
+    def map_outset(self: "OutsetGrid") -> None:
+        """Placeholder, raises NotImplementedError."""
         raise NotImplementedError()
 
-    def map_source(self) -> None:
+    def map_source(self: "OutsetGrid") -> None:
+        """Placeholder, raises NotImplementedError."""
         raise NotImplementedError()
 
-    def map_dataframe(self: "OutsetGrid", *args, **kwargs) -> "OutsetGrid":
-        """Map a plotting function over all axes, including the source plot
-        axis (if present).
+    def map_dataframe(
+        self: "OutsetGrid", plotter: typing.Callable, *args, **kwargs
+    ) -> "OutsetGrid":
+        """Map a plotting function over all axes, including source plot axes
+        (if present).
+
+        Uses data stored at initialization, passed as a first `data=` kwarg. To
+        plot other data, use `broadcast`. Complete dataset is used for source
+        axes and faceted subsets are used for each outset axes.
 
         Parameters
         ----------
@@ -473,16 +535,22 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         OutsetGrid
             Returns self.
         """
-        self.map_dataframe_outset(*args, **kwargs)
-        self.map_dataframe_source(*args, **kwargs)
+        self.map_dataframe_outset(plotter, *args, **kwargs)
+        self.map_dataframe_source(plotter, *args, **kwargs)
         return self
 
-    def map_dataframe_outset(self, *args, **kwargs) -> "OutsetGrid":
-        """Map a plotting function over only the outset axes excerpted from
-        the sourceplot.
+    def map_dataframe_outset(
+        self: "OutsetGrid", plotter: typing.Callable, *args, **kwargs
+    ) -> "OutsetGrid":
+        """Map a plotting function over outset axes only.
+
+        Uses data stored at initialization, passed as a first `data=` kwarg and
+        faceted per subplot axes. To plot other data, use `broadcast_outset`.
 
         Parameters
         ----------
+        plotter : Callable
+            The plotting function to be applied to each axis.
         *args : tuple
             Positional arguments passed to the plotting function.
         **kwargs : dict
@@ -494,18 +562,22 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Returns self.
         """
         if "hue" in kwargs and self._hue_var is not None:
-            raise ValueError("Cannot map `hue` if FacetGrid `hue` set.")
+            raise ValueError("Cannot map `hue` if FacetGrid `hue` is set.")
         elif "hue" in kwargs and kwargs.get("hue_order", None) is None:
             assert self.hue_names is None
             kwargs["hue_order"] = sorted(self.__data[kwargs["hue"]].unique())
-        super().map_dataframe(*args, **kwargs)
+        super().map_dataframe(plotter, *args, **kwargs)
         return self
 
     def map_dataframe_source(
         self: "OutsetGrid", plotter: typing.Callable, *args, **kwargs
     ) -> "OutsetGrid":
-        """Map a plotting function over all axes, including the source plot
-        axis (if present).
+        """Map a plotting function over the source plot axes only.
+
+        If source plot axes are not enabled, performs no-op.
+
+        Uses data stored at initialization, passed as a first `data=` kwarg.
+        To plot other data, use `broadcast_source`.
 
         Parameters
         ----------
@@ -522,14 +594,14 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Returns self.
         """
         if self._hue_var is not None and "hue" in kwargs:
-            raise ValueError("Cannot map `hue` if FacetGrid `hue` set.")
+            raise ValueError("Cannot map `hue` if FacetGrid `hue` is set.")
         if "hue_order" in kwargs and not (
             "hue" in kwargs or self._hue_var is not None
         ):
-            raise ValueError("Cannot map `hue_order` if `hue` unset.")
+            raise ValueError("Cannot map `hue_order` if `hue` is unset.")
         elif "hue_order" in kwargs and self.hue_names is None:
             raise ValueError(
-                "Cannot map `hue_order` if FacetGrid `hue_order` set.",
+                "Cannot map `hue_order` if FacetGrid `hue_order` is set.",
             )
 
         hue = opyt.or_value(self._hue_var, kwargs.pop("hue", None))
@@ -549,7 +621,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         **kwargs,
     ) -> "OutsetGrid":
         """Map a plotting function over all axes, including the source plot
-        axis (if present), but with the same data and arguments for all.
+        axis (if present).
+
+        Performs call with same data and arguments for all axes. To use faceted
+        data stored at initialization, refer to `map_dataframe`.
 
         Parameters
         ----------
@@ -570,7 +645,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         Does not use data stored from initialization. Data should be provided
         via argument to this method.
 
-        Preserves axis limits for all axes except the sourceplot, if present.
+        Preserves axis limits for all axes except the source plot, if present.
         """
         self.broadcast_outset(plotter, *args, **kwargs)
         self.broadcast_source(plotter, *args, **kwargs)
@@ -582,7 +657,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         *args,
         **kwargs,
     ) -> "OutsetGrid":
-        """Map a plotting function over the sourceplot axes, if present.
+        """Map a plotting function over only outset axes.
+
+        Performs call with same data and arguments for all axes. To use faceted
+        data stored at initialization, refer to `map_dataframe`.
 
         Parameters
         ----------
@@ -605,8 +683,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Preserves axis limits.
         """
-        for ax in self.marqueeplot_axes:
-            # store and restore axis limits, except for sourceplot if present
+        for ax in self.outplot_axes:
+            # store and restore axis limits, except for source plot if present
             xlim, ylim = ax.get_xlim(), ax.get_ylim()
             try:
                 plotter(*args, ax=ax, **kwargs)
@@ -623,8 +701,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         *args,
         **kwargs,
     ) -> "OutsetGrid":
-        """Map a plotting function over all axes, including the source plot
-        axis (if present), but with the same data and arguments for all.
+        """Map a plotting function over source plot axes, if present.
+
+        Performs call with same data and arguments for all axes. To use faceted
+        data stored at initialization, refer to `map_dataframe`.
 
         Parameters
         ----------

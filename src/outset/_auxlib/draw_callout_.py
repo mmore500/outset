@@ -32,6 +32,11 @@ def draw_callout(
     """Annotate a rectangular region with a flyaway "zoom" indication upwards
     and to the right.
 
+    Consists of (1) a callout leader and (2) a marked glyph. The leader is a
+    gradient fill clipped to angle to a point up and to to the right of the
+    framed region. The marked glyph (e.g., a numeral, an asterisk, etc.) is
+    drawn at the vertex point of the leader.
+
     Parameters
     ----------
     frame_xlim : Tuple[float, float]
@@ -39,21 +44,22 @@ def draw_callout(
     frame_ylim : Tuple[float, float]
         The y-limits (ymin, ymax) of the rectangular region to be annotated.
     ax : matplotlib.axes.Axes, optional
-        The axes object on which to draw the callout.
-
-        Defaults to `plt.gca()`.
+        The axes object on which to draw the callout. Defaults to `plt.gca()`.
     color : str, default "black"
         Color for the callout leader and glyph.
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding box.
-    mark_glyph : Optional[Callable], optional
-        A callable to draw a glyph at the outer vertex of the callout leader.
-
-        if None, no glyph is drawn.
-    mark_retract : float, default 0.1
-        Fraction to pull back glyph from outer vertex of the callout.
+    leader_edge_kwargs : Dict, default {}
+        Keyword arguments for customizing the leader's edge.
+    leader_face_kwargs : Dict, default {}
+        Keyword arguments for customizing the leader's face.
     leader_stretch : float, default 0.1
         Scale of callout leader relative to axis viewport.
+    mark_glyph : Optional[Callable], optional
+        A callable to draw a glyph at the outer vertex of the callout leader.
+        If None, no glyph is drawn.
+    mark_retract : float, default 0.1
+        Fraction to pull back glyph from the outer vertex of the callout.
     zorder : float, default 0
         Influences layer order of plot, with higher values in front.
     **kwargs
