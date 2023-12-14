@@ -43,7 +43,7 @@ test = [
     "flake8-formatter_junit_xml",
     "flake8",
     "flake8-pyproject",
-    "keras==2.15.0",
+    "keras==3.0.1",
     "pre-commit==3.5.0",
     "pylint==3.0.2",
     "pylint_junit",
