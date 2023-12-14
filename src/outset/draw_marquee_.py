@@ -14,7 +14,7 @@ from ._auxlib.is_axes_unset_ import is_axes_unset
 from .mark_magnifying_glass_ import mark_magnifying_glass
 
 
-def draw_outset(
+def draw_marquee(
     frame_xlim: typing.Tuple[float, float],
     frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
@@ -22,19 +22,19 @@ def draw_outset(
     color: typing.Optional[str] = "blue",
     clip_on: bool = False,
     despine: bool = True,
-    frame_facealpha: float = 0.1,
-    frame_linewidth: float = 1,
+    frame_edge_kwargs: typing.Dict = frozendict.frozendict(),
+    frame_face_kwargs: typing.Dict = frozendict.frozendict(),
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     label: typing.Optional[str] = None,
-    leader_linestyle: str = ":",
-    leader_linewidth: int = 2,
+    leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
+    leader_face_kwargs: typing.Dict = frozendict.frozendict(),
     leader_stretch: float = 0.1,
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
     zorder: float = 0,
-) -> typing.Tuple[mpl_axes.Axes, typing.Tuple[float, float, float, float]]:
+) -> mpl_axes.Axes:
     """Mark a rectangular region as outset, framing it and adding a
     "zoom"-effect callout up and to the right.
 
@@ -60,8 +60,9 @@ def draw_outset(
         box.
     despine : bool, default True
         Remove the top and right spines from the plots.
-    frame_facealpha : float, default 0.1
-        Alpha value for the frame's fill color, controlling its transparency.
+    frame_edge_kwargs : Dict, default {}
+    frame_face_kwargs : Dict, default {}
+
     frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
         How far from data range should rectangular boundary fall?
 
@@ -160,9 +161,10 @@ def draw_outset(
         frame_ylim,
         ax=ax,
         clip_on=clip_on,
+        frame_edge_kwargs=frame_edge_kwargs,
+        frame_face_kwargs=frame_face_kwargs,
         edgecolor=color,
-        facecolor=(color, frame_facealpha),
-        linewidth=frame_linewidth,
+        facecolor=color,
         zorder=zorder,
     )
 
@@ -174,8 +176,8 @@ def draw_outset(
         ax,
         color=color,
         clip_on=clip_on,
-        linewidth=leader_linewidth,
-        linestyle=leader_linestyle,
+        leader_edge_kwargs=leader_edge_kwargs,
+        leader_face_kwargs=leader_face_kwargs,
         mark_glyph=mark_glyph,
         mark_glyph_kwargs=mark_glyph_kwargs,
         mark_retract=mark_retract,
@@ -191,4 +193,4 @@ def draw_outset(
     if label is not None:
         ax.legend(handles=[mpl_patches.Patch(color=color, label=label)])
 
-    return ax, (*frame_xlim, *frame_ylim)  # unpacks into tuple ctor
+    return ax

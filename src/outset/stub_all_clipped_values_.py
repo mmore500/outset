@@ -89,7 +89,7 @@ def stub_all_clipped_values(
                         x0, x1 = x_offset - sep / 2, x_offset + sep / 2
                     if y0 > y_thresh:
                         sep = y1 - y0
-                        x0, y1 = y_offset - sep / 2, y_offset + sep / 2
+                        y0, y1 = y_offset - sep / 2, y_offset + sep / 2
                     new_segment = [(x0, y0), (x1, y1)]
                     new_segments.append(new_segment)
 

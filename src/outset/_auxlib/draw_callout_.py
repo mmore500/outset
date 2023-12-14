@@ -1,3 +1,4 @@
+import itertools as it
 import typing
 
 import frozendict
@@ -17,12 +18,14 @@ def draw_callout(
     frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
     *,
-    color: str = "blue",
+    color: str = "black",
     clip_on: bool = False,
+    leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
+    leader_face_kwargs: typing.Dict = frozendict.frozendict(),
+    leader_stretch: float = 0.1,
     mark_glyph: typing.Optional[typing.Callable] = None,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
-    leader_stretch: float = 0.1,
     zorder: float = 0,
     **kwargs,
 ) -> mpl_axes.Axes:
@@ -39,7 +42,7 @@ def draw_callout(
         The axes object on which to draw the callout.
 
         Defaults to `plt.gca()`.
-    color : str, default "blue"
+    color : str, default "black"
         Color for the callout leader and glyph.
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding box.
@@ -75,28 +78,56 @@ def draw_callout(
     )
 
     # ... outline
+    underlay_patch = mpl_patches.Polygon(  # underlay
+        leader_vertices,  # w/ upper right corner
+        **{
+            "closed": True,
+            "clip_on": clip_on,
+            "linewidth": 2,
+            "zorder": zorder,
+            **kwargs,
+            **leader_edge_kwargs,
+            "edgecolor": "white",
+            "facecolor": "none",
+            "linestyle": "-",
+        },
+    )
+    ax.add_patch(underlay_patch)
     leader_patch = mpl_patches.Polygon(
         leader_vertices,  # w/ upper right corner
-        closed=True,
-        facecolor="none",
-        edgecolor=color,
-        zorder=zorder,
-        clip_on=clip_on,
-        **kwargs,
+        **{
+            "closed": True,
+            "clip_on": clip_on,
+            "linewidth": 2,
+            "zorder": zorder,
+            **kwargs,
+            "edgecolor": color,
+            "facecolor": "none",
+            "linestyle": ":",
+            **leader_edge_kwargs,
+        },
     )
     ax.add_patch(leader_patch)
 
     # ... gradient fill, clipped insideleader_polygon
     img = ax.imshow(
         make_radial_gradient(),
-        aspect="auto",
-        cmap=mpl_colors.LinearSegmentedColormap.from_list(
-            "gradient",
-            ["white", color],
-        ),
-        extent=get_vertices_extent(leader_vertices),
-        interpolation="nearest",
-        zorder=zorder,
+        **{
+            "alpha": 0.1,
+            "aspect": "auto",
+            "cmap": mpl_colors.LinearSegmentedColormap.from_list(
+                "gradient",
+                ["white", color],
+            ),
+            "extent": get_vertices_extent(leader_vertices),
+            "interpolation": "nearest",
+            "zorder": zorder,
+            **{
+                k: v
+                for k, v in it.chain(kwargs.items(), leader_face_kwargs.items())
+                if k not in ("linestyle",)
+            },
+        },
     )
     if not clip_on:
         img.set_clip_box(ax.bbox.shrunk(10, 10))  # grow axis clipping box

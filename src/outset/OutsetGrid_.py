@@ -1,19 +1,19 @@
 import copy
 import typing
+import warnings
 
 import frozendict
 from matplotlib import axes as mpl_axes
 from matplotlib import pyplot as plt
-import numpy as np
+import opytional as opyt
 import pandas as pd
 import seaborn as sns
 
 from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
-from ._calc_outset_frames import calc_outset_frames
 from .MarkNumericalBadges_ import MarkNumericalBadges
-from .outsetplot_ import outsetplot
+from .marqueeplot_ import marqueeplot
 
 
 class _SentryType:
@@ -35,7 +35,11 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     """
 
     __data: pd.DataFrame
+    _marqueeplot_outset: typing.Callable
+    _marqueeplot_source: typing.Callable
+
     sourceplot_axes: typing.Optional[mpl_axes.Axes]
+    marqueeplot_axes: typing.Sequence[mpl_axes.Axes]
 
     def __init__(
         self: "OutsetGrid",
@@ -44,25 +48,22 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             typing.Sequence[typing.Tuple[float, float, float, float]],
         ],
         *,
-        x: str = "x",
-        y: str = "y",
-        outset: str = "outset",
-        outset_order: typing.Optional[typing.Sequence[str]] = None,
-        equalize_aspect: bool = True,
+        x: typing.Optional[str] = None,
+        y: typing.Optional[str] = None,
+        col: typing.Union[str, bool, None] = None,
+        col_order: typing.Optional[typing.Sequence[str]] = None,
         col_wrap: typing.Optional[int] = None,
+        hue: typing.Union[str, bool, None] = None,
+        hue_order: typing.Optional[typing.Sequence[str]] = None,
+        outset: typing.Optional[str] = None,
+        outset_order: typing.Optional[typing.Sequence[str]] = None,
         color: typing.Optional[str] = None,  # pass to override outset hues
-        frame_inner_pad: float = 0.1,
-        frame_outer_pad: float = 0.1,
-        leader_stretch_outplots: float = 0,
-        mark_glyph: typing.Union[
-            typing.Callable, typing.Type, None
-        ] = MarkNumericalBadges,
-        outsetplot_kwargs: typing.Dict = frozendict.frozendict(),
+        include_sourceplot: bool = True,
+        marqueeplot_kwargs: typing.Dict = frozendict.frozendict(),
+        marqueeplot_outset_kwargs: typing.Dict = frozendict.frozendict(),
+        marqueeplot_source_kwargs: typing.Dict = frozendict.frozendict(),
         palette: typing.Optional[typing.Sequence] = None,
-        sourceplot: bool = True,
-        sourceplot_kwargs: typing.Dict = frozendict.frozendict(),
-        sourceplot_xlim: typing.Optional[typing.Tuple[float, float]] = None,
-        sourceplot_ylim: typing.Optional[typing.Tuple[float, float]] = None,
+        zorder: float = 0.0,
         **kwargs,
     ) -> None:
         """Create an OutsetGrid with specified configuration.
@@ -102,8 +103,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Inner padding for the frame.
 
             Set as zero if outset frames are specified directly.
-        frame_outer_pad : float, default 0.1
-            Outer padding for the frame.
         leader_stretch_outplots : float, default 0
             Scales callout annotation in outplots, default collapsed.
         mark_glyph : Union[Callable, Type, None], optional
@@ -116,8 +115,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
             If a functor with state is provided, it should provide semantic
             deep copy support.
-        outsetplot_kwargs : dict, default frozendict.frozendict()
-            Additional keyword arguments for outsetplot function over outset
+        marqueeplot_kwargs : dict, default frozendict.frozendict()
+            Additional keyword arguments for marqueeplot function over outset
             plots.
         palette : Optional[Sequence], default None
             Color palette for the outset hue sequence.
@@ -125,7 +124,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             If True, includes the source plot that outset plots are excerpted
             from as the first axis in the grid.
         sourceplot_kwargs : dict, default frozendict.frozendict()
-            Additional keyword arguments for outsetplot function over the
+            Additional keyword arguments for marqueeplot function over the
             source plot.
         sourceplot_{x,y}lim : Optional[Tuple[float, float]], default None
             The x and y limits for the source plot.
@@ -133,21 +132,69 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Additional keyword arguments passed to seaborn's FacetGrid.
         """
 
-        if isinstance(mark_glyph, type):
-            mark_glyph = mark_glyph()
+        if col is None and col_order is not None:
+            raise ValueError("col_order must be None if col not specified")
+        if hue is None and hue_order is not None:
+            raise ValueError("hue_order must be None if hue not specified")
+        if outset is None and outset_order is not None:
+            raise ValueError(
+                "outset_order must be None if outset not specified"
+            )
+
+        for a in "frame_inner_pad", "frame_outer_pad":
+            if a in marqueeplot_outset_kwargs or a in marqueeplot_source_kwargs:
+                warnings.Warn(
+                    f"Specifying {a} for only outset or source may cause "
+                    "discrepancies in frame placement",
+                )
+
+        frame_inner_pad, frame_outer_pad = 0.2, 0.1
 
         # spoof data frame if outset frames are specified directly
-        if not isinstance(data, pd.DataFrame):
-            if x != "x" or y != "y" or outset != "outset":
+        if isinstance(data, pd.DataFrame):
+            if x is None or y is None:
                 raise ValueError(
-                    "x, y, and outset must be 'x', 'y', and 'outset' if outest "
-                    "frames are specified directly",
+                    "x and y kwargs must be provided from column names in data",
                 )
-            if outset_order is not None:
+            if col is None:
+                col = outset or hue
+                if (
+                    col_order is None
+                    and outset is not None
+                    and outset_order is not None
+                ):
+                    col_order = outset_order
+                elif (
+                    col_order is None
+                    and outset is None
+                    and hue is not None
+                    and hue_order is not None
+                ):
+                    col_order = hue_order
+
+        else:
+            if x is not None or y is not None or outset is not None:
                 raise ValueError(
-                    "outset_order should not be provided if outset frames are "
+                    "x, y, and outset must not be specified if outset frames "
+                    "are specified directly",
+                )
+            if hue not in (None, True, False):
+                raise ValueError(
+                    "hue must be None or boolean if outset frames are "
                     "specified directly",
                 )
+            if col not in (None, True, False):
+                raise ValueError(
+                    "col must be None or boolean if outset frames are "
+                    "specified directly",
+                )
+
+            if hue is None:
+                hue = True
+            if col is None:
+                col = True
+
+            x, y, outset = "x", "y", "outset"
             data = pd.DataFrame.from_records(
                 [
                     {
@@ -161,25 +208,58 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             )
             frame_inner_pad = 0
 
+        if not x in data.columns:
+            raise ValueError(f"kwarg x={x} must be provided as column in data")
+        if not y in data.columns:
+            raise ValueError(f"kwarg x={y} must be provided as column in data")
+        if outset is not None and not outset in data.columns:
+            raise ValueError("if provided, outset must be a column in data")
+
+        if col is True:
+            if outset is None:
+                raise ValueError("outset must be provided if col is True")
+            col = outset
+        elif col is False:
+            col = None
+        if hue is True:
+            if outset is None:
+                raise ValueError("outset must be provided if hue is True")
+            hue = outset
+        elif hue is False:
+            hue = None
+
+        if col is not None and not col in data.columns:
+            raise ValueError("if provided, col must be a column in data")
+
+        if hue is not None and not hue in data.columns:
+            raise ValueError("if provided, hue must be a column in data")
+
         self.__data = data
 
-        assert "_outset" not in data.columns
-        if outset_order is None:
+        if outset is not None and outset_order is None:
             outset_order = sorted(data[outset].unique())
-        # adapted from https://stackoverflow.com/a/39275799
 
-        col_order = [*outset_order]
-        if sourceplot:
+        if col is None:
+            assert "_dummy_col" not in data.columns
+            col = "_dummy_col"
+            data[col] = 0
+
+        if col_order is None:
+            col_order = sorted(data[col].unique())
+
+        if include_sourceplot:
             # SentryType entry ensures no outset data maps to sourceplot
             col_order = [_SentryType()] + col_order
 
+        # initialize axes
+        #######################################################################
         super().__init__(  # initialize parent FacetGrid
             data,
-            col=outset,
+            col=col,
             col_order=col_order,
             col_wrap=col_wrap,
-            hue=outset if color is None else None,
-            hue_order=outset_order if color is None else None,
+            hue=hue,
+            hue_order=hue_order,
             palette=palette,
             **{
                 "legend_out": False,
@@ -189,61 +269,134 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             },
         )
 
-        # direct pads to ensure consistency between sourceplot and outsetplot
-        absolute_pads = (
-            np.ptp(data[x] * frame_inner_pad),
-            np.ptp(data[y] * frame_inner_pad),
-        )
+        if include_sourceplot:
+            self.marqueeplot_axes = self.axes.flat[1:]
+            self.sourceplot_axes = self.axes.flat[0]
+        else:
+            self.sourceplot_axes = None
+            self.marqueeplot_axes = self.axes.flat[:]
 
         # draw sourceplot
         #######################################################################
-        if sourceplot:
-            self.sourceplot_axes = self.axes.flat[0]
-            if sourceplot_xlim is not None:
-                self.sourceplot_axes.set_xlim(*sourceplot_xlim)
-            if sourceplot_ylim is not None:
-                self.sourceplot_axes.set_ylim(*sourceplot_ylim)
-            outsetplot(
+        def marqueeplot_source(self_: "OutsetGrid") -> None:
+            if self_.sourceplot_axes is None:
+                return
+            marqueeplot(
                 data,
+                x=x,
+                y=y,
+                hue=hue,
+                hue_order=hue_order,
+                outset=outset,
+                outset_order=outset_order,
+                ax=self_.sourceplot_axes,
+                **{
+                    "color": color,
+                    "palette": palette,
+                    "frame_inner_pad": frame_inner_pad,
+                    "frame_outer_pad": frame_outer_pad,
+                    "mark_glyph": MarkNumericalBadges,
+                    "tight_axlim": False,
+                    "zorder": zorder,
+                    **copy.deepcopy(marqueeplot_kwargs),  # for mark_glyph
+                    **marqueeplot_source_kwargs,
+                    "frame_edge_kwargs": {
+                        **marqueeplot_kwargs.get("frame_edge_kwargs", {}),
+                        **marqueeplot_source_kwargs.get(
+                            "frame_edge_kwargs", {}
+                        ),
+                    },
+                    "frame_face_kwargs": {
+                        **marqueeplot_kwargs.get("frame_face_kwargs", {}),
+                        **marqueeplot_source_kwargs.get(
+                            "frame_face_kwargs", {}
+                        ),
+                    },
+                    "leader_edge_kwargs": {
+                        **marqueeplot_kwargs.get("leader_edge_kwargs", {}),
+                        **marqueeplot_source_kwargs.get(
+                            "leader_edge_kwargs", {}
+                        ),
+                    },
+                    "leader_face_kwargs": {
+                        **marqueeplot_kwargs.get("leader_face_kwargs", {}),
+                        **marqueeplot_source_kwargs.get(
+                            "leader_face_kwargs", {}
+                        ),
+                    },
+                    "mark_glyph_kwargs": {
+                        "markersize": 16,
+                        **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
+                        **marqueeplot_source_kwargs.get(
+                            "mark_glyph_kwargs", {}
+                        ),
+                    },
+                },
+            )
+            self_.sourceplot_axes.set_title("")
+
+        self._marqueeplot_source = marqueeplot_source
+
+        # draw outplots
+        #######################################################################
+        def marqueeplot_outset(self_: "OutsetGrid") -> None:
+            # setup
+            for d in marqueeplot_kwargs, marqueeplot_outset_kwargs:
+                for k, v in d.items():
+                    if k == "mark_glyph" and isinstance(v, type):
+                        d[k] = v()
+
+            self_.map_dataframe_outset(
+                marqueeplot,
                 x=x,
                 y=y,
                 outset=outset,
                 outset_order=outset_order,
-                ax=self.sourceplot_axes,
-                frame_inner_pad=absolute_pads,
-                frame_outer_pad=frame_outer_pad,
-                mark_glyph=copy.deepcopy(mark_glyph),
                 **{
                     "color": color,
                     "palette": palette,
-                    **sourceplot_kwargs,
+                    "frame_inner_pad": frame_inner_pad,
+                    "frame_outer_pad": frame_outer_pad,
+                    "leader_stretch": 0.0,
+                    "mark_glyph": MarkNumericalBadges(),
+                    "tight_axlim": True,
+                    "zorder": zorder,
+                    **marqueeplot_kwargs,
+                    **marqueeplot_outset_kwargs,
+                    "frame_edge_kwargs": {
+                        **marqueeplot_kwargs.get("frame_edge_kwargs", {}),
+                        **marqueeplot_outset_kwargs.get(
+                            "frame_edge_kwargs", {}
+                        ),
+                    },
+                    "frame_face_kwargs": {
+                        **marqueeplot_kwargs.get("frame_face_kwargs", {}),
+                        **marqueeplot_outset_kwargs.get(
+                            "frame_face_kwargs", {}
+                        ),
+                    },
+                    "leader_edge_kwargs": {
+                        **marqueeplot_kwargs.get("leader_edge_kwargs", {}),
+                        **marqueeplot_outset_kwargs.get(
+                            "leader_edge_kwargs", {}
+                        ),
+                    },
+                    "leader_face_kwargs": {
+                        **marqueeplot_kwargs.get("leader_face_kwargs", {}),
+                        **marqueeplot_outset_kwargs.get(
+                            "leader_face_kwargs", {}
+                        ),
+                    },
+                    "mark_glyph_kwargs": {
+                        **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
+                        **marqueeplot_outset_kwargs.get(
+                            "mark_glyph_kwargs", {}
+                        ),
+                    },
                 },
             )
-            self.sourceplot_axes.set_title(None)
-        else:
-            self.sourceplot_axes = None
 
-        # draw outplots
-        #######################################################################
-        self.map_dataframe(
-            outsetplot,
-            x=x,
-            y=y,
-            frame_inner_pad=absolute_pads,
-            frame_outer_pad=frame_outer_pad,
-            mark_glyph=mark_glyph,
-            **{
-                "color": color,
-                "leader_stretch": leader_stretch_outplots,
-                "palette": palette,
-                **outsetplot_kwargs,
-            },
-        )
-
-        # finalize
-        #######################################################################
-        if equalize_aspect:
-            self.equalize_aspect()
+        self._marqueeplot_outset = marqueeplot_outset
 
     def equalize_aspect(self: "OutsetGrid") -> "OutsetGrid":
         """Adjust axes {x,y}lims to ensure an equal xlim-to-ylim ratio across
@@ -262,7 +415,69 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             equalize_aspect(self.axes.flat)
         return self
 
-    def map_dataframe(self, *args, **kwargs) -> "OutsetGrid":
+    def marqueeplot(
+        self: "OutsetGrid", equalize_aspect: bool = True
+    ) -> "OutsetGrid":
+        self.marqueeplot_source(equalize_aspect=False)
+        self.marqueeplot_outset(equalize_aspect=False)
+        if equalize_aspect:
+            self.equalize_aspect()
+        return self
+
+    def marqueeplot_outset(
+        self: "OutsetGrid", equalize_aspect: bool = True
+    ) -> "OutsetGrid":
+        self._marqueeplot_outset(self)
+        self._marqueeplot_source = lambda self_: warnings.Warn(
+            "redundant call to marqueeplot_outset, marquees were already drawn",
+        )
+        if equalize_aspect:
+            self.equalize_aspect()
+        return self
+
+    def marqueeplot_source(
+        self: "OutsetGrid", equalize_aspect: bool = True
+    ) -> "OutsetGrid":
+        self._marqueeplot_source(self)
+        self._marqueeplot_source = lambda self_: warnings.Warn(
+            "redundant call to marqueeplot_source, marquees were already drawn",
+        )
+        if equalize_aspect:
+            self.equalize_aspect()
+        return self
+
+    def map(self) -> None:
+        raise NotImplementedError()
+
+    def map_outset(self) -> None:
+        raise NotImplementedError()
+
+    def map_source(self) -> None:
+        raise NotImplementedError()
+
+    def map_dataframe(self: "OutsetGrid", *args, **kwargs) -> "OutsetGrid":
+        """Map a plotting function over all axes, including the source plot
+        axis (if present).
+
+        Parameters
+        ----------
+        plotter : Callable
+            The plotting function to be applied to each axis.
+        *args : tuple
+            Positional arguments passed to the plotting function.
+        **kwargs : dict
+            Keyword arguments passed to the plotting function.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+        """
+        self.map_dataframe_outset(*args, **kwargs)
+        self.map_dataframe_source(*args, **kwargs)
+        return self
+
+    def map_dataframe_outset(self, *args, **kwargs) -> "OutsetGrid":
         """Map a plotting function over only the outset axes excerpted from
         the sourceplot.
 
@@ -278,11 +493,15 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         OutsetGrid
             Returns self.
         """
-        # explicitly include instead of inheriting in order to document
+        if "hue" in kwargs and self._hue_var is not None:
+            raise ValueError("Cannot map `hue` if FacetGrid `hue` set.")
+        elif "hue" in kwargs and kwargs.get("hue_order", None) is None:
+            assert self.hue_names is None
+            kwargs["hue_order"] = sorted(self.__data[kwargs["hue"]].unique())
         super().map_dataframe(*args, **kwargs)
         return self
 
-    def map_dataframe_all(
+    def map_dataframe_source(
         self: "OutsetGrid", plotter: typing.Callable, *args, **kwargs
     ) -> "OutsetGrid":
         """Map a plotting function over all axes, including the source plot
@@ -302,9 +521,24 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         OutsetGrid
             Returns self.
         """
-        self.map_dataframe(plotter, *args, **kwargs)
+        if self._hue_var is not None and "hue" in kwargs:
+            raise ValueError("Cannot map `hue` if FacetGrid `hue` set.")
+        if "hue_order" in kwargs and not (
+            "hue" in kwargs or self._hue_var is not None
+        ):
+            raise ValueError("Cannot map `hue_order` if `hue` unset.")
+        elif "hue_order" in kwargs and self.hue_names is None:
+            raise ValueError(
+                "Cannot map `hue_order` if FacetGrid `hue_order` set.",
+            )
+
+        hue = opyt.or_value(self._hue_var, kwargs.pop("hue", None))
+        hue_order = opyt.or_value(self.hue_names, kwargs.pop("hue_order", None))
+        if hue is not None:
+            kwargs["hue"] = hue
+        if hue_order is not None:
+            kwargs["hue_order"] = hue_order
         if self.sourceplot_axes is not None:
-            kwargs.pop("_outset_preserve_axlim", None)
             plotter(self.__data, *args, ax=self.sourceplot_axes, **kwargs)
         return self
 
@@ -333,19 +567,91 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Notes
         -----
-        Does not use data stored from initialization. Data should be provided via argument to this method.
+        Does not use data stored from initialization. Data should be provided
+        via argument to this method.
 
         Preserves axis limits for all axes except the sourceplot, if present.
         """
-        for i, ax in enumerate(self.axes.flat):
+        self.broadcast_outset(plotter, *args, **kwargs)
+        self.broadcast_source(plotter, *args, **kwargs)
+        return self
+
+    def broadcast_outset(
+        self: "OutsetGrid",
+        plotter: typing.Callable,
+        *args,
+        **kwargs,
+    ) -> "OutsetGrid":
+        """Map a plotting function over the sourceplot axes, if present.
+
+        Parameters
+        ----------
+        plotter : Callable
+            The plotting function to be applied to each axis.
+        *args : tuple
+            Positional arguments passed to the plotting function.
+        **kwargs : dict
+            Keyword arguments passed to the plotting function.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+
+        Notes
+        -----
+        Does not use data stored from initialization. Data should be provided
+        via argument to this method.
+
+        Preserves axis limits.
+        """
+        for ax in self.marqueeplot_axes:
             # store and restore axis limits, except for sourceplot if present
             xlim, ylim = ax.get_xlim(), ax.get_ylim()
             try:
                 plotter(*args, ax=ax, **kwargs)
-            except TypeError:
+            except (TypeError, AttributeError):
                 plt.sca(ax)
                 plotter(*args, **kwargs)
-            if i or self.sourceplot_axes is None:
-                ax.set_xlim(*xlim)
-                ax.set_ylim(*ylim)
+            ax.set_xlim(*xlim)
+            ax.set_ylim(*ylim)
+        return self
+
+    def broadcast_source(
+        self: "OutsetGrid",
+        plotter: typing.Callable,
+        *args,
+        **kwargs,
+    ) -> "OutsetGrid":
+        """Map a plotting function over all axes, including the source plot
+        axis (if present), but with the same data and arguments for all.
+
+        Parameters
+        ----------
+        plotter : Callable
+            The plotting function to be applied to each axis.
+        *args : tuple
+            Positional arguments passed to the plotting function.
+        **kwargs : dict
+            Keyword arguments passed to the plotting function.
+
+        Returns
+        -------
+        OutsetGrid
+            Returns self.
+
+        Notes
+        -----
+        Does not use data stored from initialization. Data should be provided
+        via argument to this method.
+
+        Doesn't preserve axis limits.
+        """
+        if self.sourceplot_axes is not None:
+            ax = self.sourceplot_axes
+            try:
+                plotter(*args, ax=ax, **kwargs)
+            except (TypeError, AttributeError):
+                plt.sca(ax)
+                plotter(*args, **kwargs)
         return self

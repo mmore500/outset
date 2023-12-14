@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.testing import decorators as mpl_testing_decorators
 
-from outset import draw_outset, mark_magnifying_glass, outsetplot
+from outset import draw_marquee, mark_magnifying_glass, marqueeplot
 
 # Sample data for testing
 data = pd.DataFrame(
@@ -12,16 +12,18 @@ data = pd.DataFrame(
 
 
 @mpl_testing_decorators.check_figures_equal()
-def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
-    # Using outsetplot
+def test_marqueeplot_vs_draw_marquee(fig_test: plt.Figure, fig_ref: plt.Figure):
+    # Using marqueeplot
     ax_test = fig_test.subplots()
-    outsetplot(data, x="x", y="y", ax=ax_test, mark_glyph=mark_magnifying_glass)
+    marqueeplot(
+        data, x="x", y="y", ax=ax_test, mark_glyph=mark_magnifying_glass
+    )
 
-    # Expected output using draw_outset
+    # Expected output using draw_marquee
     ax_ref = fig_ref.subplots()
     ax_ref.set_xlim(*ax_test.get_xlim())
     ax_ref.set_ylim(*ax_test.get_ylim())
-    draw_outset(
+    draw_marquee(
         (1, 4),
         (1, 3),
         ax=ax_ref,
@@ -32,30 +34,31 @@ def test_outsetplot_vs_draw_outset(fig_test: plt.Figure, fig_ref: plt.Figure):
 
 
 @mpl_testing_decorators.check_figures_equal()
-def test_outsetplot_vs_draw_outset_split(
+def test_marqueeplot_vs_draw_marquee_split(
     fig_test: plt.Figure, fig_ref: plt.Figure
 ):
     palette = ["green", "red"]
-    # Using outsetplot
+    # Using marqueeplot
     ax_test = fig_test.subplots()
-    outsetplot(
+    marqueeplot(
         data,
         x="x",
         y="y",
         mark_glyph=mark_magnifying_glass,
         outset="outset",
         outset_order=["A", "B"],
+        hue="outset",
         ax=ax_test,
         frame_inner_pad=0.0,
         frame_outer_pad=0.0,
         palette=palette,
     )
 
-    # Expected output using draw_outset
+    # Expected output using draw_marquee
     ax_ref = fig_ref.subplots()
     ax_ref.set_xlim(*ax_test.get_xlim())
     ax_ref.set_ylim(*ax_test.get_ylim())
-    draw_outset(
+    draw_marquee(
         (1, 3),
         (1, 2),
         ax=ax_ref,
@@ -63,7 +66,7 @@ def test_outsetplot_vs_draw_outset_split(
         frame_inner_pad=0.0,
         frame_outer_pad=0.0,
     )
-    draw_outset(
+    draw_marquee(
         (2, 4),
         (1, 3),
         ax=ax_ref,
@@ -75,23 +78,23 @@ def test_outsetplot_vs_draw_outset_split(
     ax_ref.set_ylim(*ax_test.get_ylim())
 
 
-def test_outsetplot_one():
+def test_marqueeplot_one():
     plt.clf()
     # Create a sample dataframe
     data = pd.DataFrame({"x": [0.5], "y": [1]})
     sns.scatterplot(data=data, x="x", y="y")
-    outsetplot(
+    marqueeplot(
         data=data,
         x="x",
         y="y",
         frame_inner_pad=0.2,
     )
-    outpath = "/tmp/test_outsetplot_one.png"
+    outpath = "/tmp/test_marqueeplot_one.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
 
 
-def test_outsetplot_several():
+def test_marqueeplot_several():
     plt.clf()
     _fig, ax = plt.subplots(figsize=(6, 4))
     ax.set_xlim(0, 4)
@@ -113,10 +116,10 @@ def test_outsetplot_several():
     )
 
     sns.scatterplot(data=data, x="x", y="y", hue="outset", ax=ax)
-    outsetplot(
+    marqueeplot(
         data=data, x="x", y="y", outset="outset", ax=ax, leader_stretch=0.0
     )
 
-    outpath = "/tmp/test_outsetplot_several.png"
+    outpath = "/tmp/test_marqueeplot_several.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")

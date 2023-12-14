@@ -4,29 +4,34 @@ import typing
 
 import matplotlib.pyplot as plt
 import numpy as np
+import opytional as opyt
 import pandas as pd
 import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
 
 from ._auxlib.is_axes_unset_ import is_axes_unset
-from .draw_outset_ import draw_outset
+from .draw_marquee_ import draw_marquee
 from .MarkNumericalBadges_ import MarkNumericalBadges
 
 
-def outsetplot(
+def marqueeplot(
     data: pd.DataFrame,
     *,
     x: str,
     y: str,
+    hue: typing.Optional[str] = None,
+    hue_order: typing.Optional[typing.Sequence[str]] = None,
     outset: typing.Optional[str] = None,
-    outset_order: typing.Optional[typing.Sequence] = None,
+    outset_order: typing.Optional[typing.Sequence[str]] = None,
     ax: typing.Optional[mpl_Axes] = None,
+    color: typing.Optional[str] = None,
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     mark_glyph: typing.Union[
         typing.Callable, typing.Type, None
     ] = MarkNumericalBadges,
     palette: typing.Optional[typing.Sequence] = None,
+    tight_axlim: bool = False,
     **kwargs,
 ) -> typing.Tuple[mpl_Axes, typing.List[typing.Tuple[float, float]]]:
     """Creates outset annotation(s) containing specified x, y points from a
@@ -53,11 +58,12 @@ def outsetplot(
     ax : matplotlib.axes.Axes, optional
         Matplotlib Axes object to draw the plot on. If None, the current axes
         are used.
+    color :
     frame_inner_pad : Union[float, Tuple[float, float]], default 0.1
         How far from data range should rectangular boundary fall?
 
         If specified as a float value, horizontal and vertical padding is
-        determined relative to axis viewport. If specified as a tuple, the first
+        determined relative to data extent. If specified as a tuple, the first
         value specifies absolute horizontal padding in axis units and the second
         specifies absolute vertical padding in axis units.
     frame_outer_pad : Union[float, Tuple[float, float]], default 0.1
@@ -80,7 +86,7 @@ def outsetplot(
         If None, the default seaborn color palette is used. Passing `color`
         kwarg overrides `palette`.
     **kwargs
-        Additional keyword arguments forward to `draw_outset`.
+        Additional keyword arguments forward to `draw_marquee`.
 
     Returns
     -------
@@ -93,6 +99,9 @@ def outsetplot(
     if palette is None:
         palette = sns.color_palette()
 
+    if hue is not None and color is not None:
+        raise ValueError(f"cannot specify both hue={hue} and color={color}")
+
     if isinstance(mark_glyph, type):
         mark_glyph = mark_glyph()
 
@@ -103,7 +112,7 @@ def outsetplot(
             if outset is not None and outset_order is not None
             else data
         )
-        if is_axes_unset(ax):  # disregard existing axlim
+        if tight_axlim or is_axes_unset(ax):  # disregard existing axlim
             if np.ptp(plotted_data[x]):
                 ax.set_xlim(plotted_data[x].min(), plotted_data[x].max())
             if np.ptp(plotted_data[y]):
@@ -121,44 +130,72 @@ def outsetplot(
 
     if isinstance(frame_outer_pad, numbers.Number):
         # convert to absolute units to prevent weird effects from
-        # successive calls to draw_outset
+        # successive calls to draw_marquee
         frame_outer_pad = (
             frame_outer_pad * np.ptp(ax.get_xlim()),
             frame_outer_pad * np.ptp(ax.get_ylim()),
         )
 
-    # assemble data groups
-    if outset is not None:
-        if outset_order is None:
-            outset_order = sorted(data[outset].unique())
-        groups = data.groupby(outset, sort=False)
-        # adapted from https://stackoverflow.com/a/39275799
-    else:
-        if outset_order is not None:
-            raise ValueError("outset_order cannot be specified without outset")
-        outset_order = [None]
-        groups = [(None, data)]
+    data = data.copy()
 
-    palette_lookup = dict(zip(outset_order, it.cycle(palette)))
-    frames = dict()
-    for outset_value, subset in groups:
+    # assemble data groups
+    if hue is None:
+        hue = "_dummy_hue"
+        assert hue not in data.columns
+        data[hue] = 0
+        palette = [color]
+
+    if hue_order is None:
+        hue_order = sorted(data[hue].unique())
+
+    color_lookup = dict(
+        zip(
+            hue_order,
+            it.cycle(palette) if color is None else it.repeat(color),
+        )
+    )
+
+    if outset is None:
+        outset = "_dummy_outset"
+        assert outset not in data.columns
+        data[outset] = 0
+
+    if outset_order is None:
+        outset_order = sorted(data[outset].unique())
+
+    assert "_dummy_hue_key" not in data.columns
+    assert "_dummy_outset_key" not in data.columns
+    data["_dummy_hue_key"] = data[hue].map(hue_order.index)
+    data["_dummy_outset_key"] = data[outset].map(outset_order.index)
+    data.sort_values(["_dummy_hue_key", "_dummy_outset_key"], inplace=True)
+
+    for (_outset_value, hue_value), subset in data[
+        data[outset].isin(outset_order) & data[hue].isin(hue_order)
+    ].groupby([outset, hue], sort=False):
         assert len(subset)
-        if outset_value not in palette_lookup:
-            continue
+
+        if isinstance(frame_inner_pad, numbers.Number):
+            # convert to absolute units to prevent weird effects from
+            # successive calls to draw_marquee
+            frame_inner_pad_ = (
+                frame_inner_pad * (np.ptp(subset[x]) or np.ptp(ax.get_xlim())),
+                frame_inner_pad * (np.ptp(subset[y]) or np.ptp(ax.get_ylim())),
+            )
+        else:
+            frame_inner_pad_ = frame_inner_pad
 
         xlim = [subset[x].min(), subset[x].max()]
         ylim = [subset[y].min(), subset[y].max()]
-        color = palette_lookup[outset_value]
-        __, frame = draw_outset(
-            xlim,
-            ylim,
-            ax,
-            color=kwargs.pop("color", color),
-            frame_inner_pad=frame_inner_pad,
+        selected_color = color_lookup[hue_value]
+        draw_marquee(
+            frame_xlim=xlim,
+            frame_ylim=ylim,
+            ax=ax,
+            color=selected_color,
+            frame_inner_pad=frame_inner_pad_,
             frame_outer_pad=frame_outer_pad,
             mark_glyph=mark_glyph,
             **kwargs,
         )
-        frames[outset_value] = frame
 
-    return ax, [frames[outset_value] for outset_value in outset_order]
+    return ax

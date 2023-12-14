@@ -1,5 +1,6 @@
 import typing
 
+import frozendict
 from matplotlib import axes as mpl_axes
 from matplotlib import patches as mpl_patches
 from matplotlib import pyplot as plt
@@ -9,6 +10,8 @@ def draw_frame(
     frame_xlim: typing.Tuple[float, float],
     frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
+    frame_edge_kwargs: typing.Dict = frozendict.frozendict(),
+    frame_face_kwargs: typing.Dict = frozendict.frozendict(),
     **kwargs,
 ) -> mpl_axes.Axes:
     """Mark rectangular region as outset.
@@ -33,12 +36,30 @@ def draw_frame(
     if ax is None:
         ax = plt.gca()
 
-    frame_patch = mpl_patches.Rectangle(
+    frame_face_patch = mpl_patches.Rectangle(
         (frame_xlim[0], frame_ylim[0]),  # lower left corner
         frame_xlim[1] - frame_xlim[0],  # width
         frame_ylim[1] - frame_ylim[0],  # height
-        **kwargs,
+        **{
+            "alpha": 0.1,
+            **kwargs,
+            "edgecolor": "none",
+            "zorder": -1,
+            **frame_face_kwargs,
+        },
     )
-    ax.add_patch(frame_patch)
+    ax.add_patch(frame_face_patch)
+
+    frame_edge_patch = mpl_patches.Rectangle(
+        (frame_xlim[0], frame_ylim[0]),  # lower left corner
+        frame_xlim[1] - frame_xlim[0],  # width
+        frame_ylim[1] - frame_ylim[0],  # height
+        **{
+            **kwargs,
+            "facecolor": "none",
+            **frame_edge_kwargs,
+        },
+    )
+    ax.add_patch(frame_edge_patch)
 
     return ax
