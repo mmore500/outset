@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from outset._auxlib.set_aspect_ import set_aspect
 
 
-def test_calc_aspect_square():
+def test_set_aspect_square():
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 1)
     set_aspect(plt.gca(), 0.5) == 1
@@ -17,7 +17,7 @@ def test_calc_aspect_square():
     assert plt.gca().get_ylim() == (0.5, 2.5)
 
 
-def test_calc_aspect_tall():
+def test_set_aspect_tall():
     plt.gca().set_xlim(0, 1)
     plt.gca().set_ylim(0, 2)
     set_aspect(plt.gca(), 1)
@@ -37,7 +37,7 @@ def test_calc_aspect_tall():
     assert plt.gca().get_xlim() == (-1.5, 2.5)
 
 
-def test_calc_aspect_wide():
+def test_set_aspect_wide():
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 2)
     set_aspect(plt.gca(), 1)
