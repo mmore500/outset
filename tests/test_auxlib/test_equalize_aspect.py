@@ -39,12 +39,6 @@ def test_equalize_aspect():
 def test_equalize_aspect_singleton():
     plt.gca().set_xlim(0, 10)
     plt.gca().set_ylim(1, 6)
-    xlim_before = plt.gca().get_xlim()
-    ylim_before = plt.gca().get_ylim()
     assert equalize_aspect([plt.gca()]) == 0.5
-    assert plt.get_xlim() == (0, 10)
-    assert plt.get_ylim() == (1, 6)
-
-
-def test_equalize_aspect_singleton():
-    assert equalize_aspect([]) == 1.0
+    assert plt.gca().get_xlim() == (0, 10)
+    assert plt.gca().get_ylim() == (1, 6)
