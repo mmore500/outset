@@ -4,7 +4,9 @@ import numpy as np
 from .calc_aspect_ import calc_aspect
 
 
-def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
+def set_aspect(
+    ax: mpl_axes.Axes, aspect: float, physical: bool = False
+) -> None:
     """Adjust the ratio between ylim span length and xlim span length.
 
     The function calculates the current aspect ratio of the Axes object and
@@ -16,7 +18,7 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
     Note that axes limits are only ever widened. Axes widening is performed
     symmetrically.
     """
-    cur_aspect = calc_aspect(ax)
+    cur_aspect = calc_aspect(ax, physical=physical)
     cur_width = np.ptp(ax.get_xlim())
     cur_height = np.ptp(ax.get_ylim())
     x_min, x_max = ax.get_xlim()
@@ -40,5 +42,10 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
     else:
         assert False, (aspect, cur_aspect)
 
-    new_aspect = calc_aspect(ax)
+    new_aspect = calc_aspect(ax, physical=physical)
     assert np.isclose(new_aspect, aspect), (new_aspect, aspect)
+
+    (x0, x1), (y0, y1) = ax.get_xlim(), ax.get_ylim()
+    assert x0 <= x_min and y0 <= y_min and x1 >= x_max and y1 >= y_max
+    assert np.isclose(x0 - x_min, x_max - x1)
+    assert np.isclose(y0 - y_min, y_max - y1)
