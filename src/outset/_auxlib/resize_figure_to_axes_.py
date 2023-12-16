@@ -34,8 +34,8 @@ def resize_figure_to_axes(fig: mpl_Figure, ax: mpl_Axes) -> None:
 
     # Adjust the position of the axis back to original
     new_pos = [
-        original_pos_in_inches[0] / fig.get_figwidth(),
-        original_pos_in_inches[1] / fig.get_figheight(),
+        1.5 * original_pos_in_inches[0] / fig.get_figwidth(),
+        1.5 * original_pos_in_inches[1] / fig.get_figheight(),
         original_pos_in_inches[2] / fig.get_figwidth(),
         original_pos_in_inches[3] / fig.get_figheight(),
     ]
