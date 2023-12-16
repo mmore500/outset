@@ -16,11 +16,6 @@ from .MarkNumericalBadges_ import MarkNumericalBadges
 from .marqueeplot_ import marqueeplot
 
 
-class _SentryType:
-    def __hash__(self: "_SentryType") -> int:
-        return 0
-
-
 class OutsetGrid(sns.axisgrid.FacetGrid):
     """Facilitates co-display of zoomed-in axis regions transplanted across a
     subplot grid.
@@ -262,8 +257,11 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             col_order = sorted(data[col].unique())
 
         if include_sourceplot:
-            # SentryType entry ensures no outset data maps to sourceplot
-            col_order = [_SentryType()] + col_order
+            if None in data[col].unique():
+                raise ValueError(
+                    "Cannot include source plot if col data includes None",
+                )
+            col_order = [None] + col_order
 
         # initialize axes
         #######################################################################
