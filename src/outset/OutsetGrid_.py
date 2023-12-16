@@ -84,7 +84,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         The arguments `data`, `x`, `y`, `col`, `hue`, and `outset` follow
         seaborn-like tidy data API convention. Note that the same value may
         be specified for more than one of `col`, `hue, and `outset`. Marquee
-        annotations are created to contain each subset of x, y values with identical `col`, `hue`, and `outset` values.
+        annotations are created to contain each subset of x, y values with
+        identical `col`, `hue`, and `outset` values.
 
         Marquee frame coordinates may also be specified directly as a sequence
         of four-element tuples `(x0, x1, y0, y1)`. In this case, each frame
