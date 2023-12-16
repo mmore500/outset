@@ -162,7 +162,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "discrepancies in frame placement",
                 )
 
-        frame_inner_pad, frame_outer_pad = 0.2, 0.1
+        default_frame_inner_pad, default_frame_outer_pad = 0.2, 0.1
 
         # spoof data frame if outset frames are specified directly
         if isinstance(data, pd.DataFrame):
@@ -220,7 +220,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     for x, y in [(xmin, ymin), (xmax, ymax)]
                 ],
             )
-            frame_inner_pad = 0
+            default_frame_inner_pad = 0
 
         if not x in data.columns:
             raise ValueError(f"kwarg x={x} must be provided as column in data")
@@ -307,8 +307,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 **{
                     "color": color,
                     "palette": palette,
-                    "frame_inner_pad": frame_inner_pad,
-                    "frame_outer_pad": frame_outer_pad,
+                    "frame_inner_pad": default_frame_inner_pad,
+                    "frame_outer_pad": default_frame_outer_pad,
                     "mark_glyph": MarkNumericalBadges,
                     "tight_axlim": False,
                     "zorder": zorder,
@@ -369,8 +369,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 **{
                     "color": color,
                     "palette": palette,
-                    "frame_inner_pad": frame_inner_pad,
-                    "frame_outer_pad": frame_outer_pad,
+                    "frame_inner_pad": default_frame_inner_pad,
+                    "frame_outer_pad": default_frame_outer_pad,
                     "leader_stretch": 0.0,
                     "mark_glyph": MarkNumericalBadges(),
                     "tight_axlim": True,
