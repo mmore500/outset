@@ -55,10 +55,8 @@ def stub_all_clipped_values(
                         marker_kwargs=marker_kwargs,
                         offset=offset,
                     )
-                    print(x, y)
                 new_offsets.append((x, y))
 
-            print(new_offsets)
             collection.set_offsets(new_offsets)
             collection.set(clip_on=False)
 
