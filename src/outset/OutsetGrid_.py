@@ -41,9 +41,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
     Attributes
     ----------
-    sourceplot_axes : Optional[mpl_axes.Axes]
+    source_axes : Optional[mpl_axes.Axes]
         The axes object for the source plot, if present.
-    outplot_axes : Sequence[mpl_axes.Axes]
+    outset_axes : Sequence[mpl_axes.Axes]
         The axes objects for the outset plots.
     """
 
@@ -51,8 +51,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     _marqueeplot_outset: typing.Callable
     _marqueeplot_source: typing.Callable
 
-    sourceplot_axes: typing.Optional[mpl_axes.Axes]
-    outplot_axes: typing.Sequence[mpl_axes.Axes]
+    source_axes: typing.Optional[mpl_axes.Axes]
+    outset_axes: typing.Sequence[mpl_axes.Axes]
 
     def __init__(
         self: "OutsetGrid",
@@ -283,16 +283,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         )
 
         if include_sourceplot:
-            self.outplot_axes = self.axes.flat[1:]
-            self.sourceplot_axes = self.axes.flat[0]
+            self.outset_axes = self.axes.flat[1:]
+            self.source_axes = self.axes.flat[0]
         else:
-            self.sourceplot_axes = None
-            self.outplot_axes = self.axes.flat[:]
+            self.source_axes = None
+            self.outset_axes = self.axes.flat[:]
 
         # draw sourceplot
         #######################################################################
         def marqueeplot_source(self_: "OutsetGrid") -> None:
-            if self_.sourceplot_axes is None:
+            if self_.source_axes is None:
                 return
             marqueeplot(
                 data,
@@ -302,7 +302,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 hue_order=hue_order,
                 outset=outset,
                 outset_order=outset_order,
-                ax=self_.sourceplot_axes,
+                ax=self_.source_axes,
                 **{
                     "color": color,
                     "palette": palette,
@@ -346,7 +346,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     },
                 },
             )
-            self_.sourceplot_axes.set_title("")
+            self_.source_axes.set_title("")
 
         self._marqueeplot_source = marqueeplot_source
 
@@ -419,8 +419,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         OutsetGrid
             Returns self.
         """
-        if self.sourceplot_axes is not None:
-            aspect = calc_aspect(self.sourceplot_axes)
+        if self.source_axes is not None:
+            aspect = calc_aspect(self.source_axes, physical=True)
             for ax in self.axes.flat[1:]:
                 set_aspect(ax, aspect)
         else:
@@ -610,8 +610,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             kwargs["hue"] = hue
         if hue_order is not None:
             kwargs["hue_order"] = hue_order
-        if self.sourceplot_axes is not None:
-            plotter(self.__data, *args, ax=self.sourceplot_axes, **kwargs)
+        if self.source_axes is not None:
+            plotter(self.__data, *args, ax=self.source_axes, **kwargs)
         return self
 
     def broadcast(
@@ -683,7 +683,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Preserves axis limits.
         """
-        for ax in self.outplot_axes:
+        for ax in self.outset_axes:
             # store and restore axis limits, except for source plot if present
             xlim, ylim = ax.get_xlim(), ax.get_ylim()
             try:
@@ -727,8 +727,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Doesn't preserve axis limits.
         """
-        if self.sourceplot_axes is not None:
-            ax = self.sourceplot_axes
+        if self.source_axes is not None:
+            ax = self.source_axes
             try:
                 plotter(*args, ax=ax, **kwargs)
             except (TypeError, AttributeError):
