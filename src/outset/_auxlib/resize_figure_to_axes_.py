@@ -23,19 +23,17 @@ def resize_figure_to_axes(fig: mpl_Figure, ax: mpl_Axes) -> None:
     ]
 
     # Get the bounding box of the axis in inches
-    bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-
-    # Extract the width and height of the axis in inches
-    # why is this multiplied by 1.5? don't know, but it works
-    width, height = bbox.width * 1.5, bbox.height * 1.5
+    bbox = ax.get_tightbbox().transformed(fig.dpi_scale_trans.inverted())
 
     # Set the figure size to match the axis size
-    fig.set_size_inches(width, height, forward=True)
+    fig.set_size_inches(
+        bbox.width + 2 * bbox.x0, bbox.height + 2 * bbox.y0, forward=True
+    )
 
     # Adjust the position of the axis back to original
     new_pos = [
-        1.5 * original_pos_in_inches[0] / fig.get_figwidth(),
-        1.5 * original_pos_in_inches[1] / fig.get_figheight(),
+        original_pos_in_inches[0] / fig.get_figwidth(),
+        original_pos_in_inches[1] / fig.get_figheight(),
         original_pos_in_inches[2] / fig.get_figwidth(),
         original_pos_in_inches[3] / fig.get_figheight(),
     ]
