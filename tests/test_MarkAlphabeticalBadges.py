@@ -4,7 +4,6 @@ from outset import MarkAlphabeticalBadges
 
 
 def test_MarkAlphabeticalBadges():
-    plt.clf()  # Clear the current figure
     ax = plt.gca()  # Get the current axes
 
     ftor = MarkAlphabeticalBadges()
@@ -22,4 +21,3 @@ def test_MarkAlphabeticalBadges():
     outpath = "/tmp/test_MarkAlphabeticalBadges.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
-    plt.close()  # Close the plot after saving

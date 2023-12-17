@@ -5,7 +5,6 @@ import outset
 
 
 def test_scatter_stub():
-    plt.clf()
     tips = sns.load_dataset("tips")
     outlier = pd.DataFrame(
         {

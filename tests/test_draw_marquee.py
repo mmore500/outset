@@ -4,7 +4,6 @@ from outset import draw_marquee
 
 
 def test_draw_marquee_one():
-    plt.clf()
     draw_marquee(
         frame_xlim=(0, 1),
         frame_ylim=(0, 2),
@@ -22,7 +21,6 @@ def test_draw_marquee_one():
 
 
 def test_draw_marquee_no_leader():
-    plt.clf()
     draw_marquee(
         frame_xlim=(0, 1),
         frame_ylim=(0, 2),
