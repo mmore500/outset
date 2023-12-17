@@ -2,9 +2,8 @@ import matplotlib.cbook as mpl_cbook
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from matplotlib.testing import decorators as mpl_testing_decorators
 
-from outset import draw_marquee, OutsetGrid
+from outset import OutsetGrid
 
 # Sample data for testing
 data = pd.DataFrame(

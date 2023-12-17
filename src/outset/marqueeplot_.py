@@ -4,7 +4,6 @@ import typing
 
 import matplotlib.pyplot as plt
 import numpy as np
-import opytional as opyt
 import pandas as pd
 import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
