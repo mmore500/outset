@@ -81,6 +81,10 @@ def mark_inlaid_asterisk(
     Returns
     -------
     None
+
+    See Also
+    --------
+    MarkInlaidAsterisk: Functor interface for `mark_inlaid_asterisk`.
     """
     if ax is None:
         ax = plt.gca()
@@ -147,3 +151,11 @@ def mark_inlaid_asterisk(
         markersize=markersize * scale_asterisk,
         **kwargs,
     )
+
+
+class MarkInlaidAsterisk:
+    """Functor interface for `mark_inlaid_asterisk`."""
+
+    def __call__(self, *args, **kwargs):
+        """Forwards to `mark_inlaid_asterisk`."""
+        return mark_inlaid_asterisk(*args, **kwargs)

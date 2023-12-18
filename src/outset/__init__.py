@@ -6,9 +6,9 @@ __version__ = "0.0.0"
 from .draw_marquee_ import draw_marquee
 from .inset_outsets_ import inset_outsets
 from .layout_corner_insets_ import layout_corner_insets
-from .mark_arrow_ import mark_arrow
-from .mark_inlaid_asterisk_ import mark_inlaid_asterisk
-from .mark_magnifying_glass_ import mark_magnifying_glass
+from .MarkArrow_ import mark_arrow, MarkArrow
+from .MarkInlaidAsterisk_ import mark_inlaid_asterisk, MarkInlaidAsterisk
+from .MarkMagnifyingGlass_ import mark_magnifying_glass, MarkMagnifyingGlass
 from .MarkAlphabeticalBadges_ import MarkAlphabeticalBadges
 from .MarkNumericalBadges_ import MarkNumericalBadges
 from .MarkRomanBadges_ import MarkRomanBadges
@@ -26,6 +26,7 @@ __all__ = [
     "mark_inlaid_asterisk",
     "mark_magnifying_glass",
     "MarkAlphabeticalBadges",
+    "MarkInlaidAsterisk",
     "MarkNumericalBadges",
     "MarkRomanBadges",
     "marqueeplot",

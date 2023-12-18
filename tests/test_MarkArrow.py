@@ -1,13 +1,17 @@
+import typing
+
 import matplotlib.pyplot as plt
+import pytest
 
-from outset import mark_arrow
+import outset
 
 
-def test_mark_arrow_single():
+@pytest.mark.parametrize("impl", [outset.MarkArrow(), outset.mark_arrow])
+def test_mark_arrow_single(impl: typing.Callable):
     ax = plt.gca()  # Get the current axes
 
     # Call the function with test values
-    mark_arrow(x=0.5, y=0.5, ax=ax, color="red")
+    impl(x=0.5, y=0.5, ax=ax, color="red")
 
     # Save and print the path of the output image
     outpath = "/tmp/test_mark_arrow_single.png"
@@ -15,10 +19,11 @@ def test_mark_arrow_single():
     print(f"saved graphic to {outpath}")
 
 
-def test_mark_arrow_multiple():
+@pytest.mark.parametrize("impl", [outset.MarkArrow(), outset.mark_arrow])
+def test_mark_arrow_multiple(impl: typing.Callable):
     # Multiple calls to the function with different parameters
-    mark_arrow(x=0.3, y=0.3, color="lavender")
-    mark_arrow(x=0.7, y=0.7, color="blue", color_accent="orange")
+    impl(x=0.3, y=0.3, color="lavender")
+    impl(x=0.7, y=0.7, color="blue", color_accent="orange")
 
     # Save and print the path of the output image
     outpath = "/tmp/test_mark_arrow_multiple.png"

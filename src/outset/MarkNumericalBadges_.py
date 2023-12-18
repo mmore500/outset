@@ -2,7 +2,7 @@ import typing
 
 from matplotlib import axes as mpl_axes
 
-from .mark_inlaid_asterisk_ import mark_inlaid_asterisk
+from .MarkInlaidAsterisk_ import mark_inlaid_asterisk
 
 _color_t = typing.Union[typing.Tuple, str]
 
@@ -21,7 +21,7 @@ class MarkNumericalBadges:
         self: "MarkNumericalBadges",
         start: int = 1,
         step: int = 1,
-    ):
+    ) -> None:
         """Initialize functor.
 
         Parameters

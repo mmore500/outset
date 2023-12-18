@@ -11,7 +11,7 @@ import seaborn as sns
 from ._auxlib.draw_callout_ import draw_callout
 from ._auxlib.draw_frame_ import draw_frame
 from ._auxlib.is_axes_unset_ import is_axes_unset
-from .mark_magnifying_glass_ import mark_magnifying_glass
+from .MarkMagnifyingGlass_ import mark_magnifying_glass
 
 
 def draw_marquee(
