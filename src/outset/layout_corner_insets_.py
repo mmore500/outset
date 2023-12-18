@@ -5,7 +5,7 @@ import typing
 
 def layout_corner_insets(
     num_insets: int,
-    corner: typing.Literal["NE", "NW", "SE", "SW"],
+    corner: typing.Literal["NE", "NW", "SE", "SW"] = "NE",
     inset_grid_size: float = 0.60,
     inset_pad_ratio: float = 0.25,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
@@ -18,7 +18,7 @@ def layout_corner_insets(
     ----------
     num_insets : int
         The number of inset plots to be generated.
-    corner : Literal["NE", "NW", "SE", "SW"]
+    corner : Literal["NE", "NW", "SE", "SW"], default "NE"
         The corner of the grid where the insets will be positioned.
     inset_grid_size : float, default 0.4
         The size of the grid of inset plots relative to the source plot.
@@ -57,7 +57,7 @@ def layout_corner_insets(
         assert 1 - inset_grid_size <= y + 1e-6
         assert y <= 1.0 - grid_size + 1e-6
 
-        if corner == "NE" or corner == "SE":
+        if corner == "NW" or corner == "SW":
             x = grid_size * col + (grid_size - ax_size)
             assert grid_size - ax_size <= x + 1e-6
             assert x <= inset_grid_size - ax_size + 1e-6

@@ -14,7 +14,7 @@ def inset_outsets(
     insets: typing.Union[
         typing.Literal["NE", "NW", "SE", "SW"],
         typing.Sequence[typing.Tuple[float, float, float, float]],
-    ] = "NW",
+    ] = "NE",
     strip_axes: bool = False,
     strip_labels: bool = True,
     strip_spines: bool = False,

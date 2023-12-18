@@ -7,10 +7,10 @@ from outset import layout_corner_insets
 @pytest.mark.parametrize(
     "num_insets, corner, expected_result",
     [
-        (1, "NE", [(0.20, 0.60, 0.20, 0.20)]),
+        (1, "NW", [(0.20, 0.60, 0.20, 0.20)]),
         (
             3,
-            "NW",
+            "NE",
             [
                 (0.60, 0.80, 0.10, 0.10),
                 (0.80, 0.80, 0.10, 0.10),
@@ -19,7 +19,7 @@ from outset import layout_corner_insets
         ),
         (
             2,
-            "SE",
+            "SW",
             [
                 (0.10, 0.10, 0.10, 0.10),
                 (0.30, 0.10, 0.10, 0.10),
@@ -27,7 +27,7 @@ from outset import layout_corner_insets
         ),
         (
             4,
-            "SW",
+            "SE",
             [
                 (0.60, 0.30, 0.10, 0.10),
                 (0.80, 0.30, 0.10, 0.10),
