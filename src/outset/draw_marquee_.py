@@ -47,64 +47,65 @@ def draw_marquee(
 
     The callout is capped by a customizable glyph, default as a magnifying
     glass.
-        Parameters
-        ----------
-        frame_xlim : Tuple[float, float]
-            X-limits (xmin, xmax) of the area to be marked as outset.
-        frame_ylim : Tuple[float, float]
-            Y-limits (ymin, ymax) of the area to be marked as outset.
-        ax : matplotlib.axes.Axes, optional
-            Axes object to draw the outset on. Defaults to `plt.gca()`.
-        color : str, optional
-            Color for the frame's edge and zoom indication lines.
-        clip_on : bool, default False
-            If True, drawing elements are clipped to the axes bounding box.
-        despine : bool, default True
-            If True, removes top and right spines from the plot.
-        frame_edge_kwargs : Dict, default {}
-            Customization arguments for the frame's edge.
-        frame_face_kwargs : Dict, default {}
-            Customization arguments for the frame's face.
-        frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
-            Padding from data extent to frame boundary, calculated relative to data
-            extent (float) or in absolute units (tuple).
-        frame_outer_pad : Union[float, Tuple[float, float]], default 0.1
-            Padding from frame boundary to axis viewport, calculated relative to data extent (float) or in absolute units (tuple).
-        label : str, optional
-            Label used for legend creation.
-        leader_edge_kwargs : Dict, default {}
-            Customization arguments for the leader's edge.
-        leader_face_kwargs : Dict, default {}
-            Customization arguments for the leader's face.
-        leader_stretch : float, default 0.1
-            Scale of callout leader relative to axis viewport.
-        mark_glyph : Callable, optional
-            A callable to draw a glyph at the outer vertex of the callout leader.
 
-            If None, no glyph is drawn.
-        mark_glyph_kwargs : Dict, default frozendict.frozendict()
-            Arguments for the mark_glyph callable.
-        mark_retract : float, default 0.1
-            Fraction to pull back glyph from the outer vertex of the callout.
-        zorder : float, default 0
-            Z-order for layering plot elements.
+    Parameters
+    ----------
+    frame_xlim : Tuple[float, float]
+        X-limits (xmin, xmax) of the area to be marked as outset.
+    frame_ylim : Tuple[float, float]
+        Y-limits (ymin, ymax) of the area to be marked as outset.
+    ax : matplotlib.axes.Axes, optional
+        Axes object to draw the outset on. Defaults to `plt.gca()`.
+    color : str, optional
+        Color for the frame's edge and zoom indication lines.
+    clip_on : bool, default False
+        If True, drawing elements are clipped to the axes bounding box.
+    despine : bool, default True
+        If True, removes top and right spines from the plot.
+    frame_edge_kwargs : Dict, default {}
+        Customization arguments for the frame's edge.
+    frame_face_kwargs : Dict, default {}
+        Customization arguments for the frame's face.
+    frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
+        Padding from data extent to frame boundary, calculated relative to data
+        extent (float) or in absolute units (tuple).
+    frame_outer_pad : Union[float, Tuple[float, float]], default 0.1
+        Padding from frame boundary to axis viewport, calculated relative to data extent (float) or in absolute units (tuple).
+    label : str, optional
+        Label used for legend creation.
+    leader_edge_kwargs : Dict, default {}
+        Customization arguments for the leader's edge.
+    leader_face_kwargs : Dict, default {}
+        Customization arguments for the leader's face.
+    leader_stretch : float, default 0.1
+        Scale of callout leader relative to axis viewport.
+    mark_glyph : Callable, optional
+        A callable to draw a glyph at the outer vertex of the callout leader.
 
-        Returns
-        -------
-        matplotlib.axes.Axes
-            Axes with the outset and annotations added.
+        If None, no glyph is drawn.
+    mark_glyph_kwargs : Dict, default frozendict.frozendict()
+        Arguments for the mark_glyph callable.
+    mark_retract : float, default 0.1
+        Fraction to pull back glyph from the outer vertex of the callout.
+    zorder : float, default 0
+        Z-order for layering plot elements.
 
-        Notes
-        -----
-        Delegates to `_auxlib.draw_callout_.draw_callout` and
-        `_auslib.draw_callout_.draw_frame` for drawing.
+    Returns
+    -------
+    matplotlib.axes.Axes
+        Axes with the outset and annotations added.
 
-        See Also
-        --------
-        marqueeplot
-            Figure-level interface for `draw_marquee`.
-        OutsetGrid
-            Figure-level interface for creating plots with marquee annotations.
+    Notes
+    -----
+    Delegates to `_auxlib.draw_callout_.draw_callout` and
+    `_auslib.draw_callout_.draw_frame` for drawing.
+
+    See Also
+    --------
+    marqueeplot
+        Figure-level interface for `draw_marquee`.
+    OutsetGrid
+        Figure-level interface for creating plots with marquee annotations.
     """
     if ax is None:
         ax = plt.gca()
