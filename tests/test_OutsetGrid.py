@@ -104,4 +104,6 @@ def test_OutsetGrid_broadcast():
 
     assert not og._is_inset()
 
-    plt.savefig("/tmp/test_OutsetGrid_broadcast.png")
+    outpath = "/tmp/test_OutsetGrid_broadcast.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")

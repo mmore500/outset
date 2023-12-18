@@ -138,4 +138,6 @@ def test_make_logo():
     # Adjust Spacing
     og.fig.tight_layout(w_pad=1, h_pad=1)
 
-    og.figure.savefig("/tmp/outset_logo.png")
+    outpath = "/tmp/outset_logo.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")

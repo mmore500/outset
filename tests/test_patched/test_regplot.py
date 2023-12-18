@@ -48,4 +48,7 @@ def test_cluster_regplot():
 
     og.broadcast(sns.despine)
     og.marqueeplot()
-    og.figure.savefig("/tmp/test_regplot.png")
+
+    outpath = "/tmp/test_regplot.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")

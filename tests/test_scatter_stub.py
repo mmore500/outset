@@ -51,4 +51,6 @@ def test_scatter_stub():
 
     outset.stub_all_clipped_values(ax)
 
-    plt.savefig("/tmp/test_scatter_stub.png")
+    outpath = "/tmp/test_scatter_stub.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")
