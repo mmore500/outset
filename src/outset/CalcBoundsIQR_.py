@@ -40,8 +40,8 @@ class CalcBoundsIQR:
         bounds : Tuple[float, float]
             Lower and upper calculated bounds.
         """
-        if not data:
-            return 0.0, 1.0
+        if not any(data):
+            return 0.0, 0.0
         quartile1, quartile3 = np.percentile(data, [25, 75])
         iqr = quartile3 - quartile1
         lower_bound = quartile1 - (self._iqr_multiplier * iqr)
