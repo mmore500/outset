@@ -13,7 +13,7 @@ def compose_callout_leader(
     """Decide shape, size, and position of callout leader triangle.
 
     Outer leader vertex placement is calculated relative to the upper right
-    frame vertex. The outer vertex is place
+    frame vertex.
 
     Uses reflected right triangle similar to the proportions of the rectangle
     to pick the upper points for the trapezoid, relative to the upper right
