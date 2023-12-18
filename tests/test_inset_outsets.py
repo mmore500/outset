@@ -99,6 +99,8 @@ def test_inset_outsets_three(corner: str):
     og.equalize_aspect()
     og.marqueeplot()
 
+    assert og._is_inset()
+
     outpath = f"/tmp/test_inset_outsets_three_{corner}.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")

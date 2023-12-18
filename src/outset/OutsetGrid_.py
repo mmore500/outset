@@ -59,6 +59,15 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         """Finalize the annotations and layout."""
         self.tight_layout()
 
+    def _is_inset(self: "OutsetGrid") -> bool:
+        """Are outset axes inset over source axes?"""
+        return (
+            self.source_axes is not None
+            and len(self.outset_axes)
+            and self.outset_axes[0].get_position().x0
+            < self.source_axes.get_position().corners()[-1][0]
+        )
+
     def __init__(
         self: "OutsetGrid",
         data: typing.Union[

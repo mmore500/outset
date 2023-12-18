@@ -15,7 +15,7 @@ def test_OutsetGrid_one():
     # Create a sample dataframe
     data = pd.DataFrame({"x": [0.5], "y": [1], "outset": ["A"]})
     sns.scatterplot(data=data, x="x", y="y")
-    OutsetGrid(
+    g = OutsetGrid(
         data=data,
         x="x",
         y="y",
@@ -24,6 +24,9 @@ def test_OutsetGrid_one():
             "frame_inner_pad": 0.2,
         },
     ).marqueeplot()
+
+    assert not g._is_inset()
+
     outpath = "/tmp/test_OutsetGrid_one.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
@@ -49,6 +52,8 @@ def test_OutsetGrid_with_sourceplot_monochrome():
     g = OutsetGrid(data=data, x="x", y="y", outset="outset")
     g.marqueeplot()
     g.map_dataframe(sns.scatterplot, x="x", y="y", hue="outset", legend=False)
+
+    assert not g._is_inset()
 
     outpath = "/tmp/test_OutsetGrid_with_sourceplot_monochrome.png"
     plt.savefig(outpath)
@@ -76,6 +81,8 @@ def test_OutsetGrid_with_sourceplot_hue():
     g.marqueeplot()
     g.map_dataframe(sns.scatterplot, x="x", y="y", legend=False)
 
+    assert not g._is_inset()
+
     outpath = "/tmp/test_OutsetGrid_with_sourceplot_hue.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
@@ -94,4 +101,7 @@ def test_OutsetGrid_broadcast():
         plt.imshow, image, extent=(0, 100, 0, 100), origin="upper", zorder=-1
     )
     og.marqueeplot()
+
+    assert not og._is_inset()
+
     plt.savefig("/tmp/test_OutsetGrid_broadcast.png")
