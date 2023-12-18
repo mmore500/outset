@@ -54,8 +54,7 @@ def mark_magnifying_glass(
 
     Returns
     -------
-    matplotlib.axes.Axes
-        The matplotlib axes containing the plot.
+    None
     """
     if ax is None:
         ax = plt.gca()
