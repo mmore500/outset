@@ -8,8 +8,10 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.axes import Axes as mpl_Axes
 
+from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.calc_outer_pad_ import calc_outer_pad
 from ._auxlib.is_axes_unset_ import is_axes_unset
+from ._auxlib.set_aspect_ import set_aspect
 from .draw_marquee_ import draw_marquee
 from .MarkNumericalBadges_ import MarkNumericalBadges
 
@@ -32,6 +34,7 @@ def marqueeplot(
         typing.Callable, typing.Type, None
     ] = MarkNumericalBadges,
     palette: typing.Optional[typing.Sequence] = None,
+    preserve_aspect: typing.Optional[bool] = None,
     tight_axlim: bool = False,
     **kwargs,
 ) -> mpl_Axes:
@@ -77,6 +80,8 @@ def marqueeplot(
         Callable or type to draw a glyph at the end of the callout.
     palette : Sequence, optional
         Color palette for plotting elements.
+    preserve_aspect: bool, optional
+        If True, finalizing by applying initial axes aspect. If None, restore initial axes aspect unless axes are unset.
     tight_axlim : bool, default False
         Whether to shrink axes limits to fit data range.
     **kwargs
@@ -94,6 +99,12 @@ def marqueeplot(
     """
     if ax is None:
         ax = plt.gca()
+
+    initial_axlim = ax.get_xlim(), ax.get_ylim()
+    if preserve_aspect or (preserve_aspect is None and not is_axes_unset(ax)):
+        initial_aspect = calc_aspect(ax)
+    else:
+        initial_aspect = None
 
     if palette is None:
         palette = sns.color_palette()
@@ -174,6 +185,17 @@ def marqueeplot(
             **kwargs,
         )
 
+    if initial_aspect is not None and not np.allclose(
+        np.array(initial_axlim),
+        np.array(
+            (
+                ax.get_xlim(),
+                ax.get_ylim(),
+            )
+        ),
+    ):
+        set_aspect(ax, initial_aspect)
+
     return ax
 
 
@@ -225,6 +247,10 @@ def _prepad_axlim(
             ax.set_xlim(min(framex_values), max(framex_values))
         if framey_values and np.ptp(framey_values):
             ax.set_ylim(min(framey_values), max(framey_values))
+    else:
+        (x0, x1), (y0, y1) = ax.get_xlim(), ax.get_ylim()
+        ax.set_xlim(min(*framex_values, x0), max(*framex_values, x1))
+        ax.set_ylim(min(*framey_values, y0), max(*framey_values, y1))
 
     pad_x, pad_y = calc_outer_pad(ax, frame_outer_pad, frame_outer_pad_unit)
     if len(data):

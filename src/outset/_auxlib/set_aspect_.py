@@ -18,6 +18,10 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
     Note that axes limits are only ever widened. Axes widening is performed
     symmetrically.
     """
+    before_aspect = calc_aspect(ax)
+    if 0.99 < aspect / before_aspect < 1.01:
+        return
+
     (x0_, x1_), (y0_, y1_) = ax.get_xlim(), ax.get_ylim()
     before_width, before_height = np.ptp(ax.get_xlim()), np.ptp(ax.get_ylim())
 

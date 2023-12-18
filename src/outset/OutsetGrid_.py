@@ -52,7 +52,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     outset_axes: typing.Sequence[mpl_axes.Axes]
 
     def tight_layout(self: "OutsetGrid") -> None:
+        xlims = [ax.get_xlim() for ax in self.axes.flat]
+        ylims = [ax.get_ylim() for ax in self.axes.flat]
         self.figure.tight_layout()
+        for ax, xlim, ylim in zip(self.axes.flat, xlims, ylims, strict=True):
+            ax.set_xlim(xlim)
+            ax.set_ylim(ylim)
 
     def _finalize_grid(
         self: "OutsetGrid", axlabels: typing.Sequence[str]
@@ -177,16 +182,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "outset may cause discrepancies in frame placement",
                 )
 
-        default_frame_outer_pad = 0.1
-        default_frame_inner_pad = (
-            # no pad if frame positions directly specified
-            0.1
-            if isinstance(data, (pd.DataFrame, abc.Mapping))
-            else 0.0
-        )
+        default_frame_outer_pad_outset = 0.1
+        default_frame_outer_pad_source = 0.1
+        default_frame_inner_pad = 0.1
 
         # spoof data frame if outset frames are specified directly
-        if isinstance(data, pd.DataFrame):
+        if isinstance(data, (pd.DataFrame, abc.Mapping)):
             if x is None or y is None:
                 raise ValueError(
                     "x and y kwargs must be provided from column names in data",
@@ -242,6 +243,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 ],
             )
             default_frame_inner_pad = 0
+            default_frame_outer_pad_source = 0
 
         if not x in data.columns:
             raise ValueError(f"kwarg x={x} must be provided as column in data")
@@ -338,7 +340,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "color": color,
                     "palette": palette,
                     "frame_inner_pad": default_frame_inner_pad,
-                    "frame_outer_pad": default_frame_outer_pad,
+                    "frame_outer_pad": default_frame_outer_pad_source,
                     "mark_glyph": default_draw_glyph_functor_class,
                     "tight_axlim": False,
                     "zorder": zorder,
@@ -400,7 +402,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "color": color,
                     "palette": palette,
                     "frame_inner_pad": default_frame_inner_pad,
-                    "frame_outer_pad": default_frame_outer_pad,
+                    "frame_outer_pad": default_frame_outer_pad_outset,
                     "frame_outer_pad_unit": "axes",
                     "leader_stretch": 0.2,
                     "leader_stretch_unit": "inchesfrom",

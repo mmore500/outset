@@ -93,12 +93,13 @@ def test_OutsetGrid_broadcast():
         image = plt.imread(image_file)
 
     og = OutsetGrid(
-        data=[(40, 60, 60, 80), (10, 40, 14, 21)],
+        data=[(0.42, 0.62, 0.78, 0.98), (0.10, 0.40, 0.14, 0.21)],
+        aspect=0.9,
         col=True,
         hue=True,
     )
     og.broadcast(
-        plt.imshow, image, extent=(0, 100, 0, 100), origin="upper", zorder=-1
+        plt.imshow, image, extent=(0, 1, 0, 1), origin="upper", zorder=-1
     )
     og.marqueeplot()
 
