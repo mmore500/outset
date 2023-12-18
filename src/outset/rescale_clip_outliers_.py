@@ -32,9 +32,12 @@ def rescale_clip_outliers(
         A function or a tuple of two functions to calculate the outlier bounds
         for the x and y data points.
 
-        If None, a default IQR-based bounds calculation (`CalcBoundsIQR` with a
-        multiplier of 1.5) is used. The functions should accept an array of
-        data points and return a tuple of lower and upper bounds.
+        Each function should accept an array of data points and return a tuple
+        of (lower, upper) bounds. If None, defaults to interquartile
+        range-based calculation (`CalcBoundsIQR` with
+        multiplier 1.5).
+    pad : float, default 0.1
+        How far should axes limits be padded beyond the non-outlier data range?
 
     Returns
     -------
@@ -42,7 +45,9 @@ def rescale_clip_outliers(
 
     Notes
     -----
-    TODO: describe edge case behavior
+    In cases where there are no outliers or all points are outliers, axes limits
+    will not be adjusted In cases where non-outliers take on only a single
+    value, padding will be applied relative to that value or, if zero, one.
     """
     if ax is None:
         ax = plt.gca()
