@@ -372,6 +372,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     },
                     "mark_glyph_kwargs": {
                         "markersize": 16,
+                        "zorder": zorder + 1.01,
                         **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
                         **marqueeplot_source_kwargs.get(
                             "mark_glyph_kwargs", {}
@@ -437,6 +438,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     },
                     "mark_glyph_kwargs": {
                         **({"markersize": 16} if self_._is_inset() else {}),
+                        "zorder": zorder + 1.01,
                         **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
                         **marqueeplot_outset_kwargs.get(
                             "mark_glyph_kwargs", {}
