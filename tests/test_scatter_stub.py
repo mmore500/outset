@@ -45,7 +45,7 @@ def test_scatter_stub():
         alpha=0.5,
     )
 
-    outset.rescale_clip_outliers(ax, 5)
+    outset.rescale_clip_outliers(ax, outset.CalcBoundsIQR(5))
     ax.set_xlim(0, ax.get_xlim()[1])
     ax.set_ylim(0, ax.get_ylim()[1])
 
