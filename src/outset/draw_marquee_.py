@@ -29,7 +29,7 @@ def draw_marquee(
     label: typing.Optional[str] = None,
     leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
     leader_face_kwargs: typing.Dict = frozendict.frozendict(),
-    leader_stretch: float = 0.1,
+    leader_stretch: float = 0.2,
     leader_stretch_unit: typing.Literal[
         "axes",
         "figure",
