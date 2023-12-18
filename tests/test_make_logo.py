@@ -24,6 +24,7 @@ def jitter(values):
 
 
 # adapted from https://www.datatechnotes.com/2020/11/tsne-visualization-example-in-python.html
+@pytest.mark.integration
 def test_make_logo():
     (x_train, y_train), (_, _) = mnist.load_data()
     x_train = x_train[:3000]
