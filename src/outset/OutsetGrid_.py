@@ -150,11 +150,11 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 "outset_order must be None if outset not specified"
             )
 
-        for a in "frame_inner_pad", "frame_outer_pad":
+        for a in "frame_inner_pad":
             if a in marqueeplot_outset_kwargs or a in marqueeplot_source_kwargs:
-                warnings.Warn(
-                    f"Specifying {a} for only outset or source may cause "
-                    "discrepancies in frame placement",
+                warnings.warn(
+                    f"Specifying {a} independently for only source or "
+                    "outset may cause discrepancies in frame placement",
                 )
 
         default_frame_inner_pad, default_frame_outer_pad = 0.2, 0.1
