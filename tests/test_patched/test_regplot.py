@@ -28,7 +28,7 @@ def test_cluster_regplot():
         data=df,
         x="comp-1",
         y="comp-2",
-        outset="y",
+        col="y",
         hue="y",
         col_wrap=2,
         palette=palette,

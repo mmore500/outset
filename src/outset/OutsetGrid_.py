@@ -88,8 +88,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         col_wrap: typing.Optional[int] = None,
         hue: typing.Union[str, bool, None] = None,
         hue_order: typing.Optional[typing.Sequence[str]] = None,
-        outset: typing.Optional[str] = None,
-        outset_order: typing.Optional[typing.Sequence[str]] = None,
         color: typing.Optional[str] = None,  # pass to override outset hues
         include_sourceplot: bool = True,
         marqueeplot_kwargs: typing.Dict = frozendict.frozendict(),
@@ -127,26 +125,20 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         col : Union[str, bool, None], default None
             Column name for categorical variable to facet across subaxes.
 
-            If None or True, set to match `outset` or `hue` if provided. If False, no faceting is performed.
+            If None or True, set to match `hue` if provided. If False, no faceting is performed.
         col_order : Optional[Sequence[str]], default None
             The order to arrange the columns in the grid.
         col_wrap : Optional[int], default None
             Number of columns where axes grid should wrap to a new row.
-        hue : Union[str, bool, None], default None
+        hue : Optional[str], default None
             Column name for categorical variable to determine rendered color of
             data's rendered marquee annotations.
 
-            If None or True, set to match `outset` if provided. If False, no faceting is performed.
+            Will also facet across subaxes if `col` is not set `False`.
         hue_order : Optional[Sequence[str]], default None
             The to assign palette colors to `hue` categorical values.
 
             May contain all or a subset of `data[hue]` values.
-        outset : Optional[str], default None
-            Column name for categorical variable to segregate data between marquee annotations.
-        outset_order : Optional[Sequence[str]], default None
-            Order for plotting the outsets.
-
-            May contain all or a subset of `data[outset]` values.
         color : Optional[str], default None
             Color for all outset annotations. Overrides the palette.
         include_sourceplot : bool, default True
@@ -170,10 +162,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             raise ValueError("col_order must be None if col not specified")
         if hue is None and hue_order is not None:
             raise ValueError("hue_order must be None if hue not specified")
-        if outset is None and outset_order is not None:
-            raise ValueError(
-                "outset_order must be None if outset not specified"
-            )
 
         for a in "frame_inner_pad":
             if a in marqueeplot_outset_kwargs or a in marqueeplot_source_kwargs:
@@ -193,25 +181,18 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "x and y kwargs must be provided from column names in data",
                 )
             if col is None:
-                col = outset or hue
+                col = hue
                 if (
                     col_order is None
-                    and outset is not None
-                    and outset_order is not None
-                ):
-                    col_order = outset_order
-                elif (
-                    col_order is None
-                    and outset is None
                     and hue is not None
                     and hue_order is not None
                 ):
                     col_order = hue_order
 
         else:
-            if x is not None or y is not None or outset is not None:
+            if x is not None or y is not None:
                 raise ValueError(
-                    "x, y, and outset must not be specified if outset frames "
+                    "x, and y must not be specified if outset frames "
                     "are specified directly",
                 )
             if hue not in (None, True, False):
@@ -225,12 +206,14 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "specified directly",
                 )
 
-            if hue is None:
-                hue = True
             if col is None:
                 col = True
 
-            x, y, outset = "x", "y", "outset"
+            x, y = "x", "y"
+            if col == True:
+                col = "outset"
+            if hue == True:
+                hue = "outset"
             data = pd.DataFrame.from_records(
                 [
                     {
@@ -249,19 +232,18 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             raise ValueError(f"kwarg x={x} must be provided as column in data")
         if not y in data.columns:
             raise ValueError(f"kwarg x={y} must be provided as column in data")
-        if outset is not None and not outset in data.columns:
-            raise ValueError("if provided, outset must be a column in data")
 
         if col is True:
-            if outset is None:
-                raise ValueError("outset must be provided if col is True")
-            col = outset
+            if hue is None:
+                raise ValueError("hue must be provided if col is True")
+            col = hue
         elif col is False:
             col = None
+
         if hue is True:
-            if outset is None:
-                raise ValueError("outset must be provided if hue is True")
-            hue = outset
+            if col is None:
+                raise ValueError("col must be provided if hue is True")
+            hue = col
         elif hue is False:
             hue = None
 
@@ -272,9 +254,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             raise ValueError("if provided, hue must be a column in data")
 
         self.__data = data
-
-        if outset is not None and outset_order is None:
-            outset_order = sorted(data[outset].unique())
 
         if col is None:
             assert "_dummy_col" not in data.columns
@@ -333,8 +312,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 y=y,
                 hue=hue,
                 hue_order=hue_order,
-                outset=outset,
-                outset_order=outset_order,
+                outset=col,
+                outset_order=col_order,
                 ax=self_.source_axes,
                 **{
                     "color": color,
@@ -397,8 +376,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 marqueeplot,
                 x=x,
                 y=y,
-                outset=outset,
-                outset_order=outset_order,
                 **{
                     "color": color,
                     "palette": palette,

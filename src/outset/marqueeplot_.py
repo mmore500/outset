@@ -150,7 +150,7 @@ def marqueeplot(
     assert "_dummy_outset_key" not in data.columns
     data["_dummy_hue_key"] = data[hue].map(hue_order.index)
     data["_dummy_outset_key"] = data[outset].map(outset_order.index)
-    data.sort_values(["_dummy_hue_key", "_dummy_outset_key"], inplace=True)
+    data.sort_values(["_dummy_outset_key", "_dummy_hue_key"], inplace=True)
 
     # need to solve for and apply outer padding prior to plotting to ensure
     # consistency...
@@ -168,7 +168,8 @@ def marqueeplot(
     )
 
     for (_outset_value, hue_value), subset in data.groupby(
-        [outset, hue], sort=False
+        [outset, hue],
+        sort=False,
     ):
         assert len(subset)
         xlim = [subset[x].min(), subset[x].max()]

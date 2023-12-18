@@ -19,7 +19,6 @@ def test_OutsetGrid_one():
         data=data,
         x="x",
         y="y",
-        outset="outset",
         marqueeplot_kwargs={
             "frame_inner_pad": 0.2,
         },
@@ -49,7 +48,7 @@ def test_OutsetGrid_with_sourceplot_monochrome():
         }
     )
 
-    g = OutsetGrid(data=data, x="x", y="y", outset="outset")
+    g = OutsetGrid(data=data, x="x", y="y", col="outset")
     g.marqueeplot()
     g.map_dataframe(sns.scatterplot, x="x", y="y", hue="outset", legend=False)
 

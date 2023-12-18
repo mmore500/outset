@@ -21,8 +21,8 @@ def test_inset_outsets_one():
         data=data,
         x="x",
         y="y",
-        outset="outset",
-        outset_order=["A"],
+        col="outset",
+        col_order=["A"],
         marqueeplot_kwargs={
             "frame_inner_pad": 0.1,
             "frame_outer_pad": 0.3,
@@ -42,8 +42,8 @@ def test_inset_outsets_two():
         data=data,
         x="x",
         y="y",
-        outset="outset",
-        outset_order=["A", "C"],
+        col="outset",
+        col_order=["A", "C"],
         marqueeplot_kwargs={
             "frame_inner_pad": 0.3,
             "frame_outer_pad": 0.1,
@@ -78,8 +78,8 @@ def test_inset_outsets_three(corner: str):
         data=data,
         x="x",
         y="y",
-        outset="outset",
-        outset_order=["A", "B", "C"],
+        col="outset",
+        col_order=["A", "B", "C"],
         marqueeplot_kwargs={
             "frame_inner_pad": 0.1,
             "frame_outer_pad": 0.1,
