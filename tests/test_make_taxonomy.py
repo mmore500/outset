@@ -1,9 +1,11 @@
 from matplotlib import pyplot as plt
 import pandas as pd
+import pytest
 
 import outset
 
 
+@pytest.mark.integration
 def test_make_taxonomy():
     # Create sample data with a 'outset' column for grouping
     data = pd.DataFrame(
@@ -84,6 +86,8 @@ def test_make_taxonomy():
         ),
         annotation_clip=False,
     )
+
+    # additional annotations for other marquees
     # g.source_axes.annotate(
     #     "marquee",
     #     xy=(1.5, 10.5),
