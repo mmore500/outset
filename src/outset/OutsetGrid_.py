@@ -411,7 +411,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         self._marqueeplot_outset = marqueeplot_outset
 
     def equalize_aspect(self: "OutsetGrid") -> "OutsetGrid":
-        """Adjust axes {x,y}lims to ensure an equal xlim-to-ylim ratio across all axes.
+        """Adjust axes {x,y}lims to ensure an equal xlim-to-ylim ratio across
+        all axes.
 
         Returns
         -------
