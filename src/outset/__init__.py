@@ -3,6 +3,7 @@ from __future__ import annotations
 
 __version__ = "0.0.0"
 
+from .CalcBoundsIQR_ import CalcBoundsIQR
 from .draw_marquee_ import draw_marquee
 from .inset_outsets_ import inset_outsets
 from .layout_corner_insets_ import layout_corner_insets
@@ -14,11 +15,12 @@ from .MarkNumericalBadges_ import MarkNumericalBadges
 from .MarkRomanBadges_ import MarkRomanBadges
 from .OutsetGrid_ import OutsetGrid
 from .marqueeplot_ import marqueeplot
-from .resize_clip_outliers_ import resize_clip_outliers
+from .rescale_clip_outliers_ import rescale_clip_outliers
 from .stub_all_clipped_values_ import stub_all_clipped_values
 from .stub_edge_mark_ import stub_edge_mark
 
 __all__ = [
+    "CalcBoundsIQR",
     "draw_marquee",
     "inset_outsets",
     "layout_corner_insets",
@@ -33,7 +35,7 @@ __all__ = [
     "MarkRomanBadges",
     "marqueeplot",
     "OutsetGrid",
-    "resize_clip_outliers",
+    "rescale_clip_outliers",
     "stub_all_clipped_values",
     "stub_edge_mark",
 ]
