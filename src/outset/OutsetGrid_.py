@@ -467,7 +467,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Returns self.
         """
         self._marqueeplot_outset(self)
-        self._marqueeplot_source = lambda self_: warnings.warn(
+        self._marqueeplot_outset = lambda self_: warnings.warn(
             "Redundant call to marqueeplot_outset, marquees were already drawn",
         )
         if equalize_aspect:
