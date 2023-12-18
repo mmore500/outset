@@ -281,7 +281,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             hue_order=hue_order,
             palette=palette,
             **{
-                "legend_out": False,
+                "legend_out": True,
                 "sharex": False,
                 "sharey": False,
                 **kwargs,
