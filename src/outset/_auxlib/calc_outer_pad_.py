@@ -23,22 +23,30 @@ from matplotlib import axes as mpl_axes
 # epdw = paf * sadw / (1 - paf * 2)
 
 
+def _calc_pad_x(ax: mpl_axes.Axes, x_axfrac: float) -> float:
+    if x_axfrac >= 0.5:
+        warnings.warn("x outer pad exceeds half axis size, clipping to 0.5")
+        x_axfrac = 0.5
+    pad_x = x_axfrac * np.ptp(ax.get_xlim()) / (1 - x_axfrac * 2)
+    assert np.isclose((np.ptp(ax.get_xlim()) + 2 * pad_x) * x_axfrac, pad_x)
+    return pad_x
+
+
+def _calc_pad_y(ax: mpl_axes.Axes, y_axfrac: float) -> float:
+    if y_axfrac >= 0.5:
+        warnings.warn("x outer pad exceeds half axis size, clipping to 0.5")
+        y_axfrac = 0.5
+    pad_y = y_axfrac * np.ptp(ax.get_ylim()) / (1 - y_axfrac * 2)
+    assert np.isclose((np.ptp(ax.get_ylim()) + 2 * pad_y) * y_axfrac, pad_y)
+    return pad_y
+
+
 def _calc_outer_pad_axes(
     ax: mpl_axes.Axes, frame_outer_pad: float
 ) -> typing.Tuple[float, float]:
     """Calculate width in data units necessary for pad to be a fraction
     `frame_outer_pad` of axes size."""
-    if frame_outer_pad >= 0.5:
-        warnings.warn("axes-proportional pad exceeds half axes size")
-    pad_x = frame_outer_pad * np.ptp(ax.get_xlim()) / (1 - frame_outer_pad * 2)
-    pad_y = frame_outer_pad * np.ptp(ax.get_ylim()) / (1 - frame_outer_pad * 2)
-    assert np.isclose(
-        (np.ptp(ax.get_xlim()) + 2 * pad_x) * frame_outer_pad, pad_x
-    )
-    assert np.isclose(
-        (np.ptp(ax.get_ylim()) + 2 * pad_y) * frame_outer_pad, pad_y
-    )
-    return pad_x, pad_y
+    return _calc_pad_x(ax, frame_outer_pad), _calc_pad_y(ax, frame_outer_pad)
 
 
 def _calc_outer_pad_figure(
@@ -53,18 +61,7 @@ def _calc_outer_pad_figure(
         )
     pad_x_axfrac = frame_outer_pad / ax.get_position().width
     pad_y_axfrac = frame_outer_pad / ax.get_position().height
-    if pad_x_axfrac >= 0.5:
-        warnings.warn("figure-proportional x pad exceeds half axes size")
-    if pad_y_axfrac >= 0.5:
-        warnings.warn("figure-proportional y pad exceeds half axes size")
-
-    # same padding proportion after application math as for axes
-    pad_x = pad_x_axfrac * np.ptp(ax.get_xlim()) / (1 - pad_x_axfrac * 2)
-    pad_y = pad_y_axfrac * np.ptp(ax.get_ylim()) / (1 - pad_y_axfrac * 2)
-    assert np.isclose((np.ptp(ax.get_xlim()) + 2 * pad_x) * pad_x_axfrac, pad_x)
-    assert np.isclose((np.ptp(ax.get_ylim()) + 2 * pad_y) * pad_y_axfrac, pad_y)
-
-    return pad_x, pad_y
+    return _calc_pad_x(ax, pad_x_axfrac), _calc_pad_y(ax, pad_y_axfrac)
 
 
 def _calc_outer_pad_inches(
@@ -75,18 +72,7 @@ def _calc_outer_pad_inches(
     axheight_inches = ax.get_position().height * ax.figure.get_figheight()
     pad_x_axfrac = frame_outer_pad / axwidth_inches
     pad_y_axfrac = frame_outer_pad / axheight_inches
-    if pad_x_axfrac >= 0.5:
-        warnings.warn("inch-specified x pad exceeds half axes size")
-    if pad_y_axfrac >= 0.5:
-        warnings.warn("inch-specified y pad exceeds half axes size")
-
-    # same padding proportion after application math as for axes
-    pad_x = pad_x_axfrac * np.ptp(ax.get_xlim()) / (1 - pad_x_axfrac * 2)
-    pad_y = pad_y_axfrac * np.ptp(ax.get_ylim()) / (1 - pad_y_axfrac * 2)
-    assert np.isclose((np.ptp(ax.get_xlim()) + 2 * pad_x) * pad_x_axfrac, pad_x)
-    assert np.isclose((np.ptp(ax.get_ylim()) + 2 * pad_y) * pad_y_axfrac, pad_y)
-
-    return pad_x, pad_y
+    return _calc_pad_x(ax, pad_x_axfrac), _calc_pad_y(ax, pad_y_axfrac)
 
 
 def calc_outer_pad(
