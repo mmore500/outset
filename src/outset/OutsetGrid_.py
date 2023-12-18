@@ -49,6 +49,13 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     source_axes: typing.Optional[mpl_axes.Axes]
     outset_axes: typing.Sequence[mpl_axes.Axes]
 
+    def tight_layout(self) -> None:
+        self.figure.tight_layout()
+
+    def _finalize_grid(self, axlabels) -> None:
+        """Finalize the annotations and layout."""
+        self.tight_layout()
+
     def __init__(
         self: "OutsetGrid",
         data: typing.Union[
@@ -612,6 +619,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             kwargs["hue_order"] = hue_order
         if self.source_axes is not None:
             plotter(self.__data, *args, ax=self.source_axes, **kwargs)
+        self.tight_layout()
         return self
 
     def broadcast(
@@ -693,6 +701,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 plotter(*args, **kwargs)
             ax.set_xlim(*xlim)
             ax.set_ylim(*ylim)
+        self.tight_layout()
         return self
 
     def broadcast_source(
@@ -734,4 +743,5 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             except (TypeError, AttributeError):
                 plt.sca(ax)
                 plotter(*args, **kwargs)
+        self.tight_layout()
         return self

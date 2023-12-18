@@ -12,6 +12,11 @@ def resize_figure_to_axes(fig: mpl_Figure, ax: mpl_Axes) -> None:
         The matplotlib figure object to be resized.
     ax : mpl_Axes
         The matplotlib axes object the figure should be resized to fit.
+
+    Notes
+    -----
+    If axis labels or titles are getting cut off, you may need to call
+    `Figure.tight_layout()` before running this function.
     """
     # Save the original position of the axis in inches
     original_pos = ax.get_position()
@@ -23,7 +28,11 @@ def resize_figure_to_axes(fig: mpl_Figure, ax: mpl_Axes) -> None:
     ]
 
     # Get the bounding box of the axis in inches
-    bbox = ax.get_tightbbox().transformed(fig.dpi_scale_trans.inverted())
+    bbox = ax.get_tightbbox(
+        renderer=fig.canvas.get_renderer(),
+    ).transformed(
+        fig.dpi_scale_trans.inverted(),
+    )
 
     # Set the figure size to match the axis size
     fig.set_size_inches(
