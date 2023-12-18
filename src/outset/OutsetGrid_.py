@@ -12,6 +12,7 @@ import seaborn as sns
 from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
+from .MarkMagnifyingGlass_ import MarkMagnifyingGlass
 from .MarkNumericalBadges_ import MarkNumericalBadges
 from .marqueeplot_ import marqueeplot
 
@@ -297,6 +298,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         # draw sourceplot
         #######################################################################
+        default_draw_glyph_functor_class = (
+            MarkMagnifyingGlass
+            if len(self.outset_axes) == 1
+            else MarkNumericalBadges
+        )
+
         def marqueeplot_source(self_: "OutsetGrid") -> None:
             if self_.source_axes is None:
                 return
@@ -314,7 +321,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "palette": palette,
                     "frame_inner_pad": default_frame_inner_pad,
                     "frame_outer_pad": default_frame_outer_pad,
-                    "mark_glyph": MarkNumericalBadges,
+                    "mark_glyph": default_draw_glyph_functor_class,
                     "tight_axlim": False,
                     "zorder": zorder,
                     **copy.deepcopy(marqueeplot_kwargs),  # for mark_glyph
@@ -378,7 +385,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "frame_outer_pad": default_frame_outer_pad,
                     "leader_stretch": 0.2,
                     "leader_stretch_unit": "inchesfrom",
-                    "mark_glyph": MarkNumericalBadges(),
+                    "mark_glyph": default_draw_glyph_functor_class(),
                     "tight_axlim": True,
                     "zorder": zorder,
                     **marqueeplot_kwargs,
