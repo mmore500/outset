@@ -220,14 +220,11 @@ def _prepad_axlim(
             ],
         )
 
-    ax.set_xlim(
-        min(min(framex_values), ax.get_xlim()[0]),
-        max(max(framex_values), ax.get_xlim()[1]),
-    )
-    ax.set_ylim(
-        min(min(framey_values), ax.get_ylim()[0]),
-        max(max(framey_values), ax.get_ylim()[1]),
-    )
+    if is_axes_unset(ax) or tight_axlim:
+        if framex_values and np.ptp(framex_values):
+            ax.set_xlim(min(framex_values), max(framex_values))
+        if framey_values and np.ptp(framey_values):
+            ax.set_ylim(min(framey_values), max(framey_values))
 
     pad_x, pad_y = calc_outer_pad(ax, frame_outer_pad, frame_outer_pad_unit)
     if len(data):

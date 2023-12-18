@@ -1,3 +1,4 @@
+from collections import abc
 import copy
 import typing
 import warnings
@@ -176,7 +177,13 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "outset may cause discrepancies in frame placement",
                 )
 
-        default_frame_inner_pad, default_frame_outer_pad = 0.2, 0.1
+        default_frame_outer_pad = 0.1
+        default_frame_inner_pad = (
+            # no pad if frame positions directly specified
+            0.1
+            if isinstance(data, (pd.DataFrame, abc.Mapping))
+            else 0.0
+        )
 
         # spoof data frame if outset frames are specified directly
         if isinstance(data, pd.DataFrame):
@@ -394,6 +401,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "palette": palette,
                     "frame_inner_pad": default_frame_inner_pad,
                     "frame_outer_pad": default_frame_outer_pad,
+                    "frame_outer_pad_unit": "axes",
                     "leader_stretch": 0.2,
                     "leader_stretch_unit": "inchesfrom",
                     "mark_glyph": default_draw_glyph_functor_class(),
