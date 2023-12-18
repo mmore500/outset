@@ -15,7 +15,7 @@ def compose_callout_leader(
     Outer leader vertex placement is calculated relative to the upper right
     frame vertex. The outer vertex is place
 
-        Uses reflected right triangle similar to the proportions of the rectangle
+    Uses reflected right triangle similar to the proportions of the rectangle
     to pick the upper points for the trapezoid, relative to the upper right
     corner of the rectangle. The trapezoid is then constructed to include
     the upper left corner of the rectangle and the lower right corner of the rectangle.

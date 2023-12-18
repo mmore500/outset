@@ -52,6 +52,10 @@ def mark_arrow(
     Returns
     -------
     None
+
+    See Also
+    --------
+    MarkArrow: Functor interface for `mark_arrow`.
     """
     if ax is None:
         ax = plt.gca()
@@ -118,3 +122,11 @@ def mark_arrow(
         markersize=markersize * overlay_scale,
         **kwargs,
     )
+
+
+class MarkArrow:
+    """Functor interface for `mark_arrow`."""
+
+    def __call__(self, *args, **kwargs):
+        """Forwards to `mark_arrow`."""
+        return mark_arrow(*args, **kwargs)

@@ -24,6 +24,7 @@ def jitter(values):
 
 
 # adapted from https://www.datatechnotes.com/2020/11/tsne-visualization-example-in-python.html
+@pytest.mark.integration
 def test_make_logo():
     (x_train, y_train), (_, _) = mnist.load_data()
     x_train = x_train[:3000]
@@ -66,7 +67,7 @@ def test_make_logo():
         alpha=0.6,
         legend=False,
         s=30,
-        ax=og.sourceplot_axes,
+        ax=og.source_axes,
     )
     og.marqueeplot()
     og.broadcast_outset(
@@ -115,7 +116,7 @@ def test_make_logo():
             path_effects=[withStroke(linewidth=20, foreground="white")],
             zorder=5,
         )
-        og.sourceplot_axes.text(
+        og.source_axes.text(
             *coord,
             txt,
             fontsize=8,

@@ -44,7 +44,7 @@ test = [
     "flake8",
     "flake8-pyproject",
     "keras==2.15.0",
-    "pre-commit==3.5.0",
+    "pre-commit==3.6.0",
     "pylint==3.0.3",
     "pylint_junit",
     "pytest-cov==4.1.0",
@@ -54,6 +54,7 @@ test = [
     "pytest-github-actions-annotate-failures",
     "scikit-learn",
     "shellcheck-py==0.9.0.6",
+    "python-slugify",
     "tensorflow"
 ]
 

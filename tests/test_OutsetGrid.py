@@ -2,9 +2,8 @@ import matplotlib.cbook as mpl_cbook
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from matplotlib.testing import decorators as mpl_testing_decorators
 
-from outset import draw_marquee, OutsetGrid
+from outset import OutsetGrid
 
 # Sample data for testing
 data = pd.DataFrame(
@@ -13,7 +12,6 @@ data = pd.DataFrame(
 
 
 def test_OutsetGrid_one():
-    plt.clf()
     # Create a sample dataframe
     data = pd.DataFrame({"x": [0.5], "y": [1], "outset": ["A"]})
     sns.scatterplot(data=data, x="x", y="y")
@@ -32,7 +30,6 @@ def test_OutsetGrid_one():
 
 
 def test_OutsetGrid_with_sourceplot_monochrome():
-    plt.clf()
     # Create sample data with a 'outset' column for grouping
     data = pd.DataFrame(
         {
@@ -59,7 +56,6 @@ def test_OutsetGrid_with_sourceplot_monochrome():
 
 
 def test_OutsetGrid_with_sourceplot_hue():
-    plt.clf()
     # Create sample data with a 'outset' column for grouping
     data = pd.DataFrame(
         {
@@ -86,8 +82,6 @@ def test_OutsetGrid_with_sourceplot_hue():
 
 
 def test_OutsetGrid_broadcast():
-    plt.clf()
-
     with mpl_cbook.get_sample_data("grace_hopper.jpg") as image_file:
         image = plt.imread(image_file)
 

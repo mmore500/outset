@@ -4,7 +4,6 @@ from outset import MarkNumericalBadges
 
 
 def test_MarkNumericalBadges():
-    plt.clf()  # Clear the current figure
     ax = plt.gca()  # Get the current axes
 
     ftor = MarkNumericalBadges()
@@ -22,4 +21,3 @@ def test_MarkNumericalBadges():
     outpath = "/tmp/test_MarkNumericalBadges.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
-    plt.close()  # Close the plot after saving

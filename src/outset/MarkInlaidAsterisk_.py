@@ -27,10 +27,11 @@ def mark_inlaid_asterisk(
     scale_badge: float = 0.8,
     **kwargs,
 ) -> None:
-    """
-    Draw asterisk badge marker(s) at specified location(s) on a matplotlib plot.
+    """Draw asterisk badge marker(s) at specified location(s) on a matplotlib p
+    lot.
 
-    This function stacks matplotlib markers to render an asterisk overlaid onto a circular badge with a slightly larger circular underlay.
+    This function stacks matplotlib markers to render an asterisk overlaid onto
+    a circular badge with a slightly larger circular underlay.
 
     Parameters
     ----------
@@ -39,7 +40,8 @@ def mark_inlaid_asterisk(
     y : float or sequence of floats
         The y-coordinate(s) where the asterisk badge(s) will be placed.
     ax : mpl_axes.Axes, optional
-        The axes object on which to draw the markers. If None, plt.gca() will be used.
+        The axes object on which to draw the markers. If None, plt.gca() will
+        be used.
     asterisk_edgewidth : float, default 1
         The edge width of the asterisk marker.
     color : str, default "black"
@@ -59,7 +61,8 @@ def mark_inlaid_asterisk(
     color_underlay : Union[str, tuple], default "white"
         The color of the underlay.
     marker : tuple, default (6, 2, 0)
-        The marker style for the asterisk. Default is 6 points, rotated 0 degrees.
+        The marker style for the asterisk. Default is 6 points, rotated 0
+        degrees.
     marker_badge : str, default "o"
         The marker style for the badge.
     marker_underlay : str, default "o"
@@ -78,6 +81,10 @@ def mark_inlaid_asterisk(
     Returns
     -------
     None
+
+    See Also
+    --------
+    MarkInlaidAsterisk: Functor interface for `mark_inlaid_asterisk`.
     """
     if ax is None:
         ax = plt.gca()
@@ -144,3 +151,11 @@ def mark_inlaid_asterisk(
         markersize=markersize * scale_asterisk,
         **kwargs,
     )
+
+
+class MarkInlaidAsterisk:
+    """Functor interface for `mark_inlaid_asterisk`."""
+
+    def __call__(self, *args, **kwargs):
+        """Forwards to `mark_inlaid_asterisk`."""
+        return mark_inlaid_asterisk(*args, **kwargs)

@@ -29,7 +29,9 @@ def equalize_aspect(axs: typing.List[mpl_axes.Axes]) -> float:
     if not axs:
         return 1.0
     aspects = [calc_aspect(a) for a in axs]
-    new_aspect = np.sqrt(min(aspects) * max(aspects))
+    new_aspect = np.sqrt(min(aspects) * max(aspects))  # geometric mean
     for ax in axs:
         set_aspect(ax, new_aspect)
+
+    assert all(np.isclose(calc_aspect(a), new_aspect) for a in axs)
     return new_aspect

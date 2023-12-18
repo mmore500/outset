@@ -5,13 +5,15 @@
 """
 This is a configuration file for pytest containing customizations and fixtures.
 
-In VSCode, Code Coverage is recorded in config.xml. Delete this file to reset reporting.
+In VSCode, Code Coverage is recorded in config.xml. Delete this file to reset
+reporting.
 """
 
 from __future__ import annotations
 
 from typing import List
 
+from matplotlib import pyplot as plt
 import pytest
 from _pytest.nodes import Item
 
@@ -28,3 +30,12 @@ def pytest_collection_modifyitems(items: list[Item]):
 def unit_test_mocks(monkeypatch: None):
     """Include Mocks here to execute all commands offline and fast."""
     pass
+
+
+@pytest.fixture(autouse=True)
+def clear_matplotlib_state():
+    """
+    A fixture that clears the Matplotlib state before each test.
+    """
+    plt.clf()
+    plt.close("all")

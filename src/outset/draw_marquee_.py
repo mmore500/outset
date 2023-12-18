@@ -11,7 +11,7 @@ import seaborn as sns
 from ._auxlib.draw_callout_ import draw_callout
 from ._auxlib.draw_frame_ import draw_frame
 from ._auxlib.is_axes_unset_ import is_axes_unset
-from .mark_magnifying_glass_ import mark_magnifying_glass
+from .MarkMagnifyingGlass_ import mark_magnifying_glass
 
 
 def draw_marquee(
@@ -35,70 +35,76 @@ def draw_marquee(
     mark_retract: float = 0.1,
     zorder: float = 0,
 ) -> mpl_axes.Axes:
-    """Mark a rectangular region as outset, framing it and adding a
-    "zoom"-effect callout up and to the right.
+    """Mark a rectangular region on a matplotlib axes object, framing it with a
+    zoom-effect callout.
+
+    Consists of (1) a rectangular frame (2) a callout leader, and (3) a marked
+    glyph. The rectangular frame consists of an outer of border and an
+    underlaid solid color fill. The leader is a gradient fill clipped to angle
+    to a point up and to to the right of the framed region. The marked glyph
+    (e.g., a numeral, an asterisk, etc.) is drawn at the vertex point of the
+    leader.
 
     The callout is capped by a customizable glyph, default as a magnifying
     glass.
+        Parameters
+        ----------
+        frame_xlim : Tuple[float, float]
+            X-limits (xmin, xmax) of the area to be marked as outset.
+        frame_ylim : Tuple[float, float]
+            Y-limits (ymin, ymax) of the area to be marked as outset.
+        ax : matplotlib.axes.Axes, optional
+            Axes object to draw the outset on. Defaults to `plt.gca()`.
+        color : str, optional
+            Color for the frame's edge and zoom indication lines.
+        clip_on : bool, default False
+            If True, drawing elements are clipped to the axes bounding box.
+        despine : bool, default True
+            If True, removes top and right spines from the plot.
+        frame_edge_kwargs : Dict, default {}
+            Customization arguments for the frame's edge.
+        frame_face_kwargs : Dict, default {}
+            Customization arguments for the frame's face.
+        frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
+            Padding from data extent to frame boundary, calculated relative to data
+            extent (float) or in absolute units (tuple).
+        frame_outer_pad : Union[float, Tuple[float, float]], default 0.1
+            Padding from frame boundary to axis viewport, calculated relative to data extent (float) or in absolute units (tuple).
+        label : str, optional
+            Label used for legend creation.
+        leader_edge_kwargs : Dict, default {}
+            Customization arguments for the leader's edge.
+        leader_face_kwargs : Dict, default {}
+            Customization arguments for the leader's face.
+        leader_stretch : float, default 0.1
+            Scale of callout leader relative to axis viewport.
+        mark_glyph : Callable, optional
+            A callable to draw a glyph at the outer vertex of the callout leader.
 
-    Parameters
-    ----------
-    frame_xlim : Tuple[float, float]
-        The x-limits (xmin, xmax) of the area to be marked outset.
-    frame_ylim : Tuple[float, float]
-        The y-limits (ymin, ymax) of the area to be marked outset.
-    ax : matplotlib.axes.Axes, optional
-        The axes object on which to draw the outset.
+            If None, no glyph is drawn.
+        mark_glyph_kwargs : Dict, default frozendict.frozendict()
+            Arguments for the mark_glyph callable.
+        mark_retract : float, default 0.1
+            Fraction to pull back glyph from the outer vertex of the callout.
+        zorder : float, default 0
+            Z-order for layering plot elements.
 
-        Defaults to `plt.gca()`.
-    color : typing.Optional[str], default "blue"
-        Color for the frame's edge and the lines of the zoom indication.
+        Returns
+        -------
+        matplotlib.axes.Axes
+            Axes with the outset and annotations added.
 
-        If None, the first color of the seaborn color palette is used.
-    clip_on : bool, default False
-        Determines if drawing elements should be clipped to the axes bounding
-        box.
-    despine : bool, default True
-        Remove the top and right spines from the plots.
-    frame_edge_kwargs : Dict, default {}
-    frame_face_kwargs : Dict, default {}
+        Notes
+        -----
+        Delegates to `_auxlib.draw_callout_.draw_callout` and
+        `_auslib.draw_callout_.draw_frame` for drawing.
 
-    frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
-        How far from data range should rectangular boundary fall?
-
-        If specified as a float value, horizontal and vertical padding is
-        determined relative to axis viewport. If specified as a tuple, the first
-        value specifies absolute horizontal padding in axis units and the second
-        specifies absolute vertical padding in axis units.
-    frame_linewidth : float, default 1
-        Line width of the frame's edge.
-    label : Optional[str], optional
-        Used for legend creation.
-    leader_linestyle : str, default ":"
-        Line style for the zoom indication (e.g., solid, dashed, dotted).
-    leader_linewidth : int, default 2
-        Line width for the zoom indication's edges.
-    leader_stretch : float, default 0.1
-        Stretch factor for the callout leader extending from the frame.
-
-        Set `leader_stretch` 0 to collapse away the leader.
-    mark_glyph : Optional[Callable], optional
-        A callable to draw a glyph at the end of the callout.
-
-        Defaults to a magnifying glass. Outset also provides implementations
-        for arrow, asterisk, and letter/number glyphs.
-    mark_glyph_kwargs : Dict, default frozendict.frozendict()
-        Keyword arguments for the mark_glyph callable.
-    mark_retract : float, default 0.1
-        Retraction factor for the glyph placement from the outer vertex of the
-        callout.
-    zorder : float, default 0
-        Z-order for layering plot elements; higher values are drawn on top.
-
-    Returns
-    -------
-    Tuple[mpl_axes.Axes, Tuple[float, float, float, float]]
-        The axes object with the outset and annotations added.
+        See Also
+        --------
+        marqueeplot
+            Figure-level interface for `draw_marquee`.
+        OutsetGrid
+            Figure-level interface for creating plots with marquee annotations.
     """
     if ax is None:
         ax = plt.gca()

@@ -47,14 +47,14 @@ def mark_magnifying_glass(
     markersize : float, default 15
         Size for glyph's largest marker element.
     rotate_angle : float, default 20
-        The angle (in degrees) to rotate the asterisk part of the magnifying glass.
+        The angle (in degrees) to rotate the asterisk part of the magnifying
+        glass.
     **kwargs : dict, optional
         Additional keyword arguments forward to matplotlib `plot`.
 
     Returns
     -------
-    matplotlib.axes.Axes
-        The matplotlib axes containing the plot.
+    None
     """
     if ax is None:
         ax = plt.gca()

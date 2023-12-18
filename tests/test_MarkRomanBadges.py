@@ -4,7 +4,6 @@ from outset import MarkRomanBadges
 
 
 def test_MarkRomanBadges_lower():
-    plt.clf()  # Clear the current figure
     ax = plt.gca()  # Get the current axes
 
     ftor = MarkRomanBadges()
@@ -21,11 +20,9 @@ def test_MarkRomanBadges_lower():
     outpath = "/tmp/test_MarkRomanBadges_lower.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
-    plt.close()  # Close the plot after saving
 
 
 def test_MarkRomanBadges_upper():
-    plt.clf()  # Clear the current figure
     ax = plt.gca()  # Get the current axes
 
     ftor = MarkRomanBadges(upper=True)
@@ -43,11 +40,9 @@ def test_MarkRomanBadges_upper():
     outpath = "/tmp/test_MarkRomanBadges_upper.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
-    plt.close()  # Close the plot after saving
 
 
 def test_MarkRomanBadges_start():
-    plt.clf()  # Clear the current figure
     ax = plt.gca()  # Get the current axes
 
     ftor = MarkRomanBadges(start=9)
@@ -65,4 +60,3 @@ def test_MarkRomanBadges_start():
     outpath = "/tmp/test_MarkRomanBadges_start.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
-    plt.close()  # Close the plot after saving

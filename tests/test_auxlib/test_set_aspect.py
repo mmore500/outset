@@ -1,57 +1,46 @@
 from matplotlib import pyplot as plt
+import numpy as np
 
+from outset._auxlib.calc_aspect_ import calc_aspect
 from outset._auxlib.set_aspect_ import set_aspect
 
 
-def test_calc_aspect_square():
+def test_set_aspect_square():
+    # note: asserts inside of set_aspect will run
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 1)
     set_aspect(plt.gca(), 0.5) == 1
-    assert plt.gca().get_xlim() == (-0.5, 1.5)
-    assert plt.gca().get_ylim() == (0, 1)
 
     plt.gca().set_xlim(0, 1)
     plt.gca().set_ylim(1, 2)
     set_aspect(plt.gca(), 2) == 1
-    assert plt.gca().get_xlim() == (0, 1)
-    assert plt.gca().get_ylim() == (0.5, 2.5)
 
 
-def test_calc_aspect_tall():
+def test_set_aspect_tall():
+    # note: asserts inside of set_aspect will run
     plt.gca().set_xlim(0, 1)
     plt.gca().set_ylim(0, 2)
     set_aspect(plt.gca(), 1)
-    assert plt.gca().get_xlim() == (-0.5, 1.5)
-    assert plt.gca().get_ylim() == (0, 2)
 
     plt.gca().set_xlim(0, 1)
     plt.gca().set_ylim(0, 2)
     set_aspect(plt.gca(), 4)
-    assert plt.gca().get_xlim() == (0, 1)
-    assert plt.gca().get_ylim() == (-1, 3)
 
     plt.gca().set_xlim(0, 1)
     plt.gca().set_ylim(0, 2)
     set_aspect(plt.gca(), 0.5)
-    assert plt.gca().get_ylim() == (0, 2)
-    assert plt.gca().get_xlim() == (-1.5, 2.5)
 
 
-def test_calc_aspect_wide():
+def test_set_aspect_wide():
+    # note: asserts inside of set_aspect will run
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 2)
     set_aspect(plt.gca(), 1)
-    assert plt.gca().get_ylim() == (-0.5, 1.5)
-    assert plt.gca().get_xlim() == (0, 2)
 
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 2)
-    set_aspect(plt.gca(), 1 / 4)
-    assert plt.gca().get_ylim() == (0, 1)
-    assert plt.gca().get_xlim() == (-1, 3)
+    set_aspect(plt.gca(), 0.25)
 
     plt.gca().set_ylim(0, 1)
     plt.gca().set_xlim(0, 2)
-    set_aspect(plt.gca(), 1 / 0.5)
-    assert plt.gca().get_xlim() == (0, 2)
-    assert plt.gca().get_ylim() == (-1.5, 2.5)
+    set_aspect(plt.gca(), 2)

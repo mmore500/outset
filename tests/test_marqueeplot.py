@@ -79,7 +79,6 @@ def test_marqueeplot_vs_draw_marquee_split(
 
 
 def test_marqueeplot_one():
-    plt.clf()
     # Create a sample dataframe
     data = pd.DataFrame({"x": [0.5], "y": [1]})
     sns.scatterplot(data=data, x="x", y="y")
@@ -95,7 +94,6 @@ def test_marqueeplot_one():
 
 
 def test_marqueeplot_several():
-    plt.clf()
     _fig, ax = plt.subplots(figsize=(6, 4))
     ax.set_xlim(0, 4)
     ax.set_ylim(0, 4)

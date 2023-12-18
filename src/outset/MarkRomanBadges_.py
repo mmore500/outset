@@ -28,7 +28,7 @@ class MarkRomanBadges:
         step: int = 1,
         *,
         upper: bool = False,
-    ):
+    ) -> None:
         """Initialize functor.
 
         Parameters
