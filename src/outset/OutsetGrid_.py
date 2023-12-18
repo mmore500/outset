@@ -420,7 +420,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Returns self.
         """
         if self.source_axes is not None:
-            aspect = calc_aspect(self.source_axes, physical=True)
+            aspect = calc_aspect(self.source_axes)
             for ax in self.axes.flat[1:]:
                 set_aspect(ax, aspect)
         else:

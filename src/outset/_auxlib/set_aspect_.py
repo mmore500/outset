@@ -1,12 +1,12 @@
+import warnings
+
 from matplotlib import axes as mpl_axes
 import numpy as np
 
 from .calc_aspect_ import calc_aspect
 
 
-def set_aspect(
-    ax: mpl_axes.Axes, aspect: float, physical: bool = False
-) -> None:
+def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
     """Adjust the ratio between ylim span length and xlim span length.
 
     The function calculates the current aspect ratio of the Axes object and
@@ -18,34 +18,58 @@ def set_aspect(
     Note that axes limits are only ever widened. Axes widening is performed
     symmetrically.
     """
-    cur_aspect = calc_aspect(ax, physical=physical)
-    cur_width = np.ptp(ax.get_xlim())
-    cur_height = np.ptp(ax.get_ylim())
-    x_min, x_max = ax.get_xlim()
-    y_min, y_max = ax.get_ylim()
+    (x0_, x1_), (y0_, y1_) = ax.get_xlim(), ax.get_ylim()
+    before_width, before_height = np.ptp(ax.get_xlim()), np.ptp(ax.get_ylim())
 
-    if aspect == cur_aspect:
-        # The current aspect ratio matches the desired one, no action needed
-        pass
-    elif aspect < cur_aspect:
-        # The desired aspect ratio is less than the current,
-        # meaning the plot is too tall. We need to increase the width evenly.
-        new_width = cur_width / aspect * cur_aspect
-        width_extend = (new_width - cur_width) / 2
-        ax.set_xlim(x_min - width_extend, x_max + width_extend)
-    elif aspect > cur_aspect:
-        # The desired aspect ratio is greater than the current,
-        # meaning the plot is too wide. We need to increase the height evenly.
-        new_height = cur_height * aspect / cur_aspect
-        height_extend = (new_height - cur_height) / 2
-        ax.set_ylim(y_min - height_extend, y_max + height_extend)
+    before_ratio = before_height / before_width
+    ax.set_aspect(aspect, adjustable="datalim")
+    after_ratio = np.ptp(ax.get_ylim()) / np.ptp(ax.get_xlim())
+
+    # manual touch-up to ensure growth (not shrink) that is symmetrical
+    if before_ratio == after_ratio:
+        # The current aspect ratio matches the targeted one, no action needed
+        # just need to ensure matplotlib didn't arbitrarily move axis limits
+        ax.set_xlim(x0_, x1_)
+        ax.set_ylim(y0_, y1_)
+        assert ax.get_xlim() == (x0_, x1_) and ax.get_ylim() == (y0_, y1_)
+    elif after_ratio < before_ratio:
+        # plot is too tall so we need to increase the width.
+        # in this case, before_height == after_height
+        after_width = before_height / after_ratio
+        assert after_width >= before_width
+        pad = (after_width - before_width) / 2
+        assert pad >= 0
+        ax.set_xlim(x0_ - pad, x1_ + pad)
+        ax.set_ylim(y0_, y1_)
+    elif after_ratio > before_ratio:
+        # plot is too wide so we need to increase the height.
+        # in this case, before_width == after_width
+        after_height = before_width * after_ratio
+        assert after_height >= before_height
+        pad = (after_height - before_height) / 2
+        assert pad >= 0
+        ax.set_xlim(x0_, x1_)
+        ax.set_ylim(y0_ - pad, y1_ + pad)
     else:
-        assert False, (aspect, cur_aspect)
+        assert False
 
-    new_aspect = calc_aspect(ax, physical=physical)
-    assert np.isclose(new_aspect, aspect), (new_aspect, aspect)
-
+    # check postconditions...
+    # ...targeted aspect ratio was achieved
+    # ...axes limit pad-out was outwards and symmetrical
     (x0, x1), (y0, y1) = ax.get_xlim(), ax.get_ylim()
-    assert x0 <= x_min and y0 <= y_min and x1 >= x_max and y1 >= y_max
-    assert np.isclose(x0 - x_min, x_max - x1)
-    assert np.isclose(y0 - y_min, y_max - y1)
+    aspect_err = aspect / calc_aspect(ax) - 1
+    info = (
+        f"aspect={aspect}, aspect_err={aspect_err}, "
+        f"before_ratio == after_ratio {before_ratio == after_ratio}, "
+        f"before_ratio={before_ratio}, after_ratio={after_ratio}, "
+        f"x0_={x0_}, x1_={x1_}, y0_={y0_}, y1_={y1_}, "
+        f"x0={x0}, x1={x1}, y0={y0}, y1={y1}"
+    )
+    assert x0 <= x0_, info
+    assert y0 <= y0_, info
+    assert x1 >= x1_, info
+    assert y1 >= y1_, info
+    assert np.isclose(x0 - x0_, x1_ - x1)
+    assert np.isclose(y0 - y0_, y1_ - y1)
+    if aspect_err > 0.05:
+        warnings.warn(f"set_aspect {aspect_err * 100}% error")
