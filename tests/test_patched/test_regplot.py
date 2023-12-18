@@ -7,31 +7,7 @@ from sklearn.datasets import load_iris
 import seaborn as sns
 
 import outset
-
-
-def regplot(data, *, x, y, hue=None, hue_order=None, ax=None, **kwargs):
-    data = data.copy()
-    if ax is None:
-        ax = plt.gca()
-    palette = kwargs.pop("palette", sns.color_palette())
-    if hue is None:
-        hue = "_dummy_hue"
-        data[hue] = 0
-    for color, (value, group) in zip(
-        it.cycle(palette),
-        data.groupby(hue),
-    ):
-        sns.regplot(
-            data=group,
-            x=x,
-            y=y,
-            ax=ax,
-            **{
-                "color": color,
-                **kwargs,
-            },
-        )
-    return ax
+from outset import patched as outset_patched
 
 
 # adapted from https://www.datatechnotes.com/2020/11/tsne-visualization-example-in-python.html
@@ -64,7 +40,7 @@ def test_cluster_regplot():
     )
 
     og.map_dataframe(
-        regplot,
+        outset_patched.regplot,
         x="comp-1",
         y="comp-2",
         palette=palette,
@@ -72,4 +48,4 @@ def test_cluster_regplot():
 
     og.broadcast(sns.despine)
     og.marqueeplot()
-    og.figure.savefig("/tmp/test_cluster_regplots.png")
+    og.figure.savefig("/tmp/test_regplot.png")
