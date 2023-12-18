@@ -52,12 +52,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     outset_axes: typing.Sequence[mpl_axes.Axes]
 
     def tight_layout(self: "OutsetGrid") -> None:
-        xlims = [ax.get_xlim() for ax in self.axes.flat]
-        ylims = [ax.get_ylim() for ax in self.axes.flat]
         self.figure.tight_layout()
-        for ax, xlim, ylim in zip(self.axes.flat, xlims, ylims, strict=True):
-            ax.set_xlim(xlim)
-            ax.set_ylim(ylim)
 
     def _finalize_grid(
         self: "OutsetGrid", axlabels: typing.Sequence[str]
