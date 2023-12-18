@@ -5,7 +5,7 @@ import typing
 from matplotlib.transforms import Bbox as mpl_Bbox
 
 from .OutsetGrid_ import OutsetGrid
-from ._auxlib.make_corner_insets_ import _make_corner_insets
+from .layout_corner_insets_ import layout_corner_insets
 from ._auxlib.resize_figure_to_axes_ import resize_figure_to_axes
 
 
@@ -47,12 +47,20 @@ def inset_outsets(
     Returns
     -------
     None
+
+    See Also
+    --------
+    layout_corner_insets
+        Underlying engine implementing corner inset layout when "NE", "NW",
+        "SE", or "SW" is passed to `inset_outsets`. The function
+        `layout_corner_insets` can be called directly to provide the `insets`
+        kwarg to tweak corner inset layouts.
     """
     if outset_grid.source_axes is None:
         raise ValueError("OutsetGrid missing source axes to inset outset axes")
 
     if isinstance(insets, str):
-        insets = _make_corner_insets(outset_grid._ncol - 1, insets)
+        insets = layout_corner_insets(outset_grid._ncol - 1, insets)
 
     outset_grid.figure.tight_layout()
 

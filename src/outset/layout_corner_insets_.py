@@ -3,15 +3,16 @@ import math
 import typing
 
 
-def _make_corner_insets(
+def layout_corner_insets(
     num_insets: int,
     corner: typing.Literal["NE", "NW", "SE", "SW"],
     inset_grid_size: float = 0.60,
     inset_pad_ratio: float = 0.25,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
-    """Generate a list of positions for inset plots in the specified corner.
+    """Lay out positions for `n` inset plots in a specified corner.
 
-    The frames are filled along diagonals from the chosen corner back.
+    The frames are filled from the chosen corner outwards, filling successive diagonals perpendicular to the cornder. Inset subfigure positions are
+    ordered so that inset number increases left-to-right, top-to-bottom.
 
     Parameters
     ----------
@@ -29,6 +30,13 @@ def _make_corner_insets(
     List[Tuple[float, float, float, float]]
         A list of tuples, each representing `(x, y, width, height)` of an inset
         plot fractionally relative to source plot axes.
+
+    See Also
+    --------
+    inset_outsets
+        Manipulates plot structure to apply corner inset layout calculated by
+        `layout_corner_insets`, placing outset plots in specified positions over
+        the source plot axes.
     """
     dimension = int(math.ceil(math.sqrt(num_insets)))
     grid_size = inset_grid_size / dimension
