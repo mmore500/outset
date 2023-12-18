@@ -50,10 +50,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     source_axes: typing.Optional[mpl_axes.Axes]
     outset_axes: typing.Sequence[mpl_axes.Axes]
 
-    def tight_layout(self) -> None:
+    def tight_layout(self: "OutsetGrid") -> None:
         self.figure.tight_layout()
 
-    def _finalize_grid(self, axlabels) -> None:
+    def _finalize_grid(
+        self: "OutsetGrid", axlabels: typing.Sequence[str]
+    ) -> None:
         """Finalize the annotations and layout."""
         self.tight_layout()
 
