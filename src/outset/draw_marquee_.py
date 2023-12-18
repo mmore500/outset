@@ -30,6 +30,12 @@ def draw_marquee(
     leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
     leader_face_kwargs: typing.Dict = frozendict.frozendict(),
     leader_stretch: float = 0.1,
+    leader_stretch_unit: typing.Literal[
+        "axes",
+        "figure",
+        "inches",
+        "inchesfrom",
+    ] = "inches",
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
@@ -78,7 +84,14 @@ def draw_marquee(
     leader_face_kwargs : Dict, default {}
         Customization arguments for the leader's face.
     leader_stretch : float, default 0.1
-        Scale of callout leader relative to axis viewport.
+        Size of callout leader in `leader_stretch_unit`.
+    leader_stretch_unit : Literal['axes', 'figure', 'inches', 'inchesfrom'], default 'axes'
+        How should callout leader placement be determined?
+
+        If 'axes' or 'figure', stretch is specified as a fraction of the axes
+        or figure size, respectively. If 'inches', stretch is specified in
+        inches. If 'inchesfrom', stretch is minimum necessary to place the
+        marker `leader_stretch` inches from the lower left corner of the frame.
     mark_glyph : Callable, optional
         A callable to draw a glyph at the outer vertex of the callout leader.
 
@@ -185,10 +198,11 @@ def draw_marquee(
         clip_on=clip_on,
         leader_edge_kwargs=leader_edge_kwargs,
         leader_face_kwargs=leader_face_kwargs,
+        leader_stretch=leader_stretch,
+        leader_stretch_unit=leader_stretch_unit,
         mark_glyph=mark_glyph,
         mark_glyph_kwargs=mark_glyph_kwargs,
         mark_retract=mark_retract,
-        leader_stretch=leader_stretch,
         zorder=zorder,
     )
 

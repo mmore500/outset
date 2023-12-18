@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import numpy as np
 import pytest
 
@@ -5,6 +6,9 @@ from outset._auxlib.compose_callout_leader_ import compose_callout_leader
 
 
 # smoke test
+@pytest.mark.parametrize(
+    "stretch_unit", ["axes", "figure", "inches", "inchesfrom"]
+)
 @pytest.mark.parametrize(
     "rect_xlim, rect_ylim, ax_xlim, ax_ylim, stretch",
     [
@@ -14,10 +18,13 @@ from outset._auxlib.compose_callout_leader_ import compose_callout_leader
     ],
 )
 def test_compose_callout_leader(
-    rect_xlim, rect_ylim, ax_xlim, ax_ylim, stretch
+    rect_xlim, rect_ylim, ax_xlim, ax_ylim, stretch, stretch_unit
 ):
+    fig, ax = plt.subplots()
+    ax.set_xlim(ax_xlim)
+    ax.set_ylim(ax_ylim)
     result = compose_callout_leader(
-        rect_xlim, rect_ylim, ax_xlim, ax_ylim, stretch
+        rect_xlim, rect_ylim, ax, stretch, stretch_unit
     )
     assert len(result) == 4
     assert all(len(item) == 2 for item in result)
