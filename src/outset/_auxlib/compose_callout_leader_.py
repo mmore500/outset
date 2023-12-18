@@ -62,14 +62,8 @@ def compose_callout_leader(
     if stretch < 0.0:
         raise ValueError("Leader stretch must be non-negative.")
 
-    ax_width, ax_height = (
-        ax_xlim[1] - ax_xlim[0],
-        ax_ylim[1] - ax_ylim[0],
-    )
-    frame_width, frame_height = (
-        frame_xlim[1] - frame_xlim[0],
-        frame_ylim[1] - frame_ylim[0],
-    )
+    ax_width, ax_height = np.ptp(ax_xlim), np.ptp(ax_ylim)
+    frame_width, frame_height = np.ptp(frame_xlim), np.ptp(frame_ylim)
     (
         (_frame_lower_left, frame_upper_right),
         (frame_upper_left, frame_lower_right),
