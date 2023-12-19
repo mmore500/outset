@@ -159,9 +159,8 @@ def draw_callout(
     # Draw callout glyph
     ###########################################################################
     frame_upper_right = np.array([frame_xlim[1], frame_ylim[1]])
-    leader_outer_vertex = tuple(np.max(np.array(leader_vertices), axis=0))
+    leader_outer_vertex = np.array(leader_vertices[-1])
     assert len(leader_outer_vertex) == 2, leader_outer_vertex
-    assert all(np.array(leader_outer_vertex) >= np.array(frame_upper_right))
 
     mark_coordinates = np.average(
         np.array([leader_outer_vertex, frame_upper_right]),
