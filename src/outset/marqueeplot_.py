@@ -34,7 +34,7 @@ def marqueeplot(
         typing.Callable, typing.Type, None
     ] = MarkNumericalBadges,
     palette: typing.Optional[typing.Sequence] = None,
-    preserve_aspect: typing.Optional[bool] = None,
+    preserve_aspect: typing.Optional[bool] = False,
     tight_axlim: bool = False,
     **kwargs,
 ) -> mpl_Axes:
@@ -80,7 +80,7 @@ def marqueeplot(
         Callable or type to draw a glyph at the end of the callout.
     palette : Sequence, optional
         Color palette for plotting elements.
-    preserve_aspect: bool, optional
+    preserve_aspect: bool, default False
         If True, finalizing by applying initial axes aspect. If None, restore initial axes aspect unless axes are unset.
     tight_axlim : bool, default False
         Whether to shrink axes limits to fit data range.
