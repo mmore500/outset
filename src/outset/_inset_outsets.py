@@ -4,8 +4,8 @@ import typing
 
 from matplotlib.transforms import Bbox as mpl_Bbox
 
-from .OutsetGrid_ import OutsetGrid
-from .layout_corner_insets_ import layout_corner_insets
+from ._OutsetGrid import OutsetGrid
+from ._layout_corner_insets import layout_corner_insets
 from ._auxlib.resize_figure_to_axes_ import resize_figure_to_axes
 
 

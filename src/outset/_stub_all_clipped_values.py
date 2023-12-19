@@ -7,7 +7,7 @@ from matplotlib.axes import Axes as mpl_Axes
 from matplotlib.collections import PathCollection as mpl_PathCollection
 from matplotlib.container import ErrorbarContainer as mpl_ErrorbarContainer
 
-from .stub_edge_mark_ import stub_edge_mark
+from ._stub_edge_mark import stub_edge_mark
 
 
 def stub_all_clipped_values(

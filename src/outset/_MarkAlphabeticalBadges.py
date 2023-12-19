@@ -2,7 +2,7 @@ import typing
 
 from matplotlib import axes as mpl_axes
 
-from .MarkInlaidAsterisk_ import mark_inlaid_asterisk
+from ._MarkInlaidAsterisk import mark_inlaid_asterisk
 
 _color_t = typing.Union[typing.Tuple, str]
 

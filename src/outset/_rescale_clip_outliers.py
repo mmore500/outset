@@ -5,7 +5,7 @@ from matplotlib.collections import PathCollection
 from matplotlib import pyplot as plt
 import numpy as np
 
-from .CalcBoundsIQR_ import CalcBoundsIQR
+from ._CalcBoundsIQR import CalcBoundsIQR
 
 
 def rescale_clip_outliers(

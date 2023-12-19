@@ -1,6 +1,6 @@
 """External functions patched or extended for outset compatibility."""
 
-from .regplot_ import regplot
+from ._regplot import regplot
 
 __all__ = [
     "regplot",

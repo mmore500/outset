@@ -13,9 +13,9 @@ import seaborn as sns
 from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
-from .MarkMagnifyingGlass_ import MarkMagnifyingGlass
-from .MarkNumericalBadges_ import MarkNumericalBadges
-from .marqueeplot_ import marqueeplot, _prepad_axlim
+from ._MarkMagnifyingGlass import MarkMagnifyingGlass
+from ._MarkNumericalBadges import MarkNumericalBadges
+from ._marqueeplot import marqueeplot, _prepad_axlim
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):

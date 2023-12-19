@@ -2,32 +2,25 @@ import typing
 
 from matplotlib import axes as mpl_axes
 
+from ._MarkInlaidAsterisk import mark_inlaid_asterisk
+
 _color_t = typing.Union[typing.Tuple, str]
 
-from .MarkAlphabeticalBadges_ import MarkAlphabeticalBadges
 
+class MarkNumericalBadges:
+    """Functor to mark badges numbered by itertools-like count.
 
-class MarkRomanBadges:
-    """Functor to mark roman numeral badges numbered by itertools-like count.
-
-    This class renders markers as roman numerals overlaid onto a circular badge
-    with a slightly larger circular underlay. Both lower and uppercase numerals
-    are supported.
-
-    Notes
-    -----
-    Due to unicode limitations values greater than twelve will not display
-    correctly. Numeral representation for zero is not supported.
+    This class renders markers as numbers overlaid onto a circular badge with a
+    slightly larger circular underlay.
     """
 
-    _ftor: MarkAlphabeticalBadges
+    _counter: int
+    _step: int
 
     def __init__(
-        self: "MarkRomanBadges",
+        self: "MarkNumericalBadges",
         start: int = 1,
         step: int = 1,
-        *,
-        upper: bool = False,
     ) -> None:
         """Initialize functor.
 
@@ -35,23 +28,14 @@ class MarkRomanBadges:
         ----------
         start : int, default 1
             The starting number for the numerical badges.
-
-            Must be between 1 and 12, inclusive.
         step : int, default 1
             The step size for the numerical badges.
         """
-        if start < 1 or start > 12:
-            raise ValueError(f"Start value {start} outside supported range.")
-        # RE unicode roman numerals, see
-        # https://www.johndcook.com/blog/2020/10/07/roman-numerals/ and
-        # https://en.wikipedia.org/wiki/Numerals_in_Unicode#Roman_numerals
-        base = 0x215F if upper else 0x216F
-        self._ftor = MarkAlphabeticalBadges(start=chr(base + start), step=step)
-
-    ftor = MarkAlphabeticalBadges()
+        self._counter = start
+        self._step = step
 
     def __call__(
-        self: "MarkRomanBadges",
+        self: "MarkNumericalBadges",
         x: float,
         y: float,
         ax: typing.Optional[mpl_axes.Axes] = None,
@@ -64,12 +48,12 @@ class MarkRomanBadges:
         marker_badge: str = "o",
         marker_underlay: str = "o",
         markersize: float = 22,
-        numeral_edgewidth: float = 0,
+        numeral_edgewidth: float = 1,
         scale_numeral: float = 0.4,
         scale_badge: float = 0.8,
         **kwargs,
     ) -> None:
-        """Draw roman numeral badge marker at specified location.
+        """Draw numbered badge marker at specified location.
 
         Numeral values increment with each call to this functor.
 
@@ -113,23 +97,26 @@ class MarkRomanBadges:
         -------
         None
         """
-        self._ftor(
+        mark_inlaid_asterisk(
             x=x,
             y=y,
             ax=ax,
+            asterisk_edgewidth=numeral_edgewidth,
             color=color,
             color_accent=color_accent,
-            color_letter=color_numeral,
+            color_asterisk_edge=color_numeral,
+            color_asterisk_face=color_numeral,
             color_badge=color_badge,
             color_underlay=color_underlay,
-            letter_edgewidth=numeral_edgewidth,
+            marker=f"${self._counter}$",
             marker_badge=marker_badge,
             marker_underlay=marker_underlay,
             markersize=markersize,
-            scale_letter=scale_numeral,
+            scale_asterisk=scale_numeral,
             scale_badge=scale_badge,
             **{
                 "linecolor": "none",
                 **kwargs,
             },
         )
+        self._counter += self._step
