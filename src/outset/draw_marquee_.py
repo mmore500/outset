@@ -36,6 +36,7 @@ def draw_marquee(
         "inches",
         "inchesfrom",
     ] = "inches",
+    leader_tweak: typing.Callable = lambda x, *args, **kwargs: x,
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
@@ -92,6 +93,8 @@ def draw_marquee(
         or figure size, respectively. If 'inches', stretch is specified in
         inches. If 'inchesfrom', stretch is minimum necessary to place the
         marker `leader_stretch` inches from the lower left corner of the frame.
+    leader_tweak : typing.Callable, default identity
+        Callable to modify the callout leader vertices before drawing.
     mark_glyph : Callable, optional
         A callable to draw a glyph at the outer vertex of the callout leader.
 
@@ -204,6 +207,7 @@ def draw_marquee(
         leader_face_kwargs=leader_face_kwargs,
         leader_stretch=leader_stretch,
         leader_stretch_unit=leader_stretch_unit,
+        leader_tweak=leader_tweak,
         mark_glyph=mark_glyph,
         mark_glyph_kwargs=mark_glyph_kwargs,
         mark_retract=mark_retract,

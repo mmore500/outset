@@ -29,6 +29,7 @@ def draw_callout(
         "inches",
         "inchesfrom",
     ] = "axes",
+    leader_tweak: typing.Callable = lambda x, *args, **kwargs: x,
     mark_glyph: typing.Optional[typing.Callable] = None,
     mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
@@ -73,6 +74,8 @@ def draw_callout(
         If None, no glyph is drawn.
     mark_retract : float, default 0.1
         Fraction to pull back glyph from the outer vertex of the callout.
+    tweak : typing.Callable, default identity
+        Callable to modify the callout leader vertices before drawing.
     zorder : float, default 0
         Influences layer order of plot, with higher values in front.
     **kwargs
@@ -95,6 +98,7 @@ def draw_callout(
         stretch=leader_stretch,
         stretch_unit=leader_stretch_unit,
     )
+    leader_vertices = leader_tweak(leader_vertices, ax)
 
     # ... outline
     underlay_patch = mpl_patches.Polygon(  # underlay

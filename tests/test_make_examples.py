@@ -43,6 +43,11 @@ def test_make_example_huefull():
         y="bill_depth_mm",
         col="island",
         hue="species",
+        marqueeplot_source_kwargs={
+            "leader_tweak": outset.TweakSpreadArea(
+                spread_factor=6, xlim=(47.5, 52)
+            ),
+        },
     )
     og.map_dataframe(
         sns.scatterplot, x="bill_length_mm", y="bill_depth_mm", legend=False

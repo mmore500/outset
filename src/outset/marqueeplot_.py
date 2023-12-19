@@ -30,6 +30,9 @@ def marqueeplot(
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     frame_outer_pad_unit: typing.Literal["axes", "figure", "inches"] = "axes",
+    leader_tweak: typing.Union[
+        typing.Callable, typing.Type
+    ] = lambda x, *args, **kwargs: x,
     mark_glyph: typing.Union[
         typing.Callable, typing.Type, None
     ] = MarkNumericalBadges,
@@ -76,6 +79,9 @@ def marqueeplot(
         If 'axes' or 'figure', padding is specified as a fraction of the axes
         or figure size, respectively. If 'inches', padding is specified in
         inches.
+    leader_tweak : Callable, default identity
+        Callable or functor type to modify the callout leader vertices before
+        drawing.
     mark_glyph : Union[Callable, Type, None], optional
         Callable or functor type to draw a glyph at the end of the callout.
     palette : Sequence, optional
@@ -114,6 +120,9 @@ def marqueeplot(
 
     if isinstance(mark_glyph, type):
         mark_glyph = mark_glyph()
+
+    if isinstance(leader_tweak, type):
+        leader_tweak = leader_tweak()
 
     data = data.copy()
 
@@ -182,6 +191,7 @@ def marqueeplot(
             color=selected_color,
             frame_inner_pad=frame_inner_pad,
             frame_outer_pad=(0, 0),  # already padded by prepad_axlim...
+            leader_tweak=leader_tweak,
             mark_glyph=mark_glyph,
             **kwargs,
         )

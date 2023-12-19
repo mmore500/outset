@@ -18,6 +18,7 @@ from .marqueeplot_ import marqueeplot
 from .rescale_clip_outliers_ import rescale_clip_outliers
 from .stub_all_clipped_values_ import stub_all_clipped_values
 from .stub_edge_mark_ import stub_edge_mark
+from .TweakSpreadArea_ import TweakSpreadArea
 
 __all__ = [
     "CalcBoundsIQR",
@@ -38,4 +39,5 @@ __all__ = [
     "rescale_clip_outliers",
     "stub_all_clipped_values",
     "stub_edge_mark",
+    "TweakSpreadArea",
 ]
