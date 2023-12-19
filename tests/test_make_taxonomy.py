@@ -21,9 +21,7 @@ def test_make_taxonomy():
         }
     )
 
-    g = outset.OutsetGrid(
-        data=data, x="x", y="y", hue="outset", outset="outset"
-    )
+    g = outset.OutsetGrid(data=data, x="x", y="y", col="outset", hue="outset")
     g.marqueeplot()
 
     g.source_axes.annotate(

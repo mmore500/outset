@@ -115,7 +115,7 @@ def test_marqueeplot_several():
 
     sns.scatterplot(data=data, x="x", y="y", hue="outset", ax=ax)
     marqueeplot(
-        data=data, x="x", y="y", outset="outset", ax=ax, leader_stretch=0.0
+        data=data, x="x", y="y", col="outset", ax=ax, leader_stretch=0.0
     )
 
     outpath = "/tmp/test_marqueeplot_several.png"
