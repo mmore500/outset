@@ -207,6 +207,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
             if col is None:
                 col = True
+            if hue is None and color is None:
+                hue = True
 
             x, y = "x", "y"
             if col == True:
