@@ -258,6 +258,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         self.__data = data
 
+        if hue is not None and hue_order is None:
+            hue_order = sorted(data[hue].unique())
+
         if col is None:
             assert "_dummy_col" not in data.columns
             col = "_dummy_col"
@@ -384,9 +387,13 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 "frame_outer_pad": default_frame_outer_pad_outset,
                 "frame_outer_pad_unit": "axes",
             }
+            fil = data[col].isin(col_order)
+            if hue is not None:
+                assert hue_order is not None
+                fil &= data[hue].isin(hue_order)
             self.broadcast_outset(
                 _prepad_axlim,
-                data=data,
+                data=data[fil],
                 x=x,
                 y=y,
                 hue=hue,
