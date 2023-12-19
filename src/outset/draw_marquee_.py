@@ -167,12 +167,16 @@ def draw_marquee(
     # tweak zorder to ensure multiple outset annotations layer properly
     ax_width, ax_height = np.ptp(ax.get_xlim()), np.ptp(ax.get_ylim())
     ax_diag = np.sqrt(ax_width**2 + ax_height**2)
-    upper_right_drop_x = ax.get_ylim()[1] - frame_xlim[1]
-    upper_right_drop_y = ax.get_ylim()[1] - frame_ylim[1]
+    upper_right_drop_x = (ax.get_ylim()[1] - frame_xlim[1]) / np.ptp(
+        ax.get_xlim(),
+    )
+    upper_right_drop_y = (ax.get_ylim()[1] - frame_ylim[1]) / np.ptp(
+        ax.get_ylim(),
+    )
     upper_right_drop = np.sqrt(
         upper_right_drop_x**2 + upper_right_drop_y**2
     )
-    zorder += 0.25 * upper_right_drop / ax_diag
+    zorder += 0.01 * upper_right_drop / ax_diag
 
     # Frame outset region
     ###########################################################################
