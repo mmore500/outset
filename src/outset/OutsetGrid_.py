@@ -383,38 +383,40 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     if k == "mark_glyph" and isinstance(v, type):
                         d[k] = v()
 
-            # need to prepad without split by hue
-            prepad_kwargs = {
-                "frame_inner_pad": default_frame_inner_pad,
-                "frame_outer_pad": default_frame_outer_pad_outset,
-                "frame_outer_pad_unit": "axes",
-            }
-            fil = data[col].isin(col_order)
-            if hue is not None:
-                assert hue_order is not None
-                fil &= data[hue].isin(hue_order)
-            self.broadcast_outset(
-                _prepad_axlim,
-                data=data[fil],
-                x=x,
-                y=y,
-                hue=hue,
-                outset=col,
-                tight_axlim=True,
-                **{
-                    **prepad_kwargs,
+            needs_prepad = not (hue is None or hue == col)
+            if needs_prepad:
+                # need to prepad without split by hue
+                prepad_kwargs = {
+                    "frame_inner_pad": default_frame_inner_pad,
+                    "frame_outer_pad": default_frame_outer_pad_outset,
+                    "frame_outer_pad_unit": "axes",
+                }
+                fil = data[col].isin(col_order)
+                if hue is not None:
+                    assert hue_order is not None
+                    fil &= data[hue].isin(hue_order)
+                self.broadcast_outset(
+                    _prepad_axlim,
+                    data=data[fil],
+                    x=x,
+                    y=y,
+                    hue=hue,
+                    outset=col,
+                    tight_axlim=True,
                     **{
-                        k: v
-                        for k, v in marqueeplot_kwargs.items()
-                        if k in prepad_kwargs
+                        **prepad_kwargs,
+                        **{
+                            k: v
+                            for k, v in marqueeplot_kwargs.items()
+                            if k in prepad_kwargs
+                        },
+                        **{
+                            k: v
+                            for k, v in marqueeplot_outset_kwargs.items()
+                            if k in prepad_kwargs
+                        },
                     },
-                    **{
-                        k: v
-                        for k, v in marqueeplot_outset_kwargs.items()
-                        if k in prepad_kwargs
-                    },
-                },
-            )
+                )
 
             self_.map_dataframe_outset(
                 marqueeplot,
@@ -429,7 +431,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "leader_stretch": 0.2,
                     "leader_stretch_unit": "inchesfrom",
                     "mark_glyph": default_draw_glyph_functor_class(),
-                    "tight_axlim": False,
+                    "tight_axlim": not needs_prepad,
                     "zorder": zorder,
                     **marqueeplot_kwargs,
                     **marqueeplot_outset_kwargs,
@@ -488,7 +490,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         return self
 
     def marqueeplot(
-        self: "OutsetGrid", equalize_aspect: bool = True
+        self: "OutsetGrid",
+        equalize_aspect: bool = True,
+        preserve_aspect: bool = False,
     ) -> "OutsetGrid":
         """Dispatch marquee annotation rendering for all subplots --- outset as
         well as source, if included.
@@ -498,20 +502,28 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         equalize_aspect : bool, optional, default: True
             If True, adjusts axes limits to enforce equal ylim height to xlim
             width ratio.
+        preserve_aspect : bool, optional, default: False
+            If True, restore initial aspect ratio after plotting..
 
         Returns
         -------
         OutsetGrid
             Returns self.
         """
-        self.marqueeplot_source(equalize_aspect=False)
-        self.marqueeplot_outset(equalize_aspect=False)
+        self.marqueeplot_source(
+            equalize_aspect=False, preserve_aspect=preserve_aspect
+        )
+        self.marqueeplot_outset(
+            equalize_aspect=False, preserve_aspect=preserve_aspect
+        )
         if equalize_aspect:
             self.equalize_aspect()
         return self
 
     def marqueeplot_outset(
-        self: "OutsetGrid", equalize_aspect: bool = True
+        self: "OutsetGrid",
+        equalize_aspect: bool = True,
+        preserve_aspect: bool = False,
     ) -> "OutsetGrid":
         """Dispatch marquee annotation rendering for outset plots only
 
@@ -520,13 +532,24 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         equalize_aspect : bool, optional, default: True
             If True, adjusts axes limits to enforce equal ylim height to xlim
             width ratio.
+        preserve_aspect : bool, optional, default: False
+            If True, restore initial aspect ratio after plotting..
 
         Returns
         -------
         OutsetGrid
             Returns self.
         """
+        if preserve_aspect and equalize_aspect:
+            raise ValueError(
+                "may only specify one of {preserve,equalize}_aspect",
+            )
+
+        aspects = [calc_aspect(ax) for ax in self.outset_axes]
         self._marqueeplot_outset(self)
+        if preserve_aspect:
+            for ax, aspect in zip(self.outset_axes, aspects):
+                set_aspect(ax, aspect)
         self._marqueeplot_outset = lambda self_: warnings.warn(
             "Redundant call to marqueeplot_outset, marquees were already drawn",
         )
@@ -535,7 +558,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         return self
 
     def marqueeplot_source(
-        self: "OutsetGrid", equalize_aspect: bool = True
+        self: "OutsetGrid",
+        equalize_aspect: bool = True,
+        preserve_aspect: bool = False,
     ) -> "OutsetGrid":
         """Dispatch marquee annotation rendering for the source plot only, if
         included.
@@ -545,13 +570,24 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         equalize_aspect : bool, optional, default: True
             If True, adjusts axes limits to enforce equal ylim height to xlim
             width ratio.
+        preserve_aspect : bool, optional, default: False
+            If True, restore initial aspect ratio after plotting..
 
         Returns
         -------
         OutsetGrid
             Returns self.
         """
+        if preserve_aspect and equalize_aspect:
+            raise ValueError(
+                "may only specify one of {preserve,equalize}_aspect",
+            )
+
+        if self.source_axes is not None:
+            aspect = calc_aspect(self.source_axes)
         self._marqueeplot_source(self)
+        if preserve_aspect and self.source_axes is not None:
+            set_aspect(self.source_axes, aspect)
         self._marqueeplot_source = lambda self_: warnings.warn(
             "Redundant call to marqueeplot_source, marquees were already drawn",
         )

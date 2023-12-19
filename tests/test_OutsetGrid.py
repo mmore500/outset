@@ -116,17 +116,12 @@ def test_OutsetGrid_broadcast_sourceless():
     og = OutsetGrid(
         data=[(0.42, 0.78, 0.62, 0.98), (0.10, 0.14, 0.40, 0.21)],
         aspect=0.9,
-        marqueeplot_kwargs={
-            "preserve_aspect": True,
-            "frame_outer_pad": 0.1,
-            "frame_outer_pad_unit": "inches",
-        },
         include_sourceplot=False,
     )
     og.broadcast(
         plt.imshow, image, extent=(0, 1, 0, 1), origin="upper", zorder=-1
     )
-    og.marqueeplot(equalize_aspect=False)
+    og.marqueeplot(equalize_aspect=False, preserve_aspect=True)
 
     assert not og._is_inset()
 
