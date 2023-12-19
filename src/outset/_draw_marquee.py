@@ -71,8 +71,13 @@ def draw_marquee(
         If True, removes top and right spines from the plot.
     frame_edge_kwargs : Dict, default {}
         Customization arguments for the frame's edge.
+
+        Standard matplotlib styling is supported (`linewidth`, `linestyle`,
+        etc.).
     frame_face_kwargs : Dict, default {}
         Customization arguments for the frame's face.
+
+        Standard matplotlib styling is supported (`facecolor`, `alpha`, etc.).
     frame_inner_pad : Union[float, Tuple[float, float]], default 0.0
         Padding from data extent to frame boundary, calculated relative to data
         extent (float) or in absolute units (tuple).
@@ -82,8 +87,13 @@ def draw_marquee(
         Label used for legend creation.
     leader_edge_kwargs : Dict, default {}
         Customization arguments for the leader's edge.
+
+        Standard matplotlib styling is supported (`linewidth`, `linestyle`,
+        etc.).
     leader_face_kwargs : Dict, default {}
         Customization arguments for the leader's face.
+
+        Standard matplotlib styling is supported (`facecolor`, `alpha`, etc.).
     leader_stretch : float, default 0.1
         Size of callout leader in `leader_stretch_unit`.
     leader_stretch_unit : Literal['axes', 'figure', 'inches', 'inchesfrom'], default 'axes'
@@ -101,6 +111,8 @@ def draw_marquee(
         If None, no glyph is drawn.
     mark_glyph_kwargs : Dict, default frozendict.frozendict()
         Arguments for the mark_glyph callable.
+
+        Standard matplotlib styling is supported (`markersize`, `color`, etc.).
     mark_retract : float, default 0.1
         Fraction to pull back glyph from the outer vertex of the callout.
     zorder : float, default 0
