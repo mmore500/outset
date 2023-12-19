@@ -15,6 +15,8 @@ def inset_outsets(
         typing.Literal["NE", "NW", "SE", "SW"],
         typing.Sequence[typing.Tuple[float, float, float, float]],
     ] = "NE",
+    *,
+    equalize_aspect: bool = True,
     strip_axes: bool = False,
     strip_labels: bool = True,
     strip_spines: bool = False,
@@ -35,6 +37,8 @@ def inset_outsets(
         specified corner of the grid. Alternately, inset positioning can be
         specified directly by providing a sequence of tuples `(x0, y0, width, height)` for the position of each plot in fractional coordinates of
         sourceplot.
+    equalize_aspect : bool, default True
+        Should the aspect ratio of the inset plots be equalized?
     strip_label : bool, default True
         Should x and y labels be stripped from inset plots.
     strip_spines : bool, default False
@@ -109,4 +113,5 @@ def inset_outsets(
             ax.set_title("")
 
     # Equalize aspect ratios
-    outset_grid.equalize_aspect()
+    if equalize_aspect:
+        outset_grid.equalize_aspect()
