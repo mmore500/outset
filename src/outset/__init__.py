@@ -1,5 +1,4 @@
-"""Outset Python Package"""
-from __future__ import annotations
+"""Top-level package for outset."""
 
 __version__ = "0.0.0"
 

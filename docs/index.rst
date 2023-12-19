@@ -11,7 +11,7 @@ Overview
    :hidden:
 
    index
-   modules
+   api
    contributing
    package
    indices

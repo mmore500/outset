@@ -1,0 +1,6 @@
+# documentation
+_autosummary/
+api
+_modules
+_build
+docs/

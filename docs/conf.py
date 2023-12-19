@@ -36,6 +36,8 @@ version = outset.__version__
 # The full version, including alpha/beta/rc tags.
 release = outset.__version__
 
+autosummary_generate = True
+autosummary_imported_members = True
 
 # -- General configuration ---------------------------------------------------
 
@@ -44,13 +46,32 @@ release = outset.__version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",  # Add links to highlighted source code
     "sphinx.ext.napoleon",  # to render Google format docstrings
     "sphinx.ext.githubpages",
+    "sphinx_rtd_theme",
 ]
+
+autoclass_content = "class"
+
+autodoc_class_signature = "separated"
+
+add_module_names = False
+
+autodoc_default_options = {
+    "member-order": "bysource",
+    "special-members": "__init__",
+    "undoc-members": True,
+    "exclude-members": "__weakref__",
+}
+
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -72,6 +93,10 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+
+def setup(app):
+    app.add_css_file("theme_override.css")
 
 
 # The name of an image file (relative to this directory) to place at the top
