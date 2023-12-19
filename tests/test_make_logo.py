@@ -44,8 +44,8 @@ def test_make_logo():
     ylim = (-60, 60)
     og = outset.OutsetGrid(
         data=[
-            (25, 33, -3, 5),
-            (-2.5, 20, -26, -18),
+            ((25, -3), (33, 5)),
+            ((-2.5, -26), (20, -18)),
         ],
         aspect=1.2,
         marqueeplot_kwargs=dict(frame_edge_kwargs={"linewidth": 2}),
