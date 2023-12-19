@@ -15,6 +15,7 @@ def stub_edge_mark(
     ax: mpl_Axes,
     x: float,
     y: float,
+    *,
     marker_kwargs: typing.Dict = frozendict(),
     offset: float = 0.1,
 ) -> typing.Tuple[float, float]:

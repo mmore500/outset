@@ -17,6 +17,7 @@ class TweakSpreadArea:
     def __init__(
         self: "TweakSpreadArea",
         spread_factor: typing.Union[float, typing.Tuple[float, float]] = 2.0,
+        *,
         xlim: typing.Optional[typing.Tuple[float, float]] = None,
         ylim: typing.Optional[typing.Tuple[float, float]] = None,
     ) -> None:

@@ -15,6 +15,7 @@ def rescale_clip_outliers(
         typing.Tuple[typing.Callable, typing.Callable],
         None,
     ] = None,
+    *,
     pad: float = 0.1,
 ) -> None:
     """Rescale the axes of a Matplotlib axes with plotted points to exclude

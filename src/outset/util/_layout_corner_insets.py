@@ -6,6 +6,7 @@ import typing
 def layout_corner_insets(
     num_insets: int,
     corner: typing.Literal["NE", "NW", "SE", "SW"] = "NE",
+    *,
     inset_grid_size: float = 0.50,
     inset_pad_ratio: float = 0.1,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:

@@ -551,6 +551,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
     def marqueeplot_outset(
         self: "OutsetGrid",
+        *,
         equalize_aspect: bool = True,
         preserve_aspect: bool = False,
     ) -> "OutsetGrid":
@@ -588,6 +589,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
     def marqueeplot_source(
         self: "OutsetGrid",
+        *,
         equalize_aspect: bool = True,
         preserve_aspect: bool = False,
     ) -> "OutsetGrid":

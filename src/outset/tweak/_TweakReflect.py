@@ -17,6 +17,7 @@ class TweakReflect:
 
     def __init__(
         self: "TweakReflect",
+        *,
         horizontal: typing.Optional[bool] = None,
         vertical: typing.Optional[bool] = None,
     ) -> None:

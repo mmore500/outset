@@ -12,6 +12,7 @@ from ._stub_edge_mark import stub_edge_mark
 
 def stub_all_clipped_values(
     ax: mpl_Axes,
+    *,
     marker_kwargs: typing.Dict = frozendict(),
     offset: float = 0.1,
 ) -> None:
