@@ -61,6 +61,32 @@ def test_make_example_huefull():
 
 
 @pytest.mark.integration
+def test_make_example_sourceless():
+    og = outset.OutsetGrid(
+        data=sns.load_dataset("penguins").dropna(),
+        x="bill_length_mm",
+        y="bill_depth_mm",
+        col="island",
+        hue="species",
+        include_sourceplot=False,
+        marqueeplot_source_kwargs={
+            "leader_tweak": outset.TweakSpreadArea(
+                spread_factor=6, xlim=(47.5, 52)
+            ),
+        },
+    )
+    og.map_dataframe(
+        sns.scatterplot, x="bill_length_mm", y="bill_depth_mm", legend=False
+    )
+    og.marqueeplot()
+    og.add_legend()
+
+    outpath = "/tmp/test_make_example_sourceless.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")
+
+
+@pytest.mark.integration
 def test_make_example_singleton():
     og = outset.OutsetGrid(
         data=[(73, 23, 78, 31)],
