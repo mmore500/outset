@@ -863,17 +863,18 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Doesn't preserve axis limits.
         """
+        if self.source_axes is None:
+            return self
         xlabel, ylabel = (
             self.source_axes.get_xlabel(),
             self.source_axes.get_ylabel(),
         )
-        if self.source_axes is not None:
-            ax = self.source_axes
-            try:
-                plotter(*args, ax=ax, **kwargs)
-            except (TypeError, AttributeError):
-                plt.sca(ax)
-                plotter(*args, **kwargs)
+        ax = self.source_axes
+        try:
+            plotter(*args, ax=ax, **kwargs)
+        except (TypeError, AttributeError):
+            plt.sca(ax)
+            plotter(*args, **kwargs)
         self.tight_layout()
         if kwargs.get("x", None) == self._x_var and self._x_var is not None:
             self.source_axes.set_xlabel(xlabel)
