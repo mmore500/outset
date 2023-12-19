@@ -54,6 +54,7 @@ def test_make_example_huefull():
         sns.scatterplot, x="bill_length_mm", y="bill_depth_mm", legend=False
     )
     og.marqueeplot()
+    og.set_axis_labels("bill length (mm)", "bill depth (mm)")
     og.add_legend()
 
     outpath = "/tmp/test_make_example_huefull.png"

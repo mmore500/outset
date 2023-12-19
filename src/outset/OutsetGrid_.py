@@ -118,9 +118,17 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             A DataFrame containing the data for plotting, or a sequence `(x0,
             x1, y0, y1)` specifying the bounds of outset frames.
         x : Optional[str], default None
-            Column name to be used for x-axis values. Not required if data is a sequence of outset frames.
+            Column name to be used for x-axis values.
+
+            If `data` specifies outset frames directly, this kwarg is not
+            required. If provided in this case, it will be used as an axis
+            label.
         y : Optional[str], default None
-            Column name to be used for y-axis values. Not required if data is a sequence of outset frames.
+            Column name to be used for y-axis values.
+
+            If `data` specifies outset frames directly, this kwarg is not
+            required. If provided in this case, it will be used as an axis
+            label.
         col : Union[str, bool, None], default None
             Column name for categorical variable to facet across subaxes.
 
@@ -189,11 +197,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     col_order = hue_order
 
         else:
-            if x is not None or y is not None:
-                raise ValueError(
-                    "x, and y must not be specified if outset frames "
-                    "are specified directly",
-                )
             if hue not in (None, True, False):
                 raise ValueError(
                     "hue must be None or boolean if outset frames are "
@@ -210,7 +213,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             if hue is None and color is None:
                 hue = True
 
-            x, y = "x", "y"
+            x, y = opyt.or_value(x, "_x"), opyt.or_value(y, "_y")
             if col == True:
                 col = "outset"
             if hue == True:
@@ -218,12 +221,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             data = pd.DataFrame.from_records(
                 [
                     {
-                        "x": x,
-                        "y": y,
+                        x: x_,
+                        y: y_,
                         "outset": i,
                     }
                     for i, boundary_points in enumerate(data)
-                    for x, y in (
+                    for x_, y_ in (
                         boundary_points
                         if len(boundary_points) == 2
                         else (boundary_points[:2], boundary_points[2:])
@@ -298,6 +301,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         if "_dummy_col" in data.columns:
             self.set_titles(col_template="")
+
+        if "_x" in data.columns:
+            self.set_axis_labels(x_var="")
+        else:
+            self.set_axis_labels(x_var=x)
+
+        if "_y" in data.columns:
+            self.set_axis_labels(y_var="")
+        else:
+            self.set_axis_labels(y_var=y)
 
         if include_sourceplot:
             self.outset_axes = self.axes.flat[1:]
@@ -662,7 +675,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         elif "hue" in kwargs and kwargs.get("hue_order", None) is None:
             assert self.hue_names is None
             kwargs["hue_order"] = sorted(self.__data[kwargs["hue"]].unique())
+
+        xlabels = [ax.get_xlabel() for ax in self.axes.flat]
+        ylabels = [ax.get_ylabel() for ax in self.axes.flat]
         super().map_dataframe(plotter, *args, **kwargs)
+        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+            for ax, xlabel in zip(self.axes.flat, xlabels):
+                ax.set_xlabel(xlabel)
+        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+            for ax, ylabel in zip(self.axes.flat, ylabels):
+                ax.set_ylabel(ylabel)
         return self
 
     def map_dataframe_source(
@@ -707,7 +729,15 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         if hue_order is not None:
             kwargs["hue_order"] = hue_order
         if self.source_axes is not None:
+            xlabel, ylabel = (
+                self.source_axes.get_xlabel(),
+                self.source_axes.get_ylabel(),
+            )
             plotter(self.__data, *args, ax=self.source_axes, **kwargs)
+            if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+                self.source_axes.set_xlabel(xlabel)
+            if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+                self.source_axes.set_ylabel(ylabel)
         self.tight_layout()
         return self
 
@@ -780,6 +810,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Preserves axis limits.
         """
+        xlabels = [ax.get_xlabel() for ax in self.axes.flat]
+        ylabels = [ax.get_ylabel() for ax in self.axes.flat]
         for ax in self.outset_axes:
             # store and restore axis limits, except for source plot if present
             xlim, ylim = ax.get_xlim(), ax.get_ylim()
@@ -790,6 +822,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 plotter(*args, **kwargs)
             ax.set_xlim(*xlim)
             ax.set_ylim(*ylim)
+        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+            for ax, xlabel in zip(self.axes.flat, xlabels):
+                ax.set_xlabel(xlabel)
+        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+            for ax, ylabel in zip(self.axes.flat, ylabels):
+                ax.set_ylabel(ylabel)
         self.tight_layout()
         return self
 
@@ -825,6 +863,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Doesn't preserve axis limits.
         """
+        xlabel, ylabel = (
+            self.source_axes.get_xlabel(),
+            self.source_axes.get_ylabel(),
+        )
         if self.source_axes is not None:
             ax = self.source_axes
             try:
@@ -833,4 +875,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 plt.sca(ax)
                 plotter(*args, **kwargs)
         self.tight_layout()
+        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+            self.source_axes.set_xlabel(xlabel)
+        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+            self.source_axes.set_ylabel(ylabel)
         return self
