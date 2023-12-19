@@ -238,8 +238,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     {
                         x: x_,
                         y: y_,
-                        col: i,
-                        hue: i,
+                        col: i + 1,
+                        hue: i + 1,
                     }
                     for i, boundary_points in enumerate(data)
                     for x_, y_ in (
