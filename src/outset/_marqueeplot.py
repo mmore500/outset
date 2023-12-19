@@ -14,7 +14,7 @@ from ._auxlib.is_axes_unset_ import is_axes_unset
 from ._auxlib.robust_groupby_ import robust_groupby
 from ._auxlib.set_aspect_ import set_aspect
 from ._draw_marquee import draw_marquee
-from ._MarkNumericalBadges import MarkNumericalBadges
+from .mark._MarkNumericalBadges import MarkNumericalBadges
 
 
 def marqueeplot(
@@ -101,8 +101,10 @@ def marqueeplot(
 
     See Also
     --------
-    OutsetGrid
+    outset.OutsetGrid
         Figure-level interface for creating plots with marquee annotations.
+    outset.draw_marquee
+        Low-level function for drawing marquee annotations.
     """
     if ax is None:
         ax = plt.gca()

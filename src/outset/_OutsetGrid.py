@@ -13,9 +13,9 @@ import seaborn as sns
 from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
-from ._MarkMagnifyingGlass import MarkMagnifyingGlass
-from ._MarkNumericalBadges import MarkNumericalBadges
 from ._marqueeplot import marqueeplot, _prepad_axlim
+from .mark._MarkMagnifyingGlass import MarkMagnifyingGlass
+from .mark._MarkNumericalBadges import MarkNumericalBadges
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):
@@ -42,6 +42,13 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         The axes object for the source plot, if present.
     outset_axes : Sequence[mpl_axes.Axes]
         The axes objects for the outset plots.
+
+    See Also
+    --------
+    outset.draw_marquee
+        Low-level function for drawing marquee annotations.
+    outset.marqueeplot
+        Axes-level tidy data interface for creating marquee annotations.
     """
 
     __data: pd.DataFrame

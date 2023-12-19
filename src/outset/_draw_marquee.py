@@ -11,7 +11,7 @@ import seaborn as sns
 from ._auxlib.draw_callout_ import draw_callout
 from ._auxlib.draw_frame_ import draw_frame
 from ._auxlib.is_axes_unset_ import is_axes_unset
-from ._MarkMagnifyingGlass import mark_magnifying_glass
+from .mark._MarkMagnifyingGlass import mark_magnifying_glass
 
 
 def draw_marquee(
@@ -118,9 +118,9 @@ def draw_marquee(
 
     See Also
     --------
-    marqueeplot
-        Figure-level interface for `draw_marquee`.
-    OutsetGrid
+    outset.marqueeplot
+        Axes-level tidy data interface for creating marquee annotations.
+    outset.OutsetGrid
         Figure-level interface for creating plots with marquee annotations.
     """
     if ax is None:
