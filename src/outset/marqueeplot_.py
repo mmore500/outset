@@ -11,6 +11,7 @@ from matplotlib.axes import Axes as mpl_Axes
 from ._auxlib.calc_aspect_ import calc_aspect
 from ._auxlib.calc_outer_pad_ import calc_outer_pad
 from ._auxlib.is_axes_unset_ import is_axes_unset
+from ._auxlib.robust_groupby_ import robust_groupby
 from ._auxlib.set_aspect_ import set_aspect
 from .draw_marquee_ import draw_marquee
 from .MarkNumericalBadges_ import MarkNumericalBadges
@@ -214,19 +215,22 @@ def _prepad_axlim(
     data: pd.DataFrame,
     x: str,
     y: str,
-    hue: str,
-    outset: str,
-    ax: mpl_Axes,
+    hue: typing.Optional[str],
+    outset: typing.Optional[str],
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]],
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]],
     frame_outer_pad_unit: typing.Literal["axes", "figure", "data"],
-    tight_axlim: bool = False,
+    tight_axlim: bool,
+    ax: typing.Optional[mpl_Axes] = None,
 ) -> None:
     """Calculate padded frame bounds and, if necessary, grow axes limits to
     include them."""
+    if ax is None:
+        ax = plt.gca()
+
     # precalculate frames with inner padding
     framex_values, framey_values = [], []
-    for _, subset in data.groupby([outset, hue], sort=False):
+    for _, subset in robust_groupby(data, by=[outset, hue], sort=False):
         assert len(subset)
 
         is_number = isinstance(frame_inner_pad, numbers.Number)

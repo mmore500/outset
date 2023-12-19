@@ -15,7 +15,7 @@ from ._auxlib.equalize_aspect_ import equalize_aspect
 from ._auxlib.set_aspect_ import set_aspect
 from .MarkMagnifyingGlass_ import MarkMagnifyingGlass
 from .MarkNumericalBadges_ import MarkNumericalBadges
-from .marqueeplot_ import marqueeplot
+from .marqueeplot_ import marqueeplot, _prepad_axlim
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):
@@ -367,6 +367,35 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     if k == "mark_glyph" and isinstance(v, type):
                         d[k] = v()
 
+            # need to prepad without split by hue
+            prepad_kwargs = {
+                "frame_inner_pad": default_frame_inner_pad,
+                "frame_outer_pad": default_frame_outer_pad_outset,
+                "frame_outer_pad_unit": "axes",
+            }
+            self.broadcast_outset(
+                _prepad_axlim,
+                data=data,
+                x=x,
+                y=y,
+                hue=hue,
+                outset=col,
+                tight_axlim=True,
+                **{
+                    **prepad_kwargs,
+                    **{
+                        k: v
+                        for k, v in marqueeplot_kwargs.items()
+                        if k in prepad_kwargs
+                    },
+                    **{
+                        k: v
+                        for k, v in marqueeplot_outset_kwargs.items()
+                        if k in prepad_kwargs
+                    },
+                },
+            )
+
             self_.map_dataframe_outset(
                 marqueeplot,
                 x=x,
@@ -380,7 +409,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "leader_stretch": 0.2,
                     "leader_stretch_unit": "inchesfrom",
                     "mark_glyph": default_draw_glyph_functor_class(),
-                    "tight_axlim": True,
+                    "tight_axlim": False,
                     "zorder": zorder,
                     **marqueeplot_kwargs,
                     **marqueeplot_outset_kwargs,
