@@ -42,7 +42,8 @@ def marqueeplot(
     tight_axlim: bool = False,
     **kwargs,
 ) -> mpl_Axes:
-    """Plot marquee annotations to contain subsets of data from a pandas DataFrame.
+    """Plot marquee annotations to contain subsets of data from a pandas
+    DataFrame.
 
     Provides a seaborn-like axis-level interface for `draw_marquee`. Details on
     marquee annotation structure and configuration can be found in that
@@ -91,8 +92,10 @@ def marqueeplot(
         If True, finalizing by applying initial axes aspect. If None, restore initial axes aspect unless axes are unset.
     tight_axlim : bool, default False
         Whether to shrink axes limits to fit data range.
-    **kwargs
-        Additional keyword arguments forwarded to `draw_marquee`.
+    **kwargs : dict
+        Keyword arguments to adjust marquee sizing and styling.
+
+        See `outset.draw_marquee` for available options.
 
     Returns
     -------

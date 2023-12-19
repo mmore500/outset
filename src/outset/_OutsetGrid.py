@@ -158,18 +158,29 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         include_sourceplot : bool, default True
             Whether to include the original source plot in the grid.
         marqueeplot_kwargs : Dict, default frozendict()
-            Additional marqueeplot keyword arguments  over all plots.
+            Keyword arguments to adjust marquee placement and styling over all
+            plots.
+
+            See `outset.marqueeplot` for available options.
         marqueeplot_outset_kwargs : Dict, default frozendict()
-            Additional marqueeplot keyword arguments specific to outset plots.
+            Keyword arguments to adjust marquee placement and styling over
+            outset plots.
+
+            See `outset.marqueeplot` for available options.
         marqueeplot_source_kwargs : Dict, default frozendict()
-            Additional marqueeplot keyword specific to the source plot, if
-            present.
+            Keyword arguments to adjust marquee placement and styling over
+            source plot, if present.
+
+            See `outset.marqueeplot` for available options.
         palette : Optional[Sequence], default None
             Color palette for the outset hue sequence.
         zorder : float, default 0.0
             The z-order for plotting elements.
         **kwargs : dict
-            Additional keyword arguments passed to seaborn's FacetGrid.
+            Additional keyword arguments forward to seaborn's `FacetGrid`.
+
+            See <https://seaborn.pydata.org/generated/seaborn.FacetGrid.html>
+            for details.
         """
 
         if col is None and col_order is not None:
