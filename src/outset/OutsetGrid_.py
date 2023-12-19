@@ -101,8 +101,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         identical `col`, `hue`, and `outset` values.
 
         Marquee frame coordinates may also be specified directly as a sequence
-        of four-element tuples `(x0, x1, y0, y1)`. In this case, each frame
-        will get its own hue and outset plot.
+        of four-element tuples as "extents" `(x0, y0, x1, y1)` or  "boundary
+        points" `((x0, y0), (x1, y1))`. In this case, each frame will get its
+        own hue and outset plot. For more elaborate manually-specified frame
+        layouts, prepare a DataFrame with columns for `x`, `y`, `hue`, and `col`
+        with two rows per frame (i.e., one row per boundary point) and pass
+        the `frame_inner_pad=0` as a marqueeplot kwarg.
 
         Marquee annotation creation must be dispatched manually after
         initialization through `marqueeplot`, `marqueeplot_outset`, and/or
@@ -216,8 +220,12 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                         "y": y,
                         "outset": i,
                     }
-                    for i, (xmin, xmax, ymin, ymax) in enumerate(data)
-                    for x, y in [(xmin, ymin), (xmax, ymax)]
+                    for i, boundary_points in enumerate(data)
+                    for x, y in (
+                        boundary_points
+                        if len(boundary_points) == 2
+                        else (boundary_points[:2], boundary_points[2:])
+                    )
                 ],
             )
             default_frame_inner_pad = 0

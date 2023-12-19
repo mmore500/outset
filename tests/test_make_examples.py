@@ -63,7 +63,7 @@ def test_make_example_huefull():
 @pytest.mark.integration
 def test_make_example_singleton():
     og = outset.OutsetGrid(
-        data=[(73, 78, 23, 31)],
+        data=[(73, 23, 78, 31)],
         color=sns.color_palette()[-1],
         marqueeplot_kwargs={
             "mark_glyph": outset.MarkAlphabeticalBadges,
