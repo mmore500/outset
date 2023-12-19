@@ -128,6 +128,7 @@ Make sure all your changes are committed. Then run:
 
 .. code:: bash
 
-   bumpversion patch # possible: major / minor / patch git push git push --tags
+   bumpversion patch # possible: major / minor / patch
+   git push git push --tags
 
 Github Actions will then deploy to PyPI if tests pass.
