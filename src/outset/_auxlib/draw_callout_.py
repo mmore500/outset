@@ -136,7 +136,7 @@ def draw_callout(
     img = ax.imshow(
         make_radial_gradient(),
         **{
-            "alpha": 0.1,
+            "alpha": 0.5,
             "aspect": "auto",
             "cmap": mpl_colors.LinearSegmentedColormap.from_list(
                 "gradient",
