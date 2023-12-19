@@ -18,6 +18,9 @@ def test_make_example_hueless():
             "mark_glyph": outset.MarkAlphabeticalBadges,
         },
         marqueeplot_source_kwargs={"leader_tweak": outset.TweakReflect()},
+        marqueeplot_outset_kwargs={
+            "leader_tweak": outset.TweakReflect(vertical=True)
+        },
     )
     og.map_dataframe(
         sns.kdeplot, x="petal_width", y="petal_length", legend=False, zorder=0
