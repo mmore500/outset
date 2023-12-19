@@ -91,12 +91,13 @@ def test_make_example_sourceless():
 @pytest.mark.integration
 def test_make_example_singleton():
     og = outset.OutsetGrid(
-        data=[(73, 23, 78, 31)],
+        data=[(73.5, 23.5, 78.5, 31.5)],
         color=sns.color_palette()[-1],
         marqueeplot_kwargs={
             "mark_glyph": outset.MarkAlphabeticalBadges,
             "frame_outer_pad": 0.2,
             "frame_outer_pad_unit": "inches",
+            "frame_face_kwargs": {"facecolor": "none"},
         },
     )
     og.broadcast(
