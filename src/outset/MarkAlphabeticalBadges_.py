@@ -110,7 +110,7 @@ class MarkAlphabeticalBadges:
             color_asterisk_face=color_letter,
             color_badge=color_badge,
             color_underlay=color_underlay,
-            marker=f"$\mathrm{{{chr(self._counter)}}}$",
+            marker=rf"$\mathrm{{{chr(self._counter)}}}$",
             marker_badge=marker_badge,
             marker_underlay=marker_underlay,
             markersize=markersize,
