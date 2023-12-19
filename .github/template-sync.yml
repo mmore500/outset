@@ -1,5 +1,5 @@
 files:
-  - ".gitignore"  # include
+  - ".gitignore" # include
   - ".github"
   - ".vscode"
   - "tests/conftest.py"
