@@ -1,8 +1,6 @@
 .. figure:: docs/assets/outset-wordmark.png
    :alt: outset wordmark
 
-   outset wordmark
-
 |PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars|
 
 Easily indicate zoom plot areas in Matplotlib
