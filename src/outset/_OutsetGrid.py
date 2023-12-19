@@ -140,6 +140,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Column name for categorical variable to facet across subaxes.
 
             If None or True, set to match `hue` if provided. If False, no faceting is performed.
+
+            If `data` specifies outset frames directly, this kwarg is not
+            required. If provided in this case, it will be used to title
+            subplots label.
         col_order : Optional[Sequence[str]], default None
             The order to arrange the columns in the grid.
         col_wrap : Optional[int], default None
@@ -149,6 +153,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             data's rendered marquee annotations.
 
             Will also facet across subaxes if `col` is not set `False`.
+
+            If `data` specifies outset frames directly, this kwarg is not
+            required. If provided in this case, it will be used to title legend
+            created by `.add_legend()`, if any.
         hue_order : Optional[Sequence[str]], default None
             The to assign palette colors to `hue` categorical values.
 
@@ -215,33 +223,23 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     col_order = hue_order
 
         else:
-            if hue not in (None, True, False):
-                raise ValueError(
-                    "hue must be None or boolean if outset frames are "
-                    "specified directly",
-                )
-            if col not in (None, True, False):
-                raise ValueError(
-                    "col must be None or boolean if outset frames are "
-                    "specified directly",
-                )
-
             if col is None:
                 col = True
             if hue is None and color is None:
                 hue = True
 
             x, y = opyt.or_value(x, "_x"), opyt.or_value(y, "_y")
-            if col == True:
+            if col is True:
                 col = "outset"
-            if hue == True:
-                hue = "outset"
+            if hue is True:
+                hue = col
             data = pd.DataFrame.from_records(
                 [
                     {
                         x: x_,
                         y: y_,
-                        "outset": i,
+                        col: i,
+                        hue: i,
                     }
                     for i, boundary_points in enumerate(data)
                     for x_, y_ in (
