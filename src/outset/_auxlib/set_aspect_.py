@@ -69,6 +69,7 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
         f"x0_={x0_}, x1_={x1_}, y0_={y0_}, y1_={y1_}, "
         f"x0={x0}, x1={x1}, y0={y0}, y1={y1}"
     )
+    assert (x0, x1) == (x0_, x1_) or (y0, y1) == (y0_, y1_), info
     assert x0 <= x0_, info
     assert y0 <= y0_, info
     assert x1 >= x1_, info
