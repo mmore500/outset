@@ -77,7 +77,7 @@ def marqueeplot(
         or figure size, respectively. If 'inches', padding is specified in
         inches.
     mark_glyph : Union[Callable, Type, None], optional
-        Callable or type to draw a glyph at the end of the callout.
+        Callable or functor type to draw a glyph at the end of the callout.
     palette : Sequence, optional
         Color palette for plotting elements.
     preserve_aspect: bool, default False
