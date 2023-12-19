@@ -6,8 +6,8 @@ import typing
 def layout_corner_insets(
     num_insets: int,
     corner: typing.Literal["NE", "NW", "SE", "SW"] = "NE",
-    inset_grid_size: float = 0.60,
-    inset_pad_ratio: float = 0.25,
+    inset_grid_size: float = 0.50,
+    inset_pad_ratio: float = 0.1,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
     """Lay out positions for `n` inset plots in a specified corner.
 
