@@ -53,3 +53,34 @@ def test_make_example_huefull():
     outpath = "/tmp/test_make_example_huefull.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
+
+
+@pytest.mark.integration
+def test_make_example_singleton():
+    og = outset.OutsetGrid(
+        data=[(73, 78, 23, 31)],
+        color=sns.color_palette()[-1],
+        marqueeplot_kwargs={
+            "mark_glyph": outset.MarkAlphabeticalBadges,
+            "frame_outer_pad": 0.2,
+            "frame_outer_pad_unit": "inches",
+        },
+    )
+    og.broadcast(
+        sns.scatterplot,
+        data=sns.load_dataset("mpg").dropna(),
+        x="horsepower",
+        y="mpg",
+        hue="origin",
+        size="weight",
+        sizes=(40, 400),
+        alpha=0.5,
+        palette="muted",
+        legend=False,
+        zorder=0,
+    )
+    og.marqueeplot(equalize_aspect=False)
+
+    outpath = "/tmp/test_make_example_singleton.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")
