@@ -8,7 +8,7 @@ authors = [
     {name = "Matthew Andres Moreno", email = "m.more500@gmail.com"},
 ]
 description = " Easily indicate zoom plot areas in Matplotlib"
-readme = "README.md"
+readme = "README.rst"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

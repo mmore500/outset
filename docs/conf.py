@@ -15,15 +15,26 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../src/"))
 
+import outset
+
 
 # -- Project information -----------------------------------------------------
 
-project = "ai-python docs"
-copyright = "2022, Daniel Ciborowski"
-author = "Daniel Ciborowski"
+project = "outset"
+copyright = "2023, Matthew Andres Moreno"
+author = "Matthew Andres Moreno"
 
 # The full version, including alpha/beta/rc tags
 release = "0.1.0"
+
+# The version info for the project you're documenting, acts as replacement
+# for |version| and |release|, also used in various other places throughout
+# the built documents.
+#
+# The short X.Y version.
+version = outset.__version__
+# The full version, including alpha/beta/rc tags.
+release = outset.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,6 +72,12 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = "assets/outset-wordmark.png"
+
 
 # Napoleon settings
 napoleon_include_init_with_doc = True

@@ -6,7 +6,7 @@ RUN python -m pip install --upgrade pip \
 ENV FLIT_ROOT_INSTALL=1
 
 COPY pyproject.toml .
-RUN touch README.md \
+RUN touch README.rst \
     && mkdir -p src/outset \
     && python -m flit install --only-deps --deps develop \
-    && rm -r pyproject.toml README.md src
+    && rm -r pyproject.toml README.rst src
