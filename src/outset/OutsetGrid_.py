@@ -291,6 +291,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             },
         )
 
+        if "_dummy_col" in data.columns:
+            self.set_titles(col_template="")
+
         if include_sourceplot:
             self.outset_axes = self.axes.flat[1:]
             self.source_axes = self.axes.flat[0]
