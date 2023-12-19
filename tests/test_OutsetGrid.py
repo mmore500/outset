@@ -94,8 +94,6 @@ def test_OutsetGrid_broadcast():
     og = OutsetGrid(
         data=[(0.42, 0.78, 0.62, 0.98), (0.10, 0.14, 0.40, 0.21)],
         aspect=0.9,
-        col=True,
-        hue=True,
     )
     og.broadcast(
         plt.imshow, image, extent=(0, 1, 0, 1), origin="upper", zorder=-1
