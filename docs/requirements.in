@@ -1,0 +1,10 @@
+IPython
+matplotlib
+nbconvert<6  # https://github.com/spatialaudio/nbsphinx/issues/466
+nbsphinx
+numpy
+pandas
+seaborn
+sphinx
+sphinx-copybutton
+sphinx-rtd-theme
