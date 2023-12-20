@@ -37,6 +37,6 @@ test_data = [
     "horizontal, vertical, input_vertices, expected_output", test_data
 )
 def test_TweakReflect(horizontal, vertical, input_vertices, expected_output):
-    tweak = TweakReflect(horizontal, vertical)
+    tweak = TweakReflect(horizontal=horizontal, vertical=vertical)
     result = tweak(input_vertices)
     assert np.allclose(result, expected_output)
