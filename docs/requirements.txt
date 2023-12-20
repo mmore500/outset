@@ -20,10 +20,14 @@ certifi==2023.11.17
     # via requests
 charset-normalizer==3.3.2
     # via requests
+comm==0.2.0
+    # via ipykernel
 contourpy==1.2.0
     # via matplotlib
 cycler==0.12.1
     # via matplotlib
+debugpy==1.8.0
+    # via ipykernel
 decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
@@ -47,8 +51,12 @@ idna==3.6
     # via requests
 imagesize==1.4.1
     # via sphinx
-ipython==8.18.1
+ipykernel==6.27.1
     # via -r requirements.in
+ipython==8.18.1
+    # via
+    #   -r requirements.in
+    #   ipykernel
 ipython-genutils==0.2.0
     # via -r requirements.in
 jedi==0.19.1
@@ -64,9 +72,12 @@ jsonschema==4.20.0
 jsonschema-specifications==2023.11.2
     # via jsonschema
 jupyter-client==8.6.0
-    # via nbclient
+    # via
+    #   ipykernel
+    #   nbclient
 jupyter-core==5.5.1
     # via
+    #   ipykernel
     #   jupyter-client
     #   nbconvert
     #   nbformat
@@ -81,7 +92,9 @@ matplotlib==3.8.2
     #   -r requirements.in
     #   seaborn
 matplotlib-inline==0.1.6
-    # via ipython
+    # via
+    #   ipykernel
+    #   ipython
 mistune==0.8.4
     # via nbconvert
 nbclient==0.5.13
@@ -98,7 +111,9 @@ nbformat==5.9.2
 nbsphinx==0.9.3
     # via -r requirements.in
 nest-asyncio==1.5.8
-    # via nbclient
+    # via
+    #   ipykernel
+    #   nbclient
 numpy==1.26.2
     # via
     #   -r requirements.in
@@ -108,6 +123,7 @@ numpy==1.26.2
     #   seaborn
 packaging==23.2
     # via
+    #   ipykernel
     #   matplotlib
     #   sphinx
 pandas==2.1.4
@@ -126,6 +142,8 @@ platformdirs==4.1.0
     # via jupyter-core
 prompt-toolkit==3.0.43
     # via ipython
+psutil==5.9.7
+    # via ipykernel
 ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
@@ -145,7 +163,9 @@ python-dateutil==2.8.2
 pytz==2023.3.post1
     # via pandas
 pyzmq==25.1.2
-    # via jupyter-client
+    # via
+    #   ipykernel
+    #   jupyter-client
 referencing==0.32.0
     # via
     #   jsonschema
@@ -200,9 +220,13 @@ stack-data==0.6.3
 testpath==0.6.0
     # via nbconvert
 tornado==6.4
-    # via jupyter-client
+    # via
+    #   ipykernel
+    #   jupyter-client
 traitlets==5.14.0
     # via
+    #   comm
+    #   ipykernel
     #   ipython
     #   jupyter-client
     #   jupyter-core
