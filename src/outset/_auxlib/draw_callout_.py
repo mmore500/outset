@@ -158,7 +158,7 @@ def draw_callout(
 
     # Draw callout glyph
     ###########################################################################
-    frame_upper_right = np.array([frame_xlim[1], frame_ylim[1]])
+    frame_upper_right = np.array(leader_vertices[1])
     leader_outer_vertex = np.array(leader_vertices[-1])
     assert len(leader_outer_vertex) == 2, leader_outer_vertex
 
