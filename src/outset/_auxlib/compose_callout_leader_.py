@@ -67,11 +67,17 @@ def compose_callout_leader(
     ) = zip(frame_xlim, frame_ylim), zip(frame_xlim, reversed(frame_ylim))
 
     if frame_width:
-        theta = np.arctan(frame_height / frame_width)
+        theta = np.arctan(
+            frame_height
+            / frame_width
+            * np.ptp(ax.get_xlim())
+            / np.ptp(ax.get_ylim())
+        )
     elif frame_height:
         theta = np.pi / 2
     else:
         theta = 0
+
     stretch_y, stretch_x = np.sin(theta) * stretch, np.cos(theta) * stretch
     if stretch_unit == "axes":
         height, width = stretch_y * ax_height, stretch_x * ax_width
