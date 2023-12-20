@@ -1,4 +1,5 @@
 IPython
+ipython-genutils  # implicit nbsphinx requirement? missing on CI
 matplotlib
 nbconvert<6  # https://github.com/spatialaudio/nbsphinx/issues/466
 nbsphinx
