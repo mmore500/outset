@@ -5,6 +5,7 @@ import warnings
 
 import frozendict
 from matplotlib import axes as mpl_axes
+from matplotlib import patches as mpl_patches
 from matplotlib import pyplot as plt
 import opytional as opyt
 import pandas as pd
@@ -57,6 +58,19 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
     source_axes: typing.Optional[mpl_axes.Axes]
     outset_axes: typing.Sequence[mpl_axes.Axes]
+
+    def add_legend(self: "OutsetGrid", *args, **kwargs) -> None:
+        if not self._legend_data:
+            super().add_legend(
+                title=self._hue_var,
+                handles=[
+                    mpl_patches.Patch(color=c, label=l)
+                    for c, l in zip(self._colors, self.hue_names)
+                ],
+                labels=self.hue_names,
+            )
+        else:
+            super().add_legend(*args, **kwargs)
 
     def tight_layout(self: "OutsetGrid") -> None:
         self.figure.tight_layout()
