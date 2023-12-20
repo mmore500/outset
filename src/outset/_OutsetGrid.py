@@ -284,6 +284,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             default_frame_inner_pad = 0
             default_frame_outer_pad_source = 0
 
+            if len(data) == 0:
+                data = pd.DataFrame({x: [], y: [], col: [], hue: []})
+
         if not x in data.columns:
             raise ValueError(f"kwarg x={x} must be provided as column in data")
         if not y in data.columns:

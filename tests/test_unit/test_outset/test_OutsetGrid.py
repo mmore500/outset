@@ -126,3 +126,8 @@ def test_OutsetGrid_broadcast_sourceless():
     outpath = "/tmp/test_OutsetGrid_broadcast_sourceless.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
+
+
+def test_OutsetGrid_empty():
+    og = OutsetGrid([])
+    og.broadcast(sns.scatterplot, x=[1], y=[2], legend=False)
