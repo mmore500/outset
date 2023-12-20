@@ -1,56 +1,75 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Function to create and append toggle button
-    function addToggleButton(div) {
-        var button = document.createElement("button");
-        button.innerHTML = "Show Code »";
+document.addEventListener("DOMContentLoaded", () => {
+    // Function to create and append a toggle button to a div
+    const addToggleButton = (div) => {
+        const button = document.createElement("button");
+        button.textContent = "Show Code »";
+        styleButton(button);
+        initializeDivStyle(div);
+        addClickEvent(button, div);
+        insertButtonAboveDiv(div, button);
+    };
 
-        // Styling the button
-        button.style.backgroundColor = "#F5F5F5"; // Light grey background
-        button.style.color = "#333333"; // Dark text color
-        button.style.border = "1px solid #DDD"; // Light grey border
-        button.style.padding = "2px 5px"; // Padding inside the button
-        button.style.marginTop = "5px"; // Margin at the top
-        button.style.cursor = "pointer"; // Cursor to indicate clickable
-        button.style.borderRadius = "3px"; // Rounded corners
-        button.style.fontSize = "0.9em"; // Font size
-        button.style.width = "100%"; // Full width of the button
-        button.style.maxWidth = "100px"; // Max width of the button
-        button.style.transition = "max-width 0.5s ease, background-color 1s ease"; // Animation for width and background-color
+    // Styling the toggle button
+    const styleButton = (button) => {
+        Object.assign(button.style, {
+            backgroundColor: "#F5F5F5",
+            color: "#333333",
+            border: "1px solid #DDD",
+            padding: "2px 5px",
+            marginTop: "5px",
+            cursor: "pointer",
+            borderRadius: "3px",
+            fontSize: "0.9em",
+            width: "100%",
+            maxWidth: "100px",
+            transition: "max-width 0.5s ease, background-color 1s ease"
+        });
+    };
 
-        // Initial hide style for div
-        div.style.opacity = '0';
-        div.style.maxHeight = '0px';
-        div.style.overflow = 'hidden';
-        div.style.transition = 'opacity 0.2s ease, max-height 0.6s ease'; // Animation for opacity and max-height
+    // Initialize div style for hiding
+    const initializeDivStyle = (div) => {
+        Object.assign(div.style, {
+            opacity: '0',
+            maxHeight: '0px',
+            overflow: 'hidden',
+            transition: 'opacity 0.2s ease, max-height 0.6s ease'
+        });
+    };
 
-        button.onclick = function() {
+    // Handle click event for the toggle button
+    const addClickEvent = (button, div) => {
+        button.onclick = () => {
             if (div.style.maxHeight === '0px') {
-                div.style.opacity = '1';
-                div.style.maxHeight = '500px'; // Adjust as needed to fit the content
-                button.innerHTML = "»» Hide Code ««";
-                // button.style.width = "100%";
+                Object.assign(div.style, {
+                    opacity: '1',
+                    maxHeight: '500px',
+                });
+                button.textContent = "»» Hide Code ««";
                 button.style.maxWidth = "100%";
             } else {
-                div.style.opacity = '0';
-                div.style.maxHeight = '0px';
-                button.innerHTML = "Show Code »";
+                Object.assign(div.style, {
+                    opacity: '0',
+                    maxHeight: '0px'
+                });
+                button.textContent = "Show Code »";
                 button.style.maxWidth = "100px";
             }
         };
+    };
 
-        div.parentNode.insertBefore(document.createElement("hr"), div);
+    // Insert the toggle button above the div
+    const insertButtonAboveDiv = (div, button) => {
+        const hr = document.createElement("hr");
+        div.parentNode.insertBefore(hr, div);
         div.parentNode.insertBefore(button, div);
-    }
+    };
 
-    // Select and hide code and output divs
-    var codeDivs = document.querySelectorAll('.nbinput.docutils.container');
-    codeDivs.forEach(function(div) {
-        // div.style.display = 'none';
-        addToggleButton(div);
-    });
+    // Select and apply toggle functionality to code and output divs
+    const codeDivs = document.querySelectorAll('.nbinput.docutils.container');
+    codeDivs.forEach(addToggleButton);
 
-    var outputDivs = document.querySelectorAll('.prompt, .stderr.docutils.container');
-    outputDivs.forEach(function(div) {
-        div.style.display = 'none';
-    });
+    // Hide cell numbers (which don't play nice with button layout)
+    // and stderr output (which is usually just a bunch of warnings)
+    const outputDivs = document.querySelectorAll('.prompt, .stderr.docutils.container');
+    outputDivs.forEach(div => div.style.display = 'none');
 });
