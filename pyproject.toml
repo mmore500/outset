@@ -59,9 +59,9 @@ test = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/microsoft/python-package-template/tree/main#readme"
-Source = "https://github.com/microsoft/python-package-template"
-Tracker = "https://github.com/microsoft/python-package-template/issues"
+Documentation = "https://mmore500.com/outset"
+Source = "https://github.com/mmore500/outset"
+Tracker = "https://github.com/mmore500/outset/issues"
 
 [tool.flit.module]
 name = "outset"
