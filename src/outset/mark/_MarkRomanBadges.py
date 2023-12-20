@@ -39,6 +39,8 @@ class MarkRomanBadges:
             Must be between 1 and 12, inclusive.
         step : int, default 1
             The step size for the numerical badges.
+        upper : bool, default False
+            Should numerals be uppercase?
         """
         if start < 1 or start > 12:
             raise ValueError(f"Start value {start} outside supported range.")
