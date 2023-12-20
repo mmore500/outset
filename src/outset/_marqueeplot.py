@@ -49,7 +49,7 @@ def marqueeplot(
     marquee annotation structure and configuration can be found in that
     function's docstring.
 
-     Parameters
+    Parameters
     ----------
     data : pd.DataFrame
         DataFrame containing the data to be marquee-annotated.

@@ -17,7 +17,7 @@ class CalcBoundsIQR:
     def __init__(self: "CalcBoundsIQR", iqr_multiplier: float = 1.5) -> None:
         """Initialize functor.
 
-        Parameters:
+        Parameters
         ----------
         iqr_multiplier : float, default 1.5
             The multiplier applied to the IQR to determine the bounds.
@@ -30,12 +30,12 @@ class CalcBoundsIQR:
         """Calculate the lower and upper bounds of the input data using the IQR
         method.
 
-        Parameters:
+        Parameters
         ----------
         data : np.ndarray
             The input data for which the bounds are calculated.
 
-        Returns:
+        Returns
         --------
         bounds : Tuple[float, float]
             Lower and upper calculated bounds.
