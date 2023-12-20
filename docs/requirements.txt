@@ -1,5 +1,9 @@
 IPython
+matplotlib
 nbsphinx
+numpy
+pandas
+seaborn
 sphinx
 sphinx-copybutton
 sphinx-rtd-theme
