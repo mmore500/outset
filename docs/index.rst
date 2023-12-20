@@ -11,6 +11,7 @@ Overview
    :hidden:
 
    index
+   gallery
    api
    contributing
    package

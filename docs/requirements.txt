@@ -1,3 +1,5 @@
+IPython
+nbsphinx
 sphinx
 sphinx-copybutton
 sphinx-rtd-theme
