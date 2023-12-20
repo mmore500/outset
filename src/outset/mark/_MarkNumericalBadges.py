@@ -16,11 +16,10 @@ class MarkNumericalBadges:
 
     _counter: int
     _step: int
+    _kwargs: dict
 
     def __init__(
-        self: "MarkNumericalBadges",
-        start: int = 1,
-        step: int = 1,
+        self: "MarkNumericalBadges", start: int = 1, step: int = 1, **kwargs
     ) -> None:
         """Initialize functor.
 
@@ -30,9 +29,12 @@ class MarkNumericalBadges:
             The starting number for the numerical badges.
         step : int, default 1
             The step size for the numerical badges.
+        kwargs : dict
+            Additional kwargs will forward to `__call_`.
         """
         self._counter = start
         self._step = step
+        self._kwargs = kwargs
 
     def __call__(
         self: "MarkNumericalBadges",
@@ -98,24 +100,27 @@ class MarkNumericalBadges:
         None
         """
         mark_inlaid_asterisk(
-            x=x,
-            y=y,
-            ax=ax,
-            asterisk_edgewidth=numeral_edgewidth,
-            color=color,
-            color_accent=color_accent,
-            color_asterisk_edge=color_numeral,
-            color_asterisk_face=color_numeral,
-            color_badge=color_badge,
-            color_underlay=color_underlay,
-            marker=f"${self._counter}$",
-            marker_badge=marker_badge,
-            marker_underlay=marker_underlay,
-            markersize=markersize,
-            scale_asterisk=scale_numeral,
-            scale_badge=scale_badge,
             **{
                 "linecolor": "none",
+                **self._kwargs,
+                **dict(
+                    x=x,
+                    y=y,
+                    ax=ax,
+                    asterisk_edgewidth=numeral_edgewidth,
+                    color=color,
+                    color_accent=color_accent,
+                    color_asterisk_edge=color_numeral,
+                    color_asterisk_face=color_numeral,
+                    color_badge=color_badge,
+                    color_underlay=color_underlay,
+                    marker=f"${self._counter}$",
+                    marker_badge=marker_badge,
+                    marker_underlay=marker_underlay,
+                    markersize=markersize,
+                    scale_asterisk=scale_numeral,
+                    scale_badge=scale_badge,
+                ),
                 **kwargs,
             },
         )

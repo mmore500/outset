@@ -28,6 +28,7 @@ class MarkRomanBadges:
         step: int = 1,
         *,
         upper: bool = False,
+        **kwargs,
     ) -> None:
         """Initialize functor.
 
@@ -41,6 +42,8 @@ class MarkRomanBadges:
             The step size for the numerical badges.
         upper : bool, default False
             Should numerals be uppercase?
+        kwwargs : dict
+            Additional kwargs forward to `__call__`.
         """
         if start < 1 or start > 12:
             raise ValueError(f"Start value {start} outside supported range.")
@@ -48,7 +51,9 @@ class MarkRomanBadges:
         # https://www.johndcook.com/blog/2020/10/07/roman-numerals/ and
         # https://en.wikipedia.org/wiki/Numerals_in_Unicode#Roman_numerals
         base = 0x215F if upper else 0x216F
-        self._ftor = MarkAlphabeticalBadges(start=chr(base + start), step=step)
+        self._ftor = MarkAlphabeticalBadges(
+            start=chr(base + start), step=step, **kwargs
+        )
 
     ftor = MarkAlphabeticalBadges()
 

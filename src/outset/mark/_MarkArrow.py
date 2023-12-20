@@ -127,6 +127,15 @@ def mark_arrow(
 class MarkArrow:
     """Functor interface for `mark_arrow`."""
 
+    _kwargs: dict
+
+    def __init__(self: "MarkArrow", **kwargs) -> None:
+        """Initialize functor.
+
+        kwargs will forward to `__call__`.
+        """
+        self._kwargs = kwargs
+
     def __call__(self, *args, **kwargs):
         """Forwards to `mark_arrow`."""
-        return mark_arrow(*args, **kwargs)
+        return mark_arrow(*args, **{**self._kwargs, **kwargs})

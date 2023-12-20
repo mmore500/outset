@@ -16,11 +16,13 @@ class MarkAlphabeticalBadges:
 
     _counter: int
     _step: int
+    _kwargs: dict
 
     def __init__(
         self: "MarkAlphabeticalBadges",
         start: str = "a",
         step: int = 1,
+        **kwargs,
     ) -> None:
         """Initialize functor.
 
@@ -32,9 +34,12 @@ class MarkAlphabeticalBadges:
             Pass "A" for uppercase letters.
         step : int, default 1
             The step size for the alphabetical badges.
+        kwargs : dict
+            Additional kwargs forward to `__call__`.
         """
         self._counter = ord(start)
         self._step = step
+        self._kwargs = kwargs
 
     def __call__(
         self: "MarkAlphabeticalBadges",
@@ -100,24 +105,27 @@ class MarkAlphabeticalBadges:
         None
         """
         mark_inlaid_asterisk(
-            x=x,
-            y=y,
-            ax=ax,
-            asterisk_edgewidth=letter_edgewidth,
-            color=color,
-            color_accent=color_accent,
-            color_asterisk_edge=color_letter,
-            color_asterisk_face=color_letter,
-            color_badge=color_badge,
-            color_underlay=color_underlay,
-            marker=rf"$\mathrm{{{chr(self._counter)}}}$",
-            marker_badge=marker_badge,
-            marker_underlay=marker_underlay,
-            markersize=markersize,
-            scale_asterisk=scale_letter,
-            scale_badge=scale_badge,
             **{
                 "linecolor": "none",
+                **self._kwargs,
+                **dict(
+                    x=x,
+                    y=y,
+                    ax=ax,
+                    asterisk_edgewidth=letter_edgewidth,
+                    color=color,
+                    color_accent=color_accent,
+                    color_asterisk_edge=color_letter,
+                    color_asterisk_face=color_letter,
+                    color_badge=color_badge,
+                    color_underlay=color_underlay,
+                    marker=rf"$\mathrm{{{chr(self._counter)}}}$",
+                    marker_badge=marker_badge,
+                    marker_underlay=marker_underlay,
+                    markersize=markersize,
+                    scale_asterisk=scale_letter,
+                    scale_badge=scale_badge,
+                ),
                 **kwargs,
             },
         )
