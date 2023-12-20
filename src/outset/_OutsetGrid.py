@@ -17,6 +17,7 @@ from ._auxlib.set_aspect_ import set_aspect
 from ._marqueeplot import marqueeplot, _prepad_axlim
 from .mark._MarkMagnifyingGlass import MarkMagnifyingGlass
 from .mark._MarkNumericalBadges import MarkNumericalBadges
+from .util._NamedFrames import NamedFrames
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):
@@ -95,6 +96,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         data: typing.Union[
             pd.DataFrame,
             typing.Sequence[typing.Tuple[float, float, float, float]],
+            NamedFrames,
         ],
         *,
         x: typing.Optional[str] = None,
@@ -135,9 +137,13 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Parameters
         ----------
-        data : pd.DataFrame or Sequence of Tuple[float, float, float, float]
+        data : pd.DataFrame or Sequence of Tuple[float, float, float, float] or
+        outset.util.NamedFrames
             A DataFrame containing the data for plotting, or a sequence `(x0,
             x1, y0, y1)` specifying the bounds of outset frames.
+
+            If NamedFrames, underlying data should map frame names to frame
+            coordinates.
         x : Optional[str], default None
             Column name to be used for x-axis values.
 
@@ -222,7 +228,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         default_frame_inner_pad = 0.1
 
         # spoof data frame if outset frames are specified directly
-        if isinstance(data, (pd.DataFrame, abc.Mapping)):
+        if isinstance(data, (pd.DataFrame, abc.Mapping)) and not isinstance(
+            data, NamedFrames
+        ):
             if x is None or y is None:
                 raise ValueError(
                     "x and y kwargs must be provided from column names in data",
@@ -242,6 +250,11 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             if hue is None and color is None:
                 hue = True
 
+            if hue and isinstance(data, NamedFrames):
+                hue_order = data.keys()
+            if col and isinstance(data, NamedFrames):
+                col_order = data.keys()
+
             x, y = opyt.or_value(x, "_x"), opyt.or_value(y, "_y")
             if col is True:
                 col = "outset"
@@ -252,10 +265,14 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     {
                         x: x_,
                         y: y_,
-                        col: i + 1,
-                        hue: i + 1,
+                        col: i,
+                        hue: i,
                     }
-                    for i, boundary_points in enumerate(data)
+                    for i, boundary_points in (
+                        data.items()
+                        if isinstance(data, NamedFrames)
+                        else enumerate(data, start=1)
+                    )
                     for x_, y_ in (
                         boundary_points
                         if len(boundary_points) == 2
@@ -309,7 +326,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 raise ValueError(
                     "Cannot include source plot if col data includes None",
                 )
-            col_order = [None] + col_order
+            col_order = [None] + [*col_order]
 
         # initialize axes
         #######################################################################
