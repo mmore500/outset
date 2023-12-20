@@ -1,7 +1,5 @@
 IPython
-ipython-genutils  # implicit nbsphinx requirement? missing on CI
 matplotlib
-nbconvert<6  # https://github.com/spatialaudio/nbsphinx/issues/466
 nbsphinx
 numpy
 pandas
@@ -9,3 +7,8 @@ seaborn
 sphinx
 sphinx-copybutton
 sphinx-rtd-theme
+
+
+ipython-genutils  # implicit nbsphinx requirement? missing on CI
+jinja2==3.0.3  # https://github.com/d2l-ai/d2l-book/issues/46#issuecomment-1262704457
+nbconvert==6.4.2  # https://github.com/spatialaudio/nbsphinx/issues/466
