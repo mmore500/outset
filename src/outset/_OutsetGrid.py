@@ -139,8 +139,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         ----------
         data : pd.DataFrame or Sequence of Tuple[float, float, float, float] or
         outset.util.NamedFrames
-            A DataFrame containing the data for plotting, or a sequence `(x0,
-            x1, y0, y1)` specifying the bounds of outset frames.
+            A DataFrame containing the data for plotting, or as a sequence of
+            "extents" `(x0, y0, x1, y1)` or  "boundary points" `((x0, y0), (x1,
+            y1))` specifying the bounds of outset frames.
 
             If NamedFrames, underlying data should map frame names to frame
             coordinates.
