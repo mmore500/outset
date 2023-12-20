@@ -61,7 +61,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
     outset_axes: typing.Sequence[mpl_axes.Axes]
 
     def add_legend(self: "OutsetGrid", *args, **kwargs) -> None:
-        if not self._legend_data:
+        for ax in self.axes.flat:
+            ax.legend().set_visible(False)
+        if not self._legend_data and self._colors and self.hue_names:
             super().add_legend(
                 title=self._hue_var,
                 handles=[
