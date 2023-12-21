@@ -264,7 +264,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
             x, y = opyt.or_value(x, "_x"), opyt.or_value(y, "_y")
             if col is True:
-                col = "outset"
+                col = hue if isinstance(hue, str) else "_outset"
             if hue is True:
                 hue = col
             data = pd.DataFrame.from_records(
@@ -356,7 +356,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             },
         )
 
-        if "_dummy_col" in data.columns:
+        if col in ("_dummy_col", "_outset"):
             self.set_titles(col_template="")
 
         if "_x" in data.columns:
@@ -370,8 +370,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             self.set_axis_labels(y_var=y)
 
         if include_sourceplot:
-            self.outset_axes = self.axes.flat[1:]
             self.source_axes = self.axes.flat[0]
+            self.source_axes.set_title("")
+            self.outset_axes = self.axes.flat[1:]
         else:
             self.source_axes = None
             self.outset_axes = self.axes.flat[:]
@@ -430,7 +431,6 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     },
                 },
             )
-            self_.source_axes.set_title("")
 
         self._marqueeplot_source = marqueeplot_source
 
