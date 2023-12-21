@@ -16,8 +16,12 @@ babel==2.14.0
     # via sphinx
 bleach==6.1.0
     # via nbconvert
+cartopy==0.22.0
+    # via -r requirements.in
 certifi==2023.11.17
-    # via requests
+    # via
+    #   pyproj
+    #   requests
 charset-normalizer==3.3.2
     # via requests
 comm==0.2.0
@@ -85,11 +89,14 @@ jupyterlab-pygments==0.3.0
     # via nbconvert
 kiwisolver==1.4.5
     # via matplotlib
+lxml==4.9.4
+    # via owslib
 markupsafe==2.1.3
     # via jinja2
 matplotlib==3.8.2
     # via
     #   -r requirements.in
+    #   cartopy
     #   seaborn
 matplotlib-inline==0.1.6
     # via
@@ -117,12 +124,17 @@ nest-asyncio==1.5.8
 numpy==1.26.2
     # via
     #   -r requirements.in
+    #   cartopy
     #   contourpy
     #   matplotlib
     #   pandas
     #   seaborn
+    #   shapely
+owslib==0.29.3
+    # via -r requirements.in
 packaging==23.2
     # via
+    #   cartopy
     #   ipykernel
     #   matplotlib
     #   sphinx
@@ -157,13 +169,22 @@ pypandoc-binary==1.12
     # via -r requirements.in
 pyparsing==3.1.1
     # via matplotlib
+pyproj==3.6.1
+    # via cartopy
+pyshp==2.3.1
+    # via cartopy
 python-dateutil==2.8.2
     # via
     #   jupyter-client
     #   matplotlib
+    #   owslib
     #   pandas
 pytz==2023.3.post1
-    # via pandas
+    # via
+    #   owslib
+    #   pandas
+pyyaml==6.0.1
+    # via owslib
 pyzmq==25.1.2
     # via
     #   ipykernel
@@ -173,13 +194,17 @@ referencing==0.32.0
     #   jsonschema
     #   jsonschema-specifications
 requests==2.31.0
-    # via sphinx
+    # via
+    #   owslib
+    #   sphinx
 rpds-py==0.15.2
     # via
     #   jsonschema
     #   referencing
 seaborn==0.13.0
     # via -r requirements.in
+shapely==2.0.2
+    # via cartopy
 six==1.16.0
     # via
     #   asttokens
