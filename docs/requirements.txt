@@ -128,6 +128,8 @@ numpy==1.26.2
     #   contourpy
     #   matplotlib
     #   pandas
+    #   pykdtree
+    #   scipy
     #   seaborn
     #   shapely
 owslib==0.29.3
@@ -165,6 +167,8 @@ pygments==2.17.2
     #   ipython
     #   nbconvert
     #   sphinx
+pykdtree==1.3.10
+    # via -r requirements.in
 pypandoc-binary==1.12
     # via -r requirements.in
 pyparsing==3.1.1
@@ -201,6 +205,8 @@ rpds-py==0.15.2
     # via
     #   jsonschema
     #   referencing
+scipy==1.11.4
+    # via -r requirements.in
 seaborn==0.13.0
     # via -r requirements.in
 shapely==2.0.2
