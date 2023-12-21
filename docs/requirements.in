@@ -13,7 +13,7 @@ sphinx-rtd-theme
 ipykernel  # https://stackoverflow.com/a/76855162/17332200
 ipython-genutils  # implicit nbsphinx requirement? missing on CI
 jinja2==3.0.3  # https://github.com/d2l-ai/d2l-book/issues/46#issuecomment-1262704457
-nbconvert==6.4.2  # https://github.com/spatialaudio/nbsphinx/issues/466
+nbconvert==7.13.1  # https://github.com/spatialaudio/nbsphinx/issues/466
 OWSLib  # needed by cartopy
 pykdtree  # needed by owslib
 pypandoc-binary  # https://stackoverflow.com/a/71585691/17332200
