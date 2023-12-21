@@ -145,15 +145,15 @@ def mark_magnifying_glass(
 class MarkMagnifyingGlass:
     """Functor interface for `mark_magnifying_glass`."""
 
-    _kwargs: dict
+    _kws: dict
 
     def __init__(self: "MarkMagnifyingGlass", **kwargs) -> None:
         """Initialize functor.
 
         kwargs will forward to `__call__`.
         """
-        self._kwargs = kwargs
+        self._kws = kwargs
 
     def __call__(self, *args, **kwargs):
         """Forwards to `mark_magnifying_glass`."""
-        return mark_magnifying_glass(*args, **{**self._kwargs, **kwargs})
+        return mark_magnifying_glass(*args, **{**self._kws, **kwargs})

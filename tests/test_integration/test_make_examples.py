@@ -14,11 +14,11 @@ def test_make_example_hueless():
         col="species",
         col_wrap=2,
         color=sns.color_palette()[1],
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "mark_glyph": otst.mark.MarkAlphabeticalBadges,
         },
-        marqueeplot_source_kwargs={"leader_tweak": otst.tweak.TweakReflect()},
-        marqueeplot_outset_kwargs={
+        marqueeplot_source_kws={"leader_tweak": otst.tweak.TweakReflect()},
+        marqueeplot_outset_kws={
             "leader_tweak": otst.tweak.TweakReflect(vertical=True)
         },
     )
@@ -47,7 +47,7 @@ def test_make_example_huefull():
         y="bill_depth_mm",
         col="island",
         hue="species",
-        marqueeplot_source_kwargs={
+        marqueeplot_source_kws={
             "leader_tweak": otst.tweak.TweakSpreadArea(
                 spread_factor=6, xlim=(47.5, 52)
             ),
@@ -74,7 +74,7 @@ def test_make_example_sourceless():
         col="island",
         hue="species",
         include_sourceplot=False,
-        marqueeplot_source_kwargs={
+        marqueeplot_source_kws={
             "leader_tweak": otst.tweak.TweakSpreadArea(
                 spread_factor=6, xlim=(47.5, 52)
             ),
@@ -96,11 +96,11 @@ def test_make_example_singleton():
     og = otst.OutsetGrid(
         data=[(73.5, 23.5, 78.5, 31.5)],
         color=sns.color_palette()[-1],
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "mark_glyph": otst.mark.MarkAlphabeticalBadges,
             "frame_outer_pad": 0.2,
             "frame_outer_pad_unit": "inches",
-            "frame_face_kwargs": {"facecolor": "none"},
+            "frame_face_kws": {"facecolor": "none"},
         },
     )
     og.broadcast(

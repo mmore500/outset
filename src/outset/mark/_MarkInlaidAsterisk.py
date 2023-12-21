@@ -164,15 +164,15 @@ def mark_inlaid_asterisk(
 class MarkInlaidAsterisk:
     """Functor interface for `mark_inlaid_asterisk`."""
 
-    _kwargs: dict
+    _kws: dict
 
     def __init__(self: "MarkInlaidAsterisk", **kwargs) -> None:
         """Initialize functor.
 
         kwargs will forward to `__call__`.
         """
-        self._kwargs = kwargs
+        self._kws = kwargs
 
     def __call__(self, *args, **kwargs):
         """Forwards to `mark_inlaid_asterisk`."""
-        return mark_inlaid_asterisk(*args, **{**self._kwargs, **kwargs})
+        return mark_inlaid_asterisk(*args, **{**self._kws, **kwargs})

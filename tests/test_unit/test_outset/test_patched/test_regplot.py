@@ -32,7 +32,7 @@ def test_cluster_regplot():
         hue="y",
         col_wrap=2,
         palette=palette,
-        marqueeplot_source_kwargs={
+        marqueeplot_source_kws={
             "leader_stretch": 0.07,
             "mark_retract": 0.25,
         },

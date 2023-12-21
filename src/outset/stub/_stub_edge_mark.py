@@ -16,7 +16,7 @@ def stub_edge_mark(
     x: float,
     y: float,
     *,
-    marker_kwargs: typing.Dict = frozendict(),
+    marker_kws: typing.Dict = frozendict(),
     offset: float = 0.1,
 ) -> typing.Tuple[float, float]:
     """Draw an edge marker for a single clipped point.
@@ -27,7 +27,7 @@ def stub_edge_mark(
         The axes object to draw markers on.
     x, y : float
         The x and y coordinates of the point.
-    marker_kwargs : dict, optional
+    marker_kws : dict, optional
         Keyword arguments forwarded to matplotlib `plot` for edge markers.
     offset : float, default 0.1
         How far outside axis viewport to draw edge markers, proportional to
@@ -90,7 +90,7 @@ def stub_edge_mark(
                 "marker": marker,
                 "markersize": 100,
                 "zorder": 10000,
-                **marker_kwargs,
+                **marker_kws,
             },
         )
 

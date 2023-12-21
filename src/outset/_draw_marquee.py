@@ -22,13 +22,13 @@ def draw_marquee(
     color: typing.Optional[str] = "blue",
     clip_on: bool = False,
     despine: bool = True,
-    frame_edge_kwargs: typing.Dict = frozendict.frozendict(),
-    frame_face_kwargs: typing.Dict = frozendict.frozendict(),
+    frame_edge_kws: typing.Dict = frozendict.frozendict(),
+    frame_face_kws: typing.Dict = frozendict.frozendict(),
     frame_inner_pad: typing.Union[float, typing.Tuple[float, float]] = 0.0,
     frame_outer_pad: typing.Union[float, typing.Tuple[float, float]] = 0.1,
     label: typing.Optional[str] = None,
-    leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
-    leader_face_kwargs: typing.Dict = frozendict.frozendict(),
+    leader_edge_kws: typing.Dict = frozendict.frozendict(),
+    leader_face_kws: typing.Dict = frozendict.frozendict(),
     leader_stretch: float = 0.2,
     leader_stretch_unit: typing.Literal[
         "axes",
@@ -38,7 +38,7 @@ def draw_marquee(
     ] = "inches",
     leader_tweak: typing.Callable = lambda x, *args, **kwargs: x,
     mark_glyph: typing.Optional[typing.Callable] = mark_magnifying_glass,
-    mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
+    mark_glyph_kws: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
     zorder: float = 0,
 ) -> mpl_axes.Axes:
@@ -69,12 +69,12 @@ def draw_marquee(
         If True, drawing elements are clipped to the axes bounding box.
     despine : bool, default True
         If True, removes top and right spines from the plot.
-    frame_edge_kwargs : Dict, default {}
+    frame_edge_kws : Dict, default {}
         Customization arguments for the frame's edge.
 
         Standard matplotlib styling is supported (`linewidth`, `linestyle`,
         etc.).
-    frame_face_kwargs : Dict, default {}
+    frame_face_kws : Dict, default {}
         Customization arguments for the frame's face.
 
         Standard matplotlib styling is supported (`facecolor`, `alpha`, etc.).
@@ -85,12 +85,12 @@ def draw_marquee(
         Padding from frame boundary to axis viewport, calculated relative to data extent (float) or in absolute units (tuple).
     label : str, optional
         Label used for legend creation.
-    leader_edge_kwargs : Dict, default {}
+    leader_edge_kws : Dict, default {}
         Customization arguments for the leader's edge.
 
         Standard matplotlib styling is supported (`linewidth`, `linestyle`,
         etc.).
-    leader_face_kwargs : Dict, default {}
+    leader_face_kws : Dict, default {}
         Customization arguments for the leader's face.
 
         Standard matplotlib styling is supported (`facecolor`, `alpha`, etc.).
@@ -109,7 +109,7 @@ def draw_marquee(
         A callable to draw a glyph at the outer vertex of the callout leader.
 
         If None, no glyph is drawn.
-    mark_glyph_kwargs : Dict, default frozendict.frozendict()
+    mark_glyph_kws : Dict, default frozendict.frozendict()
         Arguments for the mark_glyph callable.
 
         Standard matplotlib styling is supported (`markersize`, `color`, etc.).
@@ -200,8 +200,8 @@ def draw_marquee(
         frame_ylim,
         ax=ax,
         clip_on=clip_on,
-        frame_edge_kwargs=frame_edge_kwargs,
-        frame_face_kwargs=frame_face_kwargs,
+        frame_edge_kws=frame_edge_kws,
+        frame_face_kws=frame_face_kws,
         edgecolor=color,
         facecolor=color,
         zorder=zorder,
@@ -215,13 +215,13 @@ def draw_marquee(
         ax,
         color=color,
         clip_on=clip_on,
-        leader_edge_kwargs=leader_edge_kwargs,
-        leader_face_kwargs=leader_face_kwargs,
+        leader_edge_kws=leader_edge_kws,
+        leader_face_kws=leader_face_kws,
         leader_stretch=leader_stretch,
         leader_stretch_unit=leader_stretch_unit,
         leader_tweak=leader_tweak,
         mark_glyph=mark_glyph,
-        mark_glyph_kwargs=mark_glyph_kwargs,
+        mark_glyph_kws=mark_glyph_kws,
         mark_retract=mark_retract,
         zorder=zorder,
     )

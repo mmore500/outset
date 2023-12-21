@@ -10,10 +10,10 @@ def test_draw_marquee_one():
         color="mediumpurple",
         clip_on=False,
         despine=True,
-        frame_edge_kwargs=dict(linewidth=0.5),
+        frame_edge_kws=dict(linewidth=0.5),
         leader_stretch=0.14,
-        mark_glyph_kwargs=dict(markersize=15),
-        leader_edge_kwargs=dict(linestyle=":", linewidth=2),
+        mark_glyph_kws=dict(markersize=15),
+        leader_edge_kws=dict(linestyle=":", linewidth=2),
     )
     outpath = "/tmp/test_draw_marquee_one.png"
     plt.savefig(outpath)

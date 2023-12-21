@@ -10,8 +10,8 @@ def draw_frame(
     frame_xlim: typing.Tuple[float, float],
     frame_ylim: typing.Tuple[float, float],
     ax: typing.Optional[mpl_axes.Axes] = None,
-    frame_edge_kwargs: typing.Dict = frozendict.frozendict(),
-    frame_face_kwargs: typing.Dict = frozendict.frozendict(),
+    frame_edge_kws: typing.Dict = frozendict.frozendict(),
+    frame_face_kws: typing.Dict = frozendict.frozendict(),
     **kwargs,
 ) -> mpl_axes.Axes:
     """Mark a rectangular region with a frame border and an underlaid color
@@ -26,9 +26,9 @@ def draw_frame(
     ax : matplotlib.axes.Axes, optional
         The axes object on which to draw. If None, the current active axes will
         be used.
-    frame_edge_kwargs : Dict, default {}
+    frame_edge_kws : Dict, default {}
         Keyword arguments for customizing the frame's edge appearance.
-    frame_face_kwargs : Dict, default {}
+    frame_face_kws : Dict, default {}
         Keyword arguments for customizing the frame's face appearance --- i.e.,
         the underlaid solid fill.
     **kwargs
@@ -52,7 +52,7 @@ def draw_frame(
             **kwargs,
             "edgecolor": "none",
             "zorder": -1,
-            **frame_face_kwargs,
+            **frame_face_kws,
         },
     )
     ax.add_patch(frame_face_patch)
@@ -64,7 +64,7 @@ def draw_frame(
         **{
             **kwargs,
             "facecolor": "none",
-            **frame_edge_kwargs,
+            **frame_edge_kws,
         },
     )
     ax.add_patch(frame_edge_patch)

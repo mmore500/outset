@@ -114,9 +114,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         hue_order: typing.Optional[typing.Sequence[str]] = None,
         color: typing.Optional[str] = None,  # pass to override outset hues
         include_sourceplot: bool = True,
-        marqueeplot_kwargs: typing.Dict = frozendict.frozendict(),
-        marqueeplot_outset_kwargs: typing.Dict = frozendict.frozendict(),
-        marqueeplot_source_kwargs: typing.Dict = frozendict.frozendict(),
+        marqueeplot_kws: typing.Dict = frozendict.frozendict(),
+        marqueeplot_outset_kws: typing.Dict = frozendict.frozendict(),
+        marqueeplot_source_kws: typing.Dict = frozendict.frozendict(),
         palette: typing.Optional[typing.Sequence] = None,
         zorder: float = 0.0,
         **kwargs,
@@ -192,17 +192,17 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             Color for all outset annotations. Overrides the palette.
         include_sourceplot : bool, default True
             Whether to include the original source plot in the grid.
-        marqueeplot_kwargs : Dict, default frozendict()
+        marqueeplot_kws : Dict, default frozendict()
             Keyword arguments to adjust marquee placement and styling over all
             plots.
 
             See `outset.marqueeplot` for available options.
-        marqueeplot_outset_kwargs : Dict, default frozendict()
+        marqueeplot_outset_kws : Dict, default frozendict()
             Keyword arguments to adjust marquee placement and styling over
             outset plots.
 
             See `outset.marqueeplot` for available options.
-        marqueeplot_source_kwargs : Dict, default frozendict()
+        marqueeplot_source_kws : Dict, default frozendict()
             Keyword arguments to adjust marquee placement and styling over
             source plot, if present.
 
@@ -224,7 +224,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             raise ValueError("hue_order must be None if hue not specified")
 
         for a in "frame_inner_pad":
-            if a in marqueeplot_outset_kwargs or a in marqueeplot_source_kwargs:
+            if a in marqueeplot_outset_kws or a in marqueeplot_source_kws:
                 warnings.warn(
                     f"Specifying {a} independently for only source or "
                     "outset may cause discrepancies in frame placement",
@@ -404,39 +404,29 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "mark_glyph": default_draw_glyph_functor_class,
                     "tight_axlim": False,
                     "zorder": zorder,
-                    **copy.deepcopy(marqueeplot_kwargs),  # for mark_glyph
-                    **marqueeplot_source_kwargs,
-                    "frame_edge_kwargs": {
-                        **marqueeplot_kwargs.get("frame_edge_kwargs", {}),
-                        **marqueeplot_source_kwargs.get(
-                            "frame_edge_kwargs", {}
-                        ),
+                    **copy.deepcopy(marqueeplot_kws),  # for mark_glyph
+                    **marqueeplot_source_kws,
+                    "frame_edge_kws": {
+                        **marqueeplot_kws.get("frame_edge_kws", {}),
+                        **marqueeplot_source_kws.get("frame_edge_kws", {}),
                     },
-                    "frame_face_kwargs": {
-                        **marqueeplot_kwargs.get("frame_face_kwargs", {}),
-                        **marqueeplot_source_kwargs.get(
-                            "frame_face_kwargs", {}
-                        ),
+                    "frame_face_kws": {
+                        **marqueeplot_kws.get("frame_face_kws", {}),
+                        **marqueeplot_source_kws.get("frame_face_kws", {}),
                     },
-                    "leader_edge_kwargs": {
-                        **marqueeplot_kwargs.get("leader_edge_kwargs", {}),
-                        **marqueeplot_source_kwargs.get(
-                            "leader_edge_kwargs", {}
-                        ),
+                    "leader_edge_kws": {
+                        **marqueeplot_kws.get("leader_edge_kws", {}),
+                        **marqueeplot_source_kws.get("leader_edge_kws", {}),
                     },
-                    "leader_face_kwargs": {
-                        **marqueeplot_kwargs.get("leader_face_kwargs", {}),
-                        **marqueeplot_source_kwargs.get(
-                            "leader_face_kwargs", {}
-                        ),
+                    "leader_face_kws": {
+                        **marqueeplot_kws.get("leader_face_kws", {}),
+                        **marqueeplot_source_kws.get("leader_face_kws", {}),
                     },
-                    "mark_glyph_kwargs": {
+                    "mark_glyph_kws": {
                         "markersize": 16,
                         "zorder": zorder + 1.01,
-                        **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
-                        **marqueeplot_source_kwargs.get(
-                            "mark_glyph_kwargs", {}
-                        ),
+                        **marqueeplot_kws.get("mark_glyph_kws", {}),
+                        **marqueeplot_source_kws.get("mark_glyph_kws", {}),
                     },
                 },
             )
@@ -448,7 +438,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         #######################################################################
         def marqueeplot_outset(self_: "OutsetGrid") -> None:
             # setup
-            for d in marqueeplot_kwargs, marqueeplot_outset_kwargs:
+            for d in marqueeplot_kws, marqueeplot_outset_kws:
                 for k, v in d.items():
                     if k == "mark_glyph" and isinstance(v, type):
                         d[k] = v()
@@ -456,7 +446,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             needs_prepad = not (hue is None or hue == col)
             if needs_prepad:
                 # need to prepad without split by hue
-                prepad_kwargs = {
+                prepad_kws = {
                     "frame_inner_pad": default_frame_inner_pad,
                     "frame_outer_pad": default_frame_outer_pad_outset,
                     "frame_outer_pad_unit": "axes",
@@ -474,16 +464,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     outset=col,
                     tight_axlim=True,
                     **{
-                        **prepad_kwargs,
+                        **prepad_kws,
                         **{
                             k: v
-                            for k, v in marqueeplot_kwargs.items()
-                            if k in prepad_kwargs
+                            for k, v in marqueeplot_kws.items()
+                            if k in prepad_kws
                         },
                         **{
                             k: v
-                            for k, v in marqueeplot_outset_kwargs.items()
-                            if k in prepad_kwargs
+                            for k, v in marqueeplot_outset_kws.items()
+                            if k in prepad_kws
                         },
                     },
                 )
@@ -503,39 +493,29 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                     "mark_glyph": default_draw_glyph_functor_class(),
                     "tight_axlim": not needs_prepad,
                     "zorder": zorder,
-                    **marqueeplot_kwargs,
-                    **marqueeplot_outset_kwargs,
-                    "frame_edge_kwargs": {
-                        **marqueeplot_kwargs.get("frame_edge_kwargs", {}),
-                        **marqueeplot_outset_kwargs.get(
-                            "frame_edge_kwargs", {}
-                        ),
+                    **marqueeplot_kws,
+                    **marqueeplot_outset_kws,
+                    "frame_edge_kws": {
+                        **marqueeplot_kws.get("frame_edge_kws", {}),
+                        **marqueeplot_outset_kws.get("frame_edge_kws", {}),
                     },
-                    "frame_face_kwargs": {
-                        **marqueeplot_kwargs.get("frame_face_kwargs", {}),
-                        **marqueeplot_outset_kwargs.get(
-                            "frame_face_kwargs", {}
-                        ),
+                    "frame_face_kws": {
+                        **marqueeplot_kws.get("frame_face_kws", {}),
+                        **marqueeplot_outset_kws.get("frame_face_kws", {}),
                     },
-                    "leader_edge_kwargs": {
-                        **marqueeplot_kwargs.get("leader_edge_kwargs", {}),
-                        **marqueeplot_outset_kwargs.get(
-                            "leader_edge_kwargs", {}
-                        ),
+                    "leader_edge_kws": {
+                        **marqueeplot_kws.get("leader_edge_kws", {}),
+                        **marqueeplot_outset_kws.get("leader_edge_kws", {}),
                     },
-                    "leader_face_kwargs": {
-                        **marqueeplot_kwargs.get("leader_face_kwargs", {}),
-                        **marqueeplot_outset_kwargs.get(
-                            "leader_face_kwargs", {}
-                        ),
+                    "leader_face_kws": {
+                        **marqueeplot_kws.get("leader_face_kws", {}),
+                        **marqueeplot_outset_kws.get("leader_face_kws", {}),
                     },
-                    "mark_glyph_kwargs": {
+                    "mark_glyph_kws": {
                         **({"markersize": 16} if self_._is_inset() else {}),
                         "zorder": zorder + 1.01,
-                        **marqueeplot_kwargs.get("mark_glyph_kwargs", {}),
-                        **marqueeplot_outset_kwargs.get(
-                            "mark_glyph_kwargs", {}
-                        ),
+                        **marqueeplot_kws.get("mark_glyph_kws", {}),
+                        **marqueeplot_outset_kws.get("mark_glyph_kws", {}),
                     },
                 },
             )

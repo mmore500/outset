@@ -23,7 +23,7 @@ def test_inset_outsets_one():
         y="y",
         col="outset",
         col_order=["A"],
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "frame_inner_pad": 0.1,
             "frame_outer_pad": 0.3,
         },
@@ -44,15 +44,15 @@ def test_inset_outsets_two():
         y="y",
         col="outset",
         col_order=["A", "C"],
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "frame_inner_pad": 0.3,
             "frame_outer_pad": 0.1,
             "frame_outer_pad_unit": "axes",
         },
-        marqueeplot_outset_kwargs={
+        marqueeplot_outset_kws={
             "frame_outer_pad": 0.2,
             "frame_outer_pad_unit": "inches",
-            "mark_glyph_kwargs": {"markersize": 16},
+            "mark_glyph_kws": {"markersize": 16},
         },
         aspect=1.2,
     )
@@ -80,15 +80,15 @@ def test_inset_outsets_three(corner: str):
         y="y",
         col="outset",
         col_order=["A", "B", "C"],
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "frame_inner_pad": 0.1,
             "frame_outer_pad": 0.1,
             "frame_outer_pad_unit": "axes",
         },
-        marqueeplot_outset_kwargs={
+        marqueeplot_outset_kws={
             "frame_outer_pad": 0.1,
             "frame_outer_pad_unit": "inches",
-            "mark_glyph_kwargs": {"markersize": 16},
+            "mark_glyph_kws": {"markersize": 16},
         },
         aspect=1.2,
     )

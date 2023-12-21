@@ -20,8 +20,8 @@ def draw_callout(
     *,
     color: str = "black",
     clip_on: bool = False,
-    leader_edge_kwargs: typing.Dict = frozendict.frozendict(),
-    leader_face_kwargs: typing.Dict = frozendict.frozendict(),
+    leader_edge_kws: typing.Dict = frozendict.frozendict(),
+    leader_face_kws: typing.Dict = frozendict.frozendict(),
     leader_stretch: float = 0.1,
     leader_stretch_unit: typing.Literal[
         "axes",
@@ -31,7 +31,7 @@ def draw_callout(
     ] = "axes",
     leader_tweak: typing.Callable = lambda x, *args, **kwargs: x,
     mark_glyph: typing.Optional[typing.Callable] = None,
-    mark_glyph_kwargs: typing.Dict = frozendict.frozendict(),
+    mark_glyph_kws: typing.Dict = frozendict.frozendict(),
     mark_retract: float = 0.1,
     zorder: float = 0,
     **kwargs,
@@ -56,9 +56,9 @@ def draw_callout(
         Color for the callout leader and glyph.
     clip_on : bool, default False
         Determines if drawing elements should be clipped to the axes bounding box.
-    leader_edge_kwargs : Dict, default {}
+    leader_edge_kws : Dict, default {}
         Keyword arguments for customizing the leader's edge.
-    leader_face_kwargs : Dict, default {}
+    leader_face_kws : Dict, default {}
         Keyword arguments for customizing the leader's face.
     leader_stretch : float, default 0.1
         Size of callout leader in `leader_stretch_unit`.
@@ -109,7 +109,7 @@ def draw_callout(
             "linewidth": 2,
             "zorder": zorder,
             **kwargs,
-            **leader_edge_kwargs,
+            **leader_edge_kws,
             "edgecolor": "black" if color == "white" else "white",
             "facecolor": "none",
             "linestyle": "-",
@@ -127,7 +127,7 @@ def draw_callout(
             "edgecolor": color,
             "facecolor": "none",
             "linestyle": ":",
-            **leader_edge_kwargs,
+            **leader_edge_kws,
         },
     )
     ax.add_patch(leader_patch)
@@ -147,7 +147,7 @@ def draw_callout(
             "zorder": zorder,
             **{
                 k: v
-                for k, v in it.chain(kwargs.items(), leader_face_kwargs.items())
+                for k, v in it.chain(kwargs.items(), leader_face_kws.items())
                 if k not in ("linestyle",)
             },
         },
@@ -175,7 +175,7 @@ def draw_callout(
                 "color": color,
                 "clip_on": clip_on,
                 "zorder": zorder,
-                **mark_glyph_kwargs,
+                **mark_glyph_kws,
             },
         )
 

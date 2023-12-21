@@ -16,7 +16,7 @@ class MarkAlphabeticalBadges:
 
     _counter: int
     _step: int
-    _kwargs: dict
+    _kws: dict
 
     def __init__(
         self: "MarkAlphabeticalBadges",
@@ -39,7 +39,7 @@ class MarkAlphabeticalBadges:
         """
         self._counter = ord(start)
         self._step = step
-        self._kwargs = kwargs
+        self._kws = kwargs
 
     def __call__(
         self: "MarkAlphabeticalBadges",
@@ -112,7 +112,7 @@ class MarkAlphabeticalBadges:
         mark_inlaid_asterisk(
             **{
                 "linecolor": "none",
-                **self._kwargs,
+                **self._kws,
                 **dict(
                     x=x,
                     y=y,

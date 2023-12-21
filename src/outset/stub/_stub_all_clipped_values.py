@@ -13,7 +13,7 @@ from ._stub_edge_mark import stub_edge_mark
 def stub_all_clipped_values(
     ax: mpl_Axes,
     *,
-    marker_kwargs: typing.Dict = frozendict(),
+    marker_kws: typing.Dict = frozendict(),
     offset: float = 0.1,
 ) -> None:
     """Draw edge markers for points lying outside the plot's bounds.
@@ -27,7 +27,7 @@ def stub_all_clipped_values(
     ----------
     ax : matplotlib.axes.Axes
         The axes object to draw markers on.
-    marker_kwargs : dict, optional
+    marker_kws : dict, optional
         Keyword arguments forwarded to matplotlib `plot` for edge markers.
     offset : float, default 0.1
         How far outside axis viewport to draw edge markers, proportional to
@@ -53,7 +53,7 @@ def stub_all_clipped_values(
                         ax,
                         x,
                         y,
-                        marker_kwargs=marker_kwargs,
+                        marker_kws=marker_kws,
                         offset=offset,
                     )
                 new_offsets.append((x, y))

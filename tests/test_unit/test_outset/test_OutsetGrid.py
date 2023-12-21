@@ -20,7 +20,7 @@ def test_OutsetGrid_one():
         data=data,
         x="x",
         y="y",
-        marqueeplot_kwargs={
+        marqueeplot_kws={
             "frame_inner_pad": 0.2,
         },
     ).marqueeplot()

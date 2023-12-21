@@ -48,10 +48,10 @@ def test_make_logo():
             ((-2.5, -26), (20, -18)),
         ],
         aspect=1.2,
-        marqueeplot_kwargs=dict(frame_edge_kwargs={"linewidth": 2}),
-        marqueeplot_source_kwargs=dict(
-            frame_face_kwargs={"alpha": 0.2},
-            leader_face_kwargs={"alpha": 0.0, "linestyle": (0, (1, 0.5))},
+        marqueeplot_kws=dict(frame_edge_kws={"linewidth": 2}),
+        marqueeplot_source_kws=dict(
+            frame_face_kws={"alpha": 0.2},
+            leader_face_kws={"alpha": 0.0, "linestyle": (0, (1, 0.5))},
             leader_stretch=0.12,
             mark_retract=0.25,
         ),
