@@ -83,7 +83,10 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         self: "OutsetGrid", axlabels: typing.Sequence[str]
     ) -> None:
         """Finalize the annotations and layout."""
-        self.tight_layout()
+        if not self._is_inset():
+            # calls to tight layout sometimes cause unwanted reversions
+            # of axes insetting --- not sure why
+            self.tight_layout()
 
     def _is_inset(self: "OutsetGrid") -> bool:
         """Are outset axes inset over source axes?"""
