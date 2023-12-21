@@ -4,6 +4,7 @@ import pandas as pd
 import seaborn as sns
 
 from outset import OutsetGrid
+from outset import util as otst_util
 
 # Sample data for testing
 data = pd.DataFrame(
@@ -78,7 +79,13 @@ def test_OutsetGrid_with_sourceplot_hue():
 
     g = OutsetGrid(data=data, x="x", y="y", hue="outset")
     g.marqueeplot()
-    g.map_dataframe(sns.scatterplot, x="x", y="y", legend=False)
+    g.map_dataframe(
+        sns.scatterplot,
+        x="x",
+        y="y",
+        marker=otst_util.SplitKwarg(outset="+", source="o"),
+        legend=False,
+    )
 
     assert not g._is_inset()
 
@@ -97,6 +104,15 @@ def test_OutsetGrid_broadcast():
     )
     og.broadcast(
         plt.imshow, image, extent=(0, 1, 0, 1), origin="upper", zorder=-1
+    )
+    og.broadcast(
+        plt.plot,
+        [0.5],
+        [0.85],
+        color="red",
+        linewidth=2,
+        marker=otst_util.SplitKwarg(outset="+", source="o"),
+        zorder=10,
     )
     og.marqueeplot()
 

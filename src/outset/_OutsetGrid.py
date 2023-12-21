@@ -18,6 +18,7 @@ from ._marqueeplot import marqueeplot, _prepad_axlim
 from .mark._MarkMagnifyingGlass import MarkMagnifyingGlass
 from .mark._MarkNumericalBadges import MarkNumericalBadges
 from .util._NamedFrames import NamedFrames
+from .util._SplitKwarg import SplitKwarg
 
 
 class OutsetGrid(sns.axisgrid.FacetGrid):
@@ -699,8 +700,28 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         OutsetGrid
             Returns self.
         """
-        self.map_dataframe_outset(plotter, *args, **kwargs)
-        self.map_dataframe_source(plotter, *args, **kwargs)
+        self.map_dataframe_outset(
+            plotter,
+            *[
+                arg.outset if isinstance(arg, SplitKwarg) else arg
+                for arg in args
+            ],
+            **{
+                k: v.outset if isinstance(v, SplitKwarg) else v
+                for k, v in kwargs.items()
+            },
+        )
+        self.map_dataframe_source(
+            plotter,
+            *[
+                arg.source if isinstance(arg, SplitKwarg) else arg
+                for arg in args
+            ],
+            **{
+                k: v.source if isinstance(v, SplitKwarg) else v
+                for k, v in kwargs.items()
+            },
+        )
         return self
 
     def map_dataframe_outset(
@@ -829,8 +850,28 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
 
         Preserves axis limits for all axes except the source plot, if present.
         """
-        self.broadcast_outset(plotter, *args, **kwargs)
-        self.broadcast_source(plotter, *args, **kwargs)
+        self.broadcast_outset(
+            plotter,
+            *[
+                arg.outset if isinstance(arg, SplitKwarg) else arg
+                for arg in args
+            ],
+            **{
+                k: v.outset if isinstance(v, SplitKwarg) else v
+                for k, v in kwargs.items()
+            },
+        )
+        self.broadcast_source(
+            plotter,
+            *[
+                arg.source if isinstance(arg, SplitKwarg) else arg
+                for arg in args
+            ],
+            **{
+                k: v.source if isinstance(v, SplitKwarg) else v
+                for k, v in kwargs.items()
+            },
+        )
         return self
 
     def broadcast_outset(
