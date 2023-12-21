@@ -64,7 +64,7 @@ class MarkRomanBadges:
         ax: typing.Optional[mpl_axes.Axes] = None,
         *,
         color: str = "black",
-        color_accent: str = "white",
+        color_accent: typing.Optional[str] = None,
         color_numeral: _color_t = "color_accent",
         color_badge: _color_t = "color",
         color_underlay: _color_t = "color_accent",
@@ -91,6 +91,11 @@ class MarkRomanBadges:
             will be used.
         color : str, default "black"
             The primary color for the glyph.
+        color_accent : Optional[str], optional
+            The default accent color for the glyph.
+
+            If `color` is "white", defaults "black". Otherwise, defaults
+            "white".
         color_numeral : Union[str, tuple], default "white"
             The color of the numeral.
         color_badge : Union[str, tuple], default "color"

@@ -110,7 +110,7 @@ def draw_callout(
             "zorder": zorder,
             **kwargs,
             **leader_edge_kwargs,
-            "edgecolor": "white",
+            "edgecolor": "black" if color == "white" else "white",
             "facecolor": "none",
             "linestyle": "-",
         },

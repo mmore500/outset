@@ -46,6 +46,10 @@ def mark_inlaid_asterisk(
         The edge width of the asterisk marker.
     color : str, default "black"
         The primary color for the glyph.
+    color_accent : Optional[str], optional
+        The default accent color for the glyph.
+
+        If `color` is "white", defaults "black". Otherwise, defaults "white".
     color_asterisk_edge : Union[str, tuple], default ("color", 0.7)
         The edge color of the asterisk marker.
 
@@ -89,6 +93,9 @@ def mark_inlaid_asterisk(
     """
     if ax is None:
         ax = plt.gca()
+
+    if color_accent is None:
+        color_accent = "black" if color == "white" else "white"
 
     # substitute "color" with color kwarg
     def substitute_color(query: _color_t) -> _color_t:

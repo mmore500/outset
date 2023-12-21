@@ -14,7 +14,7 @@ def mark_magnifying_glass(
     *,
     alpha: float = 1.0,
     color: str = "black",
-    color_accent: str = "white",
+    color_accent: typing.Optional[str] = None,
     linecolor: str = "none",
     markersize: float = 15,
     rotate_angle: float = 20,
@@ -36,8 +36,10 @@ def mark_magnifying_glass(
         The axes object on which to draw the markers.
 
         If None, `plt.gca()` will be used.
-    color_accent : str, default "white"
-        The color used for the accent layer of the glyph, enhancing visibility.
+    color_accent : Optional[str], optional
+        The default accent color for the glyph.
+
+        If `color` is "white", defaults "black". Otherwise, defaults "white".
     alpha : float, default 1.0
         The transparency level of the markers.
     color : str, default "black"
@@ -58,6 +60,9 @@ def mark_magnifying_glass(
     """
     if ax is None:
         ax = plt.gca()
+
+    if color_accent is None:
+        color_accent = "black" if color == "white" else "white"
 
     handle_marker = rotate_marker(3, rotate_angle)  # TICKDOWN
 

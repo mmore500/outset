@@ -14,7 +14,7 @@ def mark_arrow(
     *,
     alpha: float = 1.0,
     color: str = "black",
-    color_accent: str = "white",
+    color_accent: typing.Optional[str] = None,
     linecolor: str = "none",
     markersize: float = 15,
     rotate_angle: float = 20,
@@ -38,8 +38,10 @@ def mark_arrow(
         The transparency level of the markers.
     color : str, default "black"
         The primary color for the glyph components.
-    color_accent : str, default "white"
-        The color used for the accent layer of the glyph, enhancing visibility.
+    color_accent : Optional[str], optional
+        The default accent color for the glyph.
+
+        If `color` is "white", defaults "black". Otherwise, defaults "white".
     linecolor : str, default "none"
         Color for connecting lines between markers, if any.
     markersize : float, default 15
@@ -59,6 +61,9 @@ def mark_arrow(
     """
     if ax is None:
         ax = plt.gca()
+
+    if color_accent is None:
+        color_accent = "black" if color == "white" else "white"
 
     # rotated tickdown marker for handle
     # adapted from https://stackoverflow.com/a/49662573
