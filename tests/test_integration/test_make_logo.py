@@ -44,16 +44,19 @@ def test_make_logo():
     ylim = (-60, 60)
     og = outset.OutsetGrid(
         data=[
-            ((25, -3), (33, 5)),
-            ((-2.5, -26), (20, -18)),
+            ((27.6, -3.0), (35.6, 5.2)),
+            ((-2.5, -26), (20, -16)),
         ],
         aspect=1.2,
-        marqueeplot_kws=dict(frame_edge_kws={"linewidth": 2}),
+        marqueeplot_kws=dict(
+            frame_edge_kws={"linewidth": 2}, mark_glyph_kws={"markersize": 35}
+        ),
         marqueeplot_source_kws=dict(
-            frame_face_kws={"alpha": 0.2},
-            leader_face_kws={"alpha": 0.0, "linestyle": (0, (1, 0.5))},
-            leader_stretch=0.12,
-            mark_retract=0.25,
+            frame_face_kws={"alpha": 0.6, "zorder": 3},
+            leader_face_kws={"alpha": 1.0, "linestyle": (0, (1, 0.5))},
+            leader_stretch=0.8,
+            mark_retract=0.1,
+            mark_glyph_kws={"markersize": 20},
         ),
         zorder=4,
     )
@@ -109,7 +112,7 @@ def test_make_logo():
             *coord,
             txt,
             clip_on=True,
-            fontsize=48,
+            fontsize=84,
             fontstyle="italic",
             color=color,
             rotation=rot,
