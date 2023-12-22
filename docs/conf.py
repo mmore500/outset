@@ -24,9 +24,6 @@ project = "outset"
 copyright = "2023, Matthew Andres Moreno"
 author = "Matthew Andres Moreno"
 
-# The full version, including alpha/beta/rc tags
-release = "0.1.0"
-
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
 # the built documents.

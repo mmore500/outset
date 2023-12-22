@@ -343,3 +343,17 @@ overgeneral-exceptions= [
     "BaseException",
     "Exception"
 ]
+
+[bumpver]
+current_version = "v0.0.0"
+version_pattern = "vMAJOR.MINOR.PATCH"
+commit = true
+tag = true
+
+[bumpver.file_patterns]
+"src/outset/__init__.py" = [
+  '^__version__ = "{pep440_version}"$'
+]
+
+# CITATION.cff =
+#   version: {pep440_version}
