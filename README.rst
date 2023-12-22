@@ -4,7 +4,7 @@
 
 |PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars|
 
-Easily indicate zoom plot areas in Matplotlib
+add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualizations with ease!
 
 - Free software: MIT license
 - Documentation: https://mmore500.com/outset
