@@ -26,6 +26,110 @@ Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>
 Basic Usage
 -----------
 
+Refer to the `quickstart guide <https://mmore500.com/outset/quickstart.html>`_ for more detailed usage information.
+
+Select Outset Regions Manually
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+   from matplotlib import pyplot as plt
+   import numpy as np
+   import outset as otst
+   import seaborn as sns
+
+   grid1 = otst.OutsetGrid(
+      [(-10, 8, -8, 12), (-5, 5, -1, 3)],  # frame positions (x0, y0, x1, y1
+   )
+
+   # broadcast plot content to all axes
+   # adapted from https://matplotlib.org/stable/gallery/
+   i, a, b, c, d = np.arange(0.0, 2*np.pi, 0.01), 1, 7, 3, 11
+   grid1.broadcast(
+      plt.plot,
+      np.sin(i*a)*np.cos(i*b) * 20,  # x values
+      np.sin(i*c)*np.cos(i*d) * 20,  # y values
+      c="k",
+      zorder=-1,
+   )
+
+   grid1.marqueeplot()  # render marquee annotations, adjust axlims
+
+   plt.savefig("usage1.png")
+
+
+.. figure:: docs/assets/usage1.png
+   :alt: usage example 1 result
+
+Outset Data Subsets
+^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+   grid2 = otst.OutsetGrid(  # setup axes grid
+      aspect=0.6,
+      data=sns.load_dataset("iris").dropna(),
+      height=3,
+      x="petal_width",
+      y="petal_length",
+      col="species",  # put each species in its own outset
+      hue="species",   # make different color marquees
+   )
+
+   # map scatterplot over all axes
+   grid2.map_dataframe(
+      sns.scatterplot,
+      x="petal_width",
+      y="petal_length",
+      legend=False,
+      zorder=0,
+   )
+
+   grid2.marqueeplot()  # dispatch marquee render, adjust axlims
+   grid2.add_legend()  # add figure-level legend
+
+   plt.savefig("usage2.png")
+
+
+.. figure:: docs/assets/usage2.png
+   :alt: usage example 2 result
+
+
+Convert Outset Plots to Insets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+   grid3 = otst.OutsetGrid(  # setup axes grid
+      aspect=1.5,
+      data=sns.load_dataset("iris").dropna(),
+      height=4,
+      x="petal_width",
+      y="petal_length",
+      col="species",  # put each species in its own outset
+      hue="species",   # make different color marquees
+   )
+
+   # map scatterplot over all axes
+   grid3.map_dataframe(
+      sns.scatterplot,
+      x="petal_width",
+      y="petal_length",
+      legend=False,
+      zorder=0,
+   )
+   grid3.add_legend()  # add figure-level legend
+
+   otst.inset_outsets(grid3, insets="NW")  # inset outset plots over source axes
+
+   grid3.marqueeplot()  # dispatch marquee render, adjust axlims
+
+   plt.savefig("usage3.png")
+
+
+.. figure:: docs/assets/usage3.png
+   :alt: usage example 3 result
+
 
 Install
 -------
