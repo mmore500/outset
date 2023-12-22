@@ -203,7 +203,8 @@ Citation
 Contributing
 ------------
 
-This project welcomes contributions and suggestions. Our documentation includes `detailed information to get you started <https://mmore500.com/outset/contributing.html#>`__.
+This project welcomes contributions and suggestions.
+Documentation includes `detailed information to get you started <https://mmore500.com/outset/contributing.html#>`__.
 
 .. |PyPi| image:: https://img.shields.io/pypi/v/outset.svg
    :target: https://pypi.python.org/pypi/outset
