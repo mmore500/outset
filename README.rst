@@ -23,118 +23,97 @@ Install
 Gallery
 -------
 
-.. figure:: docs/assets/outset-gallery-collage.png
-   :target: https://mmore500.com/outset/gallery.html
-   :alt: outset gallery collage
+   .. figure:: docs/assets/outset-gallery-collage.png
+      :target: https://mmore500.com/outset/gallery.html
+      :alt: outset gallery collage
 
-Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>`_ for example heatmap, imshow, kde lineplot, regplot, scatterplot, patch, etc. visualizations created with ``outset``.
+
+*Find example code and visualizations* |gallery|_.
+
+.. _gallery: https://mmore500.com/outset/gallery.html
+
+.. |gallery| replace:: *here*
 
 Basic Usage
 -----------
 
-Refer to the `quickstart guide <https://mmore500.com/outset/quickstart.html>`_ for more detailed usage information.
+Use ``outset.OutsetGrid`` to 
+Zoom sections can be designated manually (a) or inferred to (b).
+Call ``outset``
 
-Select Outset Regions Manually
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+a) Create ``OutsetGrid``, Explicit Frame Positions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+   .. code:: python
 
-   from matplotlib import pyplot as plt
-   import numpy as np
-   import outset as otst
-   import seaborn as sns
+      from matplotlib import pyplot as plt
+      import numpy as np
+      import outset as otst
+      import seaborn as sns
+      i, a, b, c, d = np.arange(0.0, 2*np.pi, 0.01), 1, 7, 3, 11  # https://matplotlib.org/stable/gallery/
 
-   grid1 = otst.OutsetGrid(
-      [(-10, 8, -8, 12), (-5, 5, -1, 3)],  # frame positions (x0, y0, x1, y1
-   )
+      # 3 axes grid: source plot and two zoom frames
+      grid = otst.OutsetGrid([(-10, 8, -8, 12), (-5, 5, -1, 3)])  # frame coords
+      grid.broadcast(plt.plot,  # run plotter over all axes
+         np.sin(i*a)*np.cos(i*b) * 20, np.sin(i*c)*np.cos(i*d) * 20,  # line coords
+         c="k", zorder=-1)  # kwargs forwarded to plt.plot
 
-   # broadcast plot content to all axes
-   # adapted from https://matplotlib.org/stable/gallery/
-   i, a, b, c, d = np.arange(0.0, 2*np.pi, 0.01), 1, 7, 3, 11
-   grid1.broadcast(
-      plt.plot,
-      np.sin(i*a)*np.cos(i*b) * 20,  # x values
-      np.sin(i*c)*np.cos(i*d) * 20,  # y values
-      c="k",
-      zorder=-1,
-   )
+      grid.marqueeplot()  # set axlims and render marquee annotations
 
-   grid1.marqueeplot()  # render marquee annotations, adjust axlims
+   ..
 
-   plt.savefig("usage1.png")
+   .. figure:: docs/assets/usage1.png
+      :alt: usage example 1 result
 
+b) Create ``OutsetGrid``, Inferred Frame Positions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. figure:: docs/assets/usage1.png
-   :alt: usage example 1 result
+   .. code:: python
 
-Outset Data Subsets
-^^^^^^^^^^^^^^^^^^^
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data to create axes grid
+         x="petal_width", y="petal_length",
+         col="species",  # create zoom panel for each species
+         hue="species",  # color marquee annotations by species
+         aspect=0.6, height=3)  # adjust axes grid geometry
+      grid.map_dataframe(sns.scatterplot,  # map plotter over faceted data
+         x="petal_width", y="petal_length", legend=False, zorder=0)
 
-.. code:: python
+      grid.marqueeplot()   # set axlims and render marquee annotations
+      grid.add_legend()  # add figure-level legend
 
-   grid2 = otst.OutsetGrid(  # setup axes grid
-      aspect=0.6,
-      data=sns.load_dataset("iris").dropna(),
-      height=3,
-      x="petal_width",
-      y="petal_length",
-      col="species",  # put each species in its own outset
-      hue="species",   # make different color marquees
-   )
+   ..
 
-   # map scatterplot over all axes
-   grid2.map_dataframe(
-      sns.scatterplot,
-      x="petal_width",
-      y="petal_length",
-      legend=False,
-      zorder=0,
-   )
-
-   grid2.marqueeplot()  # dispatch marquee render, adjust axlims
-   grid2.add_legend()  # add figure-level legend
-
-   plt.savefig("usage2.png")
+   .. figure:: docs/assets/usage2.png
+      :alt: usage example 2 result
 
 
-.. figure:: docs/assets/usage2.png
-   :alt: usage example 2 result
+c) Overlay With ``inset_outsets``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+   .. code-block:: python
 
-Convert Outset Plots to Insets
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data to create axes grid
+         x="petal_width", y="petal_length",
+         col="species",  # put each species in its own outset
+         hue="species",   # make different color marquees
+         aspect=1.5, height=4)  # adjust axes grid geometry
+      grid.map_dataframe(sns.scatterplot,  # map plotter over faceted data
+         x="petal_width", y="petal_length", legend=False, zorder=0)
 
-.. code-block:: python
+      grid.add_legend()  # add figure-level legend
+      otst.inset_outsets(grid, insets="NW")  # inset outsets in upper-left corner
+      grid.marqueeplot()  # set axlims and render marquee annotations
 
-   grid3 = otst.OutsetGrid(  # setup axes grid
-      aspect=1.5,
-      data=sns.load_dataset("iris").dropna(),
-      height=4,
-      x="petal_width",
-      y="petal_length",
-      col="species",  # put each species in its own outset
-      hue="species",   # make different color marquees
-   )
+   ..
 
-   # map scatterplot over all axes
-   grid3.map_dataframe(
-      sns.scatterplot,
-      x="petal_width",
-      y="petal_length",
-      legend=False,
-      zorder=0,
-   )
-   grid3.add_legend()  # add figure-level legend
+   .. figure:: docs/assets/usage3.png
+      :alt: usage example 3 result
 
-   otst.inset_outsets(grid3, insets="NW")  # inset outset plots over source axes
+*See the* |quickstart|_ *for more detailed usage information.*
 
-   grid3.marqueeplot()  # dispatch marquee render, adjust axlims
+.. _quickstart: https://mmore500.com/outset/quickstart.html
 
-   plt.savefig("usage3.png")
-
-
-.. figure:: docs/assets/usage3.png
-   :alt: usage example 3 result
+.. |quickstart| replace:: *quickstart guide*
 
 
 API Overview
@@ -145,7 +124,7 @@ API Overview
   * designate zoom regions directly, or as regions containing data subsets
   * object-oriented, "tidy data" interface a la ``seaborn.FacetGrid``
 
-* |inset_outsets|_: rearrange an``OutsetGrid`` to place outset zoom regions as insets over the original source axes
+* |inset_outsets|_: rearrange an ``OutsetGrid`` to place outset zoom regions as insets over the original source axes
 
 * |marqueeplot|_: axis-level "tidy data" interface to draw marquees framing specified subsets of data
 
@@ -165,21 +144,25 @@ API Overview
 .. _draw_marquee: https://mmore500.com/outset/_autosummary/outset.draw_marquee.html
 
 
-Read the full API documentation `here <https://mmore500.com/outset/_autosummary/outset.html#module-outset>`_.
+*Read the full API documentation* |apidocs|_.
+
+.. _apidocs: https://mmore500.com/outset/_autosummary/outset.html#module-outset
+
+.. |apidocs| replace:: *here*
 
 Available Styling Extensions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Callout mark glyphs*: customize symbols identifying marquee annotations
+*Callout mark glyphs:* customize symbols identifying marquee annotations
 
-* |MarkAlphabeticalBadges|_
-* |MarkArrow|_
-* |MarkInlaidAsterisk|_
-* |MarkMagnifyingGlass|_
-* |MarkRomanBadges|_
+   * |MarkAlphabeticalBadges|_
+   * |MarkArrow|_
+   * |MarkInlaidAsterisk|_
+   * |MarkMagnifyingGlass|_
+   * |MarkRomanBadges|_
 
-.. image:: docs/assets/callout-mark-glyphs.png
-   :alt: comparison of available glyphs
+   .. image:: docs/assets/callout-mark-glyphs.png
+      :alt: comparison of available glyphs
 
 .. |MarkAlphabeticalBadges| replace:: ``outset.mark.MarkAlphabeticalBadges``
 .. _MarkAlphabeticalBadges: https://mmore500.com/outset/_autosummary/outset.mark.MarkAlphabeticalBadges.html
@@ -196,17 +179,16 @@ Available Styling Extensions
 .. |MarkRomanBadges| replace:: ``outset.mark.MarkRomanBadges``
 .. _MarkRomanBadges: https://mmore500.com/outset/_autosummary/outset.mark.MarkRomanBadges.html
 
-*Callout tweaks*: customize how marquee callouts are shaped and positioned
+*Callout tweaks:* customize how marquee callouts are shaped and positioned
 
-* |TweakReflect|_
-* |TweakSpreadArea|_
+   * |TweakReflect|_
+   * |TweakSpreadArea|_
 
 .. |TweakReflect| replace:: ``outset.mark.TweakReflect``
 .. _TweakReflect: https://mmore500.com/outset/_autosummary/outset.tweak.TweakReflect.html
 
 .. |TweakSpreadArea| replace:: ``outset.mark.TweakSpreadArea``
 .. _TweakSpreadArea: https://mmore500.com/outset/_autosummary/outset.tweak.TweakSpreadArea.html
-
 
 
 Citation
