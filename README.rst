@@ -2,7 +2,7 @@
    :target: https://github.com/mmore500/outset
    :alt: outset wordmark
 
-|PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars|
+|PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars| |zenodo|
 
 add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualizations with ease!
 
@@ -200,6 +200,24 @@ Available Styling Extensions
 Citation
 --------
 
+If outset is used in scientific publication, please cite it as
+
+    Matthew Andres Moreno. (2023). mmore500/outset. Zenodo. https://doi.org/10.5281/zenodo.10426106
+
+.. code:: bibtex
+
+    @software{moreno2023outset,
+      author = {Matthew Andres Moreno},
+      title = {mmore500/outset},
+      month = dec,
+      year = 2023,
+      publisher = {Zenodo},
+      doi = {10.5281/zenodo.10426106},
+      url = {https://doi.org/10.5281/zenodo.10426106}
+    }
+
+Consider also citing `matplotlib <https://matplotlib.org/stable/users/project/citing.html>`__ and `seaborn <https://seaborn.pydata.org/citing.html>`__ .
+
 Contributing
 ------------
 
@@ -214,3 +232,5 @@ Documentation includes `detailed information to get you started <https://mmore50
    :target: https://github.com/mmore500/outset/actions/workflows/sphinx.yml
 .. |GitHub stars| image:: https://img.shields.io/github/stars/mmore500/outset.svg?style=round-square&logo=github&label=Stars&logoColor=white
    :target: https://github.com/mmore500/outset
+.. |zenodo| image:: https://zenodo.org/badge/729401509.svg
+   :target: https://zenodo.org/doi/10.5281/zenodo.10426106
