@@ -160,6 +160,8 @@ Available Styling Extensions
    .. image:: docs/assets/callout-mark-glyphs.png
       :alt: comparison of available glyphs
 
+   *These mark glyphs can also be used directly, independently of the rest of the library!*
+
 .. |MarkAlphabeticalBadges| replace:: ``outset.mark.MarkAlphabeticalBadges``
 .. _MarkAlphabeticalBadges: https://mmore500.com/outset/_autosummary/outset.mark.MarkAlphabeticalBadges.html
 
