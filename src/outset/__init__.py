@@ -1,6 +1,6 @@
 """Top-level package for outset."""
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 from ._draw_marquee import draw_marquee
 from ._inset_outsets import inset_outsets
