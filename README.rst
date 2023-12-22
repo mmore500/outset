@@ -14,6 +14,12 @@ Easily indicate zoom plot areas in Matplotlib
 Features
 --------
 
+Install
+-------
+
+``python3 -m pip install outset``
+
+
 Gallery
 -------
 
@@ -130,11 +136,6 @@ Convert Outset Plots to Insets
 .. figure:: docs/assets/usage3.png
    :alt: usage example 3 result
 
-
-Install
--------
-
-``python3 -m pip install outset``
 
 API Overview
 ------------
