@@ -153,7 +153,7 @@ API Overview
 Available Styling Extensions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Callout mark glyphs:* customize marquee identifiers
+*Callout mark glyphs:* customize marquee identifiers; pass as ``mark_glyph`` kwarg
 
    |MarkAlphabeticalBadges|_ | |MarkArrow|_ | |MarkInlaidAsterisk|_ | |MarkMagnifyingGlass|_ | |MarkRomanBadges|_
 
@@ -175,7 +175,7 @@ Available Styling Extensions
 .. |MarkRomanBadges| replace:: ``outset.mark.MarkRomanBadges``
 .. _MarkRomanBadges: https://mmore500.com/outset/_autosummary/outset.mark.MarkRomanBadges.html
 
-*Callout tweaks:* customize how marquee callouts are shaped and positioned
+*Callout tweaks:* customize how marquee callouts are shaped and positioned; pass as ``leader_tweak`` kwarg
 
    * |TweakReflect|_: flip callouts left-right/up-down 
    * |TweakSpreadArea|_: spread callout glyphs apart to resolve overlaps
