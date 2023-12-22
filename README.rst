@@ -1,4 +1,4 @@
-.. figure:: docs/assets/outset-wordmark.png
+.. figure:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/outset-wordmark.png
    :target: https://github.com/mmore500/outset
    :alt: outset wordmark
 
@@ -31,7 +31,7 @@ Install
 Gallery
 -------
 
-   .. figure:: docs/assets/outset-gallery-collage.png
+   .. figure:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/outset-gallery-collage.png
       :target: https://mmore500.com/outset/gallery.html
       :alt: outset gallery collage
 
@@ -70,7 +70,7 @@ a) Create ``OutsetGrid``, Explicit Zoom Areas
 
    ..
 
-   .. figure:: docs/assets/usage1.png
+   .. figure:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/usage1.png
       :alt: usage example 1 result
 
 b) Create ``OutsetGrid``, Inferred Zoom Areas
@@ -91,7 +91,7 @@ b) Create ``OutsetGrid``, Inferred Zoom Areas
 
    ..
 
-   .. figure:: docs/assets/usage2.png
+   .. figure:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/usage2.png
       :alt: usage example 2 result
 
 
@@ -114,7 +114,7 @@ c) Overlay Zoom Panels as Insets
 
    ..
 
-   .. figure:: docs/assets/usage3.png
+   .. figure:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/usage3.png
       :alt: usage example 3 result
 
 *See the* |quickstart|_ *for more detailed usage information.*
@@ -165,7 +165,7 @@ Available Styling Extensions
 
    |MarkAlphabeticalBadges|_ | |MarkArrow|_ | |MarkInlaidAsterisk|_ | |MarkMagnifyingGlass|_ | |MarkRomanBadges|_
 
-   .. image:: docs/assets/callout-mark-glyphs.png
+   .. image:: https://raw.githubusercontent.com/mmore500/outset/481089653d858f14e636c3757df4927783bd5d23/docs/assets/callout-mark-glyphs.png
       :alt: comparison of available glyphs
 
    *These mark glyphs can also be used directly, independently of the rest of the library!*
