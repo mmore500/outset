@@ -27,7 +27,7 @@ Gallery
    :target: https://mmore500.com/outset/gallery.html
    :alt: outset gallery collage
 
-Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>`_ for example heatmap, imshow, kde lineplot, regplot, scatterplot, patch, and more visualizations created with ``outset``.
+Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>`_ for example heatmap, imshow, kde lineplot, regplot, scatterplot, patch, etc. visualizations created with ``outset``.
 
 Basic Usage
 -----------
