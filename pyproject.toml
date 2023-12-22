@@ -7,7 +7,7 @@ name =  "outset"
 authors = [
     {name = "Matthew Andres Moreno", email = "m.more500@gmail.com"},
 ]
-description = " Easily indicate zoom plot areas in Matplotlib"
+description = "add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualizations with ease!"
 readme = "README.rst"
 classifiers = [
     "Development Status :: 3 - Alpha",
