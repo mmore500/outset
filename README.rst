@@ -153,13 +153,9 @@ API Overview
 Available Styling Extensions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Callout mark glyphs:* customize symbols identifying marquee annotations
+*Callout mark glyphs:* customize marquee identifiers
 
-   * |MarkAlphabeticalBadges|_
-   * |MarkArrow|_
-   * |MarkInlaidAsterisk|_
-   * |MarkMagnifyingGlass|_
-   * |MarkRomanBadges|_
+   |MarkAlphabeticalBadges|_ | |MarkArrow|_ | |MarkInlaidAsterisk|_ | |MarkMagnifyingGlass|_ | |MarkRomanBadges|_
 
    .. image:: docs/assets/callout-mark-glyphs.png
       :alt: comparison of available glyphs
@@ -181,8 +177,8 @@ Available Styling Extensions
 
 *Callout tweaks:* customize how marquee callouts are shaped and positioned
 
-   * |TweakReflect|_
-   * |TweakSpreadArea|_
+   * |TweakReflect|_: flip callouts left-right/up-down 
+   * |TweakSpreadArea|_: spread callout glyphs apart to resolve overlaps
 
 .. |TweakReflect| replace:: ``outset.mark.TweakReflect``
 .. _TweakReflect: https://mmore500.com/outset/_autosummary/outset.tweak.TweakReflect.html
