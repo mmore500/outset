@@ -533,7 +533,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         """
         if self.source_axes is not None:
             aspect = calc_aspect(self.source_axes)
-            for ax in self.axes.flat[1:]:
+            for ax in self.outset_axes:
                 set_aspect(ax, aspect)
         else:
             equalize_aspect(self.axes.flat)
