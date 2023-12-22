@@ -236,4 +236,4 @@ Documentation includes `detailed information to get you started <https://mmore50
 .. |zenodo| image:: https://zenodo.org/badge/729401509.svg
    :target: https://zenodo.org/doi/10.5281/zenodo.10426106
 .. |docs| image:: https://img.shields.io/badge/pages%20-%20docs%20-%20fedcba?logo=github
-   :alt: docs on GitHub Pages
+   :target: https://mmore500.com/outset
