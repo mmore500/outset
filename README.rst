@@ -14,7 +14,7 @@ add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualiz
 Features
 --------
 
-* compose axes grids to juxtapose a complete plot with magnified subsections 
+* compose axes grids to juxtapose a complete plot with data subsets or magnified subregions 
 * render grid axes as overlaid insets
 * draw elegant zoom indicators with publication-ready default styling
 * enjoy a familiar, data-oriented interface --- with full feature sets inherited directly from seaborn
