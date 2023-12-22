@@ -15,6 +15,11 @@ Features
 Gallery
 -------
 
+.. figure:: docs/assets/outset-gallery-collage.png
+   :alt: outset gallery collage
+
+Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>`_ for example heatmap, imshow, kde lineplot, regplot, scatterplot, patch, and more visualizations created with ``outset``.
+
 Basic Usage
 -----------
 
