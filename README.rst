@@ -2,7 +2,7 @@
    :target: https://github.com/mmore500/outset
    :alt: outset wordmark
 
-|PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars| |zenodo|
+|PyPi| |docs| |GitHub stars| |CI| |Deploy Sphinx documentation to Pages| |zenodo|
 
 add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualizations with ease!
 
@@ -235,3 +235,5 @@ Documentation includes `detailed information to get you started <https://mmore50
    :target: https://github.com/mmore500/outset
 .. |zenodo| image:: https://zenodo.org/badge/729401509.svg
    :target: https://zenodo.org/doi/10.5281/zenodo.10426106
+.. |docs| image:: https://img.shields.io/badge/pages%20-%20docs%20-%20fedcba?logo=github
+   :alt: docs on GitHub Pages
