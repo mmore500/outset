@@ -37,12 +37,12 @@ Gallery
 Basic Usage
 -----------
 
-Use ``outset.OutsetGrid`` to 
-Zoom sections can be designated manually (a) or inferred to (b).
-Call ``outset``
+Use ``outset.OutsetGrid`` to compose source plot with zoom panels on an axes grid. 
+Zoom sections can be *a)* designated manually or *b)* inferred to bound data subsets.
+To overlay zoom panels onto source plot, *c)* call ``outset.inset_outsets``.
 
-a) Create ``OutsetGrid``, Explicit Frame Positions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+a) Create ``OutsetGrid``, Explicit Zoom Areas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    .. code:: python
 
@@ -65,8 +65,8 @@ a) Create ``OutsetGrid``, Explicit Frame Positions
    .. figure:: docs/assets/usage1.png
       :alt: usage example 1 result
 
-b) Create ``OutsetGrid``, Inferred Frame Positions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+b) Create ``OutsetGrid``, Inferred Zoom Areas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    .. code:: python
 
@@ -87,8 +87,8 @@ b) Create ``OutsetGrid``, Inferred Frame Positions
       :alt: usage example 2 result
 
 
-c) Overlay With ``inset_outsets``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+c) Overlay Zoom Panels as Insets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    .. code-block:: python
 
