@@ -1,4 +1,5 @@
 .. figure:: docs/assets/outset-wordmark.png
+   :target: https://github.com/mmore500/outset
    :alt: outset wordmark
 
 |PyPi| |CI| |Deploy Sphinx documentation to Pages| |GitHub stars|
@@ -6,7 +7,8 @@
 Easily indicate zoom plot areas in Matplotlib
 
 - Free software: MIT license
-- Documentation: <https://mmore500.com/outset>
+- Documentation: https://mmore500.com/outset
+- Repository: https://github.com/mmore500/outset
 
 
 Features
@@ -16,6 +18,7 @@ Gallery
 -------
 
 .. figure:: docs/assets/outset-gallery-collage.png
+   :target: https://mmore500.com/outset/gallery.html
    :alt: outset gallery collage
 
 Check out the project's `gallery page <https://mmore500.com/outset/gallery.html>`_ for example heatmap, imshow, kde lineplot, regplot, scatterplot, patch, and more visualizations created with ``outset``.
