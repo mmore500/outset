@@ -80,7 +80,8 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         self.figure.tight_layout()
 
     def _finalize_grid(
-        self: "OutsetGrid", axlabels: typing.Sequence[str]
+        self: "OutsetGrid",
+        axlabels: typing.Optional[typing.Sequence[str]] = None,
     ) -> None:
         """Finalize the annotations and layout."""
         if not self._is_inset():
@@ -797,7 +798,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 self.source_axes.set_xlabel(xlabel)
             if kwargs.get("y", None) == self._y_var and self._y_var is not None:
                 self.source_axes.set_ylabel(ylabel)
-        self.tight_layout()
+        self._finalize_grid()
         return self
 
     def broadcast(
@@ -907,7 +908,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         if kwargs.get("y", None) == self._y_var and self._y_var is not None:
             for ax, ylabel in zip(self.axes.flat, ylabels):
                 ax.set_ylabel(ylabel)
-        self.tight_layout()
+        self._finalize_grid()
         return self
 
     def broadcast_source(
@@ -954,7 +955,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         except (TypeError, AttributeError):
             plt.sca(ax)
             plotter(*args, **kwargs)
-        self.tight_layout()
+        self._finalize_grid()
         if kwargs.get("x", None) == self._x_var and self._x_var is not None:
             self.source_axes.set_xlabel(xlabel)
         if kwargs.get("y", None) == self._y_var and self._y_var is not None:
