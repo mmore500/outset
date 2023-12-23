@@ -21,9 +21,9 @@ def layout_corner_insets(
         The number of inset plots to be generated.
     corner : Literal["NE", "NW", "SE", "SW"], default "NE"
         The corner of the grid where the insets will be positioned.
-    inset_grid_size : float, default 0.4
+    inset_grid_size : float, default 0.5
         The size of the grid of inset plots relative to the source plot.
-    inset_pad_ratio : float, default 0.33
+    inset_pad_ratio : float, default 0.1
         Pad size between inset plots as a fraction of inset plot size.
 
     Returns
