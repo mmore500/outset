@@ -9,6 +9,7 @@ def layout_corner_insets(
     *,
     inset_grid_size: float = 0.50,
     inset_pad_ratio: float = 0.1,
+    transpose: bool = False,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
     """Lay out positions for `n` inset plots in a specified corner.
 
@@ -25,6 +26,8 @@ def layout_corner_insets(
         The size of the grid of inset plots relative to the source plot.
     inset_pad_ratio : float, default 0.1
         Pad size between inset plots as a fraction of inset plot size.
+    transpose : bool, default False
+        Should inset grid layout be ordered top-to-bottom, left-to-right?
 
     Returns
     -------
@@ -50,6 +53,8 @@ def layout_corner_insets(
     for row, col in sorted(
         sorted(it.product(range(dimension), repeat=2), key=sum)[:num_insets],
     ):
+        if transpose:
+            row, col = col, row
         # Calculate the top-left corner of each frame
         x = 1.0 - grid_size - col * grid_size
         y = 1.0 - grid_size - row * grid_size
