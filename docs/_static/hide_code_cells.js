@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (div.style.maxHeight === '0px') {
                 Object.assign(div.style, {
                     opacity: '1',
-                    maxHeight: '500px',
+                    maxHeight: '50000px',
                 });
                 button.textContent = "»» Hide Code ««";
                 button.style.maxWidth = "100%";
