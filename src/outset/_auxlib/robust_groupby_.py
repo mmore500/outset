@@ -36,6 +36,6 @@ def robust_groupby(
     """
     by = list(filter(bool, by))
     if by:
-        return data.groupby(by=by, **kwargs)
+        return data.groupby(by=by, **{"observed": True, **kwargs})
     else:
         return [(None, data)]

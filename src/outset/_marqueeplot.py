@@ -141,6 +141,8 @@ def marqueeplot(
 
     if hue_order is None:
         hue_order = sorted(data[hue].unique())
+    else:
+        hue_order = list(hue_order)
 
     color_lookup = dict(
         zip(
@@ -156,16 +158,25 @@ def marqueeplot(
 
     if outset_order is None:
         outset_order = sorted(data[outset].unique())
+    else:
+        outset_order = list(outset_order)
 
-    data = data[
-        data[hue].isin(hue_order) & data[outset].isin(outset_order)
-    ].copy()
+    data = (
+        data[data[hue].isin(hue_order) & data[outset].isin(outset_order)]
+        .copy()
+        .reset_index()
+    )
+    # remove unused categories to prevent bad index lookups
+    if isinstance(data[hue].dtype, pd.CategoricalDtype):
+        data[hue] = data[hue].cat.remove_unused_categories()
+    if isinstance(data[outset].dtype, pd.CategoricalDtype):
+        data[outset] = data[outset].cat.remove_unused_categories()
 
     assert "_dummy_hue_key" not in data.columns
     assert "_dummy_outset_key" not in data.columns
-    data["_dummy_hue_key"] = data[hue].map([*hue_order].index)
-    data["_dummy_outset_key"] = data[outset].map([*outset_order].index)
-    data.sort_values(["_dummy_outset_key", "_dummy_hue_key"], inplace=True)
+    # must cast to int dueto categorical dtype weirdness
+    data["_dummy_hue_key"] = data[hue].map(hue_order.index).astype(int)
+    data["_dummy_outset_key"] = data[outset].map(outset_order.index).astype(int)
 
     # need to solve for and apply outer padding prior to plotting to ensure
     # consistency...
@@ -182,9 +193,10 @@ def marqueeplot(
         tight_axlim=tight_axlim,
     )
 
-    for (_outset_value, hue_value), subset in data.groupby(
-        [outset, hue],
-        sort=False,
+    for (__, __, __, hue_value), subset in data.groupby(
+        ["_dummy_outset_key", "_dummy_hue_key", outset, hue],
+        observed=True,
+        sort=True,  # sort by outset key then hue key
     ):
         assert len(subset)
         xlim = [subset[x].min(), subset[x].max()]
