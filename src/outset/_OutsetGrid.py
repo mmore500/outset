@@ -383,6 +383,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         default_draw_glyph_functor_class = (
             MarkMagnifyingGlass
             if len(self.outset_axes) == 1
+            and (hue is None or len(hue_order) == 1)
             else MarkNumericalBadges
         )
 
