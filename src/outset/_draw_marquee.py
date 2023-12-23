@@ -141,7 +141,7 @@ def draw_marquee(
         color = sns.color_palette()[0]
 
     # pad frame coordinates out from data
-    if isinstance(frame_inner_pad, tuple):
+    if isinstance(frame_inner_pad, typing.Iterable):
         pad_x, pad_y = frame_inner_pad
     elif isinstance(frame_inner_pad, numbers.Number):
         pad_x = (np.ptp(frame_xlim) or np.ptp(ax.get_xlim())) * frame_inner_pad
@@ -155,7 +155,7 @@ def draw_marquee(
 
     # pad axis viewport out from frame
     ax_xlim, ax_ylim = ax.get_xlim(), ax.get_ylim()
-    if isinstance(frame_outer_pad, tuple):
+    if isinstance(frame_outer_pad, typing.Iterable):
         pad_x, pad_y = frame_outer_pad
     elif isinstance(frame_outer_pad, numbers.Number):
         pad_x = max(np.ptp(ax.get_xlim()), np.ptp(frame_xlim)) * frame_outer_pad
