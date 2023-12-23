@@ -2,13 +2,15 @@ import itertools as it
 import math
 import typing
 
+import numpy as np
+
 
 def layout_corner_insets(
     num_insets: int,
     corner: typing.Literal["NE", "NW", "SE", "SW"] = "NE",
     *,
-    inset_grid_size: float = 0.50,
-    inset_pad_ratio: float = 0.1,
+    inset_grid_size: typing.Union[typing.Tuple[float, float], float] = 0.50,
+    inset_pad_ratio: typing.Union[typing.Tuple[float, float], float] = 0.1,
     transpose: bool = False,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
     """Lay out positions for `n` inset plots in a specified corner.
@@ -22,9 +24,9 @@ def layout_corner_insets(
         The number of inset plots to be generated.
     corner : Literal["NE", "NW", "SE", "SW"], default "NE"
         The corner of the grid where the insets will be positioned.
-    inset_grid_size : float, default 0.5
+    inset_grid_size : Union[Tuple[float, float], float], default 0.5
         The size of the grid of inset plots relative to the source plot.
-    inset_pad_ratio : float, default 0.1
+    inset_pad_ratio : Union[Tuple[float, float], float], default 0.1
         Pad size between inset plots as a fraction of inset plot size.
     transpose : bool, default False
         Should inset grid layout be ordered top-to-bottom, left-to-right?
@@ -43,9 +45,26 @@ def layout_corner_insets(
         the source plot axes.
     """
     dimension = int(math.ceil(math.sqrt(num_insets)))
-    grid_size = inset_grid_size / dimension
-    ax_size = grid_size * (1 - inset_pad_ratio)
-    assert ax_size < grid_size
+    if not isinstance(inset_grid_size, typing.Iterable):
+        inset_grid_size = (inset_grid_size, inset_grid_size)
+
+    if not np.allclose(np.clip(inset_grid_size, 0.0, 1.0), inset_grid_size):
+        raise ValueError("inset_grid_size values must be within unit scale")
+
+    grid_size_x = inset_grid_size[0] / dimension
+    grid_size_y = inset_grid_size[1] / dimension
+
+    if not isinstance(inset_pad_ratio, typing.Iterable):
+        inset_pad_ratio = (inset_pad_ratio, inset_pad_ratio)
+
+    if not np.allclose(np.clip(inset_pad_ratio, 0.0, 1.0), inset_pad_ratio):
+        raise ValueError("inset_pad_ratio values must be within unit scale")
+
+    ax_size_x = grid_size_x * (1 - inset_pad_ratio[0])
+    assert ax_size_x < grid_size_x
+
+    ax_size_y = grid_size_y * (1 - inset_pad_ratio[1])
+    assert ax_size_y < grid_size_y
 
     # generate frame coordinates from the corner out, along diagonals
     # https://mmore500.com/2023/12/16/zigzag-traversal.html
@@ -56,24 +75,24 @@ def layout_corner_insets(
         if transpose:
             row, col = col, row
         # Calculate the top-left corner of each frame
-        x = 1.0 - grid_size - col * grid_size
-        y = 1.0 - grid_size - row * grid_size
-        assert 1 - inset_grid_size <= x + 1e-6
-        assert x <= 1.0 - grid_size + 1e-6
-        assert 1 - inset_grid_size <= y + 1e-6
-        assert y <= 1.0 - grid_size + 1e-6
+        x = 1.0 - grid_size_x - col * grid_size_x
+        y = 1.0 - grid_size_y - row * grid_size_y
+        assert 1 - inset_grid_size[0] <= x + 1e-6
+        assert x <= 1.0 - grid_size_x + 1e-6
+        assert 1 - inset_grid_size[1] <= y + 1e-6
+        assert y <= 1.0 - grid_size_y + 1e-6
 
         if corner == "NW" or corner == "SW":
-            x = grid_size * col + (grid_size - ax_size)
-            assert grid_size - ax_size <= x + 1e-6
-            assert x <= inset_grid_size - ax_size + 1e-6
+            x = grid_size_x * col + (grid_size_x - ax_size_x)
+            assert grid_size_x - ax_size_x <= x + 1e-6
+            assert x <= inset_grid_size[0] - ax_size_x + 1e-6
         if corner == "SE" or corner == "SW":
-            y = grid_size * row + (grid_size - ax_size)
-            assert grid_size - ax_size <= y + 1e-6
-            assert y <= inset_grid_size - ax_size + 1e-6
+            y = grid_size_y * row + (grid_size_y - ax_size_y)
+            assert grid_size_y - ax_size_y <= y + 1e-6
+            assert y <= inset_grid_size[1] - ax_size_y + 1e-6
 
         # Add the frame to the list
-        frame_coordinates.append((x, y, ax_size, ax_size))
+        frame_coordinates.append((x, y, ax_size_x, ax_size_y))
 
     # take the first `num_insets` frames from corner out and then sort them
     # so that frames are ordered left-to-right, top-to-bottom
