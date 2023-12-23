@@ -10,6 +10,7 @@ def layout_corner_insets(
     corner: typing.Literal["NE", "NW", "SE", "SW"] = "NE",
     *,
     inset_grid_size: typing.Union[typing.Tuple[float, float], float] = 0.50,
+    inset_margin_size: typing.Union[typing.Tuple[float, float], float] = 0.1,
     inset_pad_ratio: typing.Union[typing.Tuple[float, float], float] = 0.1,
     transpose: bool = False,
 ) -> typing.List[typing.Tuple[float, float, float, float]]:
@@ -24,6 +25,9 @@ def layout_corner_insets(
         The number of inset plots to be generated.
     corner : Literal["NE", "NW", "SE", "SW"], default "NE"
         The corner of the grid where the insets will be positioned.
+    inset_margin_size : Union[Tuple[float, float], float], default 0.5
+        How far should grid be spaced from source plot boundaries, relative to
+        the source plot size?
     inset_grid_size : Union[Tuple[float, float], float], default 0.5
         The size of the grid of inset plots relative to the source plot.
     inset_pad_ratio : Union[Tuple[float, float], float], default 0.1
@@ -66,6 +70,24 @@ def layout_corner_insets(
     ax_size_y = grid_size_y * (1 - inset_pad_ratio[1])
     assert ax_size_y < grid_size_y
 
+    if not isinstance(inset_margin_size, typing.Iterable):
+        inset_margin_size = (inset_margin_size, inset_margin_size)
+
+    if not np.allclose(np.clip(inset_margin_size, 0.0, 1.0), inset_margin_size):
+        raise ValueError("inset_margin_size values must be within unit scale")
+    margin_x, margin_y = inset_margin_size
+
+    if margin_x + grid_size_x > 1:
+        raise ValueError(
+            f"x grid size {grid_size_x} with margin {margin_x} "
+            "exceeds available space"
+        )
+    if margin_y + grid_size_y > 1:
+        raise ValueError(
+            f"y grid size {grid_size_y} with margin {margin_y} "
+            "exceeds available space"
+        )
+
     # generate frame coordinates from the corner out, along diagonals
     # https://mmore500.com/2023/12/16/zigzag-traversal.html
     frame_coordinates = []
@@ -74,22 +96,22 @@ def layout_corner_insets(
     ):
         if transpose:
             row, col = col, row
-        # Calculate the top-left corner of each frame
-        x = 1.0 - grid_size_x - col * grid_size_x
-        y = 1.0 - grid_size_y - row * grid_size_y
-        assert 1 - inset_grid_size[0] <= x + 1e-6
-        assert x <= 1.0 - grid_size_x + 1e-6
-        assert 1 - inset_grid_size[1] <= y + 1e-6
-        assert y <= 1.0 - grid_size_y + 1e-6
+        # Calculate the bottom-left corner of each frame
+        x = 1.0 - margin_x - ax_size_x - col * grid_size_x
+        y = 1.0 - margin_y - ax_size_y - row * grid_size_y
+        assert 1 - inset_grid_size[0] - margin_x <= x + 1e-6
+        assert x <= 1.0 - margin_x + 1e-6
+        assert 1 - inset_grid_size[1] - margin_y <= y + 1e-6
+        assert y <= 1.0 - margin_y + 1e-6
 
         if corner == "NW" or corner == "SW":
-            x = grid_size_x * col + (grid_size_x - ax_size_x)
-            assert grid_size_x - ax_size_x <= x + 1e-6
-            assert x <= inset_grid_size[0] - ax_size_x + 1e-6
+            x = grid_size_x * col + margin_x
+            assert margin_x <= x + 1e-6
+            assert x <= inset_grid_size[0] - ax_size_x + margin_x + 1e-6
         if corner == "SE" or corner == "SW":
-            y = grid_size_y * row + (grid_size_y - ax_size_y)
-            assert grid_size_y - ax_size_y <= y + 1e-6
-            assert y <= inset_grid_size[1] - ax_size_y + 1e-6
+            y = grid_size_y * row + margin_y
+            assert margin_y <= y + 1e-6
+            assert y <= inset_grid_size[1] - ax_size_y + margin_y + 1e-6
 
         # Add the frame to the list
         frame_coordinates.append((x, y, ax_size_x, ax_size_y))

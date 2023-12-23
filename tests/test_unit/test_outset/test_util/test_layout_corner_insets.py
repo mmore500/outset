@@ -4,11 +4,11 @@ import pytest
 from outset.util import layout_corner_insets
 
 
-@pytest.mark.parametrize("transpose", [True, False])
+@pytest.mark.parametrize("transpose", [False, True])
 @pytest.mark.parametrize(
     "num_insets, corner, expected_result",
     [
-        (1, "NW", [(0.20, 0.60, 0.20, 0.20)]),
+        (1, "NW", [(0.10, 0.70, 0.20, 0.20)]),
         (
             3,
             "NE",
@@ -43,6 +43,7 @@ def test_layout_corner_insets(num_insets, corner, expected_result, transpose):
         num_insets,
         corner,
         inset_grid_size=0.40,
+        inset_margin_size=0.10,
         inset_pad_ratio=0.50,
         transpose=transpose,
     )
@@ -59,7 +60,7 @@ def test_layout_corner_insets(num_insets, corner, expected_result, transpose):
 @pytest.mark.parametrize(
     "num_insets, corner, expected_result",
     [
-        (1, "NW", [(0.20, 0.60, 0.20, 0.20)]),
+        (1, "NW", [(0.10, 0.70, 0.20, 0.20)]),
         (
             3,
             "NE",
@@ -94,6 +95,7 @@ def test_layout_corner_insets_tuple(num_insets, corner, expected_result):
         num_insets,
         corner,
         inset_grid_size=(0.40, 0.40),
+        inset_margin_size=(0.10, 0.10),
         inset_pad_ratio=(0.50, 0.50),
     )
     assert np.allclose(result, expected_result)
