@@ -388,10 +388,19 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         )
 
         def marqueeplot_source(self_: "OutsetGrid") -> None:
+            data_ = data
             if self_.source_axes is None:
                 return
+            if kwargs.get("row", None) is not None:
+                row = kwargs["row"]
+                row_order = [*kwargs.get("row_order", [])]
+                if len(row_order) != 1:
+                    raise NotImplementedError(
+                        "row_order must be provided and length 1",
+                    )
+                data_ = data_[data_[row].isin(row_order)].reset_index()
             marqueeplot(
-                data,
+                data_,
                 x=x,
                 y=y,
                 hue=hue,

@@ -147,3 +147,34 @@ def test_OutsetGrid_broadcast_sourceless():
 def test_OutsetGrid_empty():
     og = OutsetGrid([])
     og.broadcast(sns.scatterplot, x=[1], y=[2], legend=False)
+
+
+def test_OutsetGrid_with_row_singleton():
+    # Create sample data with a 'outset' column for grouping
+    data = pd.DataFrame(
+        {
+            "x": [0.825, 3.1, 0.5, 0.8, 2.2, 2],
+            "y": [1.2, 0.8, 2.5, 2.3, 1.1, 3.7],
+            "baz": [0, 0, 0, 1, 1, 1],
+            "outset": [
+                "group1",
+                "group1",
+                "group2",
+                "group2",
+                "group3",
+                "group3",
+            ],
+        }
+    )
+
+    g = OutsetGrid(
+        data=data, x="x", y="y", col="outset", row="baz", row_order=[0]
+    )
+    g.marqueeplot()
+    g.map_dataframe(sns.scatterplot, x="x", y="y", hue="outset", legend=False)
+
+    assert not g._is_inset()
+
+    outpath = "/tmp/test_OutsetGrid_with_row_singleton.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")
