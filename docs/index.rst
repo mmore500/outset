@@ -12,6 +12,7 @@ Overview
 
    index
    gallery
+   quickstart
    api
    contributing
    package
