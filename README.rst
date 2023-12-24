@@ -14,7 +14,7 @@ add zoom indicators, insets, and magnified panels to matplotlib/seaborn visualiz
 Features
 --------
 
-* compose axes grids to juxtapose a complete plot with data subsets or magnified subregions 
+* compose axes grids to juxtapose a complete plot with data subsets or magnified subregions
 * render grid axes as overlaid insets
 * draw elegant zoom indicators with publication-ready default styling
 * enjoy a familiar, data-oriented interface --- with full feature sets inherited directly from seaborn
@@ -45,7 +45,7 @@ Gallery
 Basic Usage
 -----------
 
-Use ``outset.OutsetGrid`` to compose source plot with zoom panels on an axes grid. 
+Use ``outset.OutsetGrid`` to compose source plot with zoom panels on an axes grid.
 Zoom sections can be *a)* designated manually or *b)* inferred to bound data subsets.
 To overlay zoom panels onto source plot, *c)* call ``outset.inset_outsets``.
 
@@ -187,7 +187,7 @@ Available Styling Extensions
 
 *Callout tweaks:* customize how marquee callouts are shaped and positioned; pass as ``leader_tweak`` kwarg
 
-   * |TweakReflect|_: flip callouts left-right/up-down 
+   * |TweakReflect|_: flip callouts left-right/up-down
    * |TweakSpreadArea|_: spread callout glyphs apart to resolve overlaps
 
 .. |TweakReflect| replace:: ``outset.mark.TweakReflect``
