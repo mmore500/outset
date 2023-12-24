@@ -1,9 +1,10 @@
 import matplotlib.cbook as mpl_cbook
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from outset import OutsetGrid
+from outset import inset_outsets, OutsetGrid
 from outset import util as otst_util
 
 # Sample data for testing
@@ -176,5 +177,38 @@ def test_OutsetGrid_with_row_singleton():
     assert not g._is_inset()
 
     outpath = "/tmp/test_OutsetGrid_with_row_singleton.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")
+
+
+def test_OutsetGrid_no_marqueeplot():
+    grid = OutsetGrid(
+        data=[[(-3, 0), (3, 4)]] * 4,
+        aspect=1.5,
+    )
+    inset_outsets(
+        grid,
+        insets=otst_util.layout_corner_insets(
+            1,
+            "NW",
+            inset_grid_size=0.35,
+        )
+        + otst_util.layout_corner_insets(
+            3,
+            "SE",
+            inset_pad_ratio=0.4,
+            inset_margin_size=(0.0, 0.1),
+        ),
+        equalize_aspect=False,
+        strip_ticks=False,
+    )
+
+    grid.broadcast(
+        plt.plot,
+        np.linspace(-3, 3, 100),
+        np.sin(np.linspace(-3, 3, 100)),
+    )
+
+    outpath = "/tmp/test_OutsetGrid_no_marqueeplot.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")

@@ -378,6 +378,17 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             self.source_axes = None
             self.outset_axes = self.axes.flat[:]
 
+        # ensure axlims set when no marqueeplot call
+        def initialize_axlims(data: pd.DataFrame, **kwargs: dict) -> None:
+            ax = kwargs.get("ax", plt.gca())
+            xs, ys = data[x].dropna(), data[y].dropna()
+            if len(xs):
+                ax.set_xlim(xs.min(), xs.max())
+            if len(ys):
+                ax.set_ylim(ys.min(), ys.max())
+
+        self.map_dataframe_outset(initialize_axlims)
+
         # draw sourceplot
         #######################################################################
         default_draw_glyph_functor_class = (
