@@ -212,3 +212,15 @@ def test_OutsetGrid_no_marqueeplot():
     outpath = "/tmp/test_OutsetGrid_no_marqueeplot.png"
     plt.savefig(outpath)
     print(f"saved graphic to {outpath}")
+
+
+def test_OutsetGrid_n():
+    grid = OutsetGrid(
+        data=3,
+        aspect=1.5,
+        col_wrap=2,
+    )
+
+    outpath = "/tmp/test_OutsetGrid_n.png"
+    plt.savefig(outpath)
+    print(f"saved graphic to {outpath}")

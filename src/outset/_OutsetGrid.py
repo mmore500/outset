@@ -104,6 +104,7 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             pd.DataFrame,
             typing.Sequence[typing.Tuple[float, float, float, float]],
             NamedFrames,
+            int,
         ],
         *,
         x: typing.Optional[str] = None,
@@ -145,13 +146,14 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         Parameters
         ----------
         data : pd.DataFrame or Sequence of Tuple[float, float, float, float] or
-        outset.util.NamedFrames
+        outset.util.NamedFrames or int
             A DataFrame containing the data for plotting, or as a sequence of
             "extents" `(x0, y0, x1, y1)` or  "boundary points" `((x0, y0), (x1,
             y1))` specifying the bounds of outset frames.
 
             If NamedFrames, underlying data should map frame names to frame
-            coordinates.
+            coordinates. If an int n is provided, n outset frames with extents
+            (0, 0, 1, 1) will be created.
         x : Optional[str], default None
             Column name to be used for x-axis values.
 
@@ -234,6 +236,9 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         default_frame_outer_pad_outset = 0.1
         default_frame_outer_pad_source = 0.1
         default_frame_inner_pad = 0.1
+
+        if isinstance(data, int):
+            data = [(0, 0, 1, 1)] * data
 
         # spoof data frame if outset frames are specified directly
         if isinstance(data, (pd.DataFrame, abc.Mapping)) and not isinstance(
