@@ -58,7 +58,8 @@ a) Create ``OutsetGrid``, Explicit Zoom Areas
       import numpy as np
       import outset as otst
       import seaborn as sns
-      i, a, b, c, d = np.arange(0.0, 2*np.pi, 0.01), 1, 7, 3, 11  # https://matplotlib.org/stable/gallery/
+      # adapted from # https://matplotlib.org/stable/gallery/
+      i, a, b, c, d = np.arange(0.0, 2*np.pi, 0.01), 1, 7, 3, 11
 
       # 3 axes grid: source plot and two zoom frames
       grid = otst.OutsetGrid([(-10, 8, -8, 12), (-5, 5, -1, 3)])  # frame coords
@@ -78,7 +79,7 @@ b) Create ``OutsetGrid``, Inferred Zoom Areas
 
    .. code:: python
 
-      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data to create axes grid
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data over axes grid
          x="petal_width", y="petal_length",
          col="species",  # create zoom panel for each species
          hue="species",  # color marquee annotations by species
@@ -100,7 +101,7 @@ c) Overlay Zoom Panels as Insets
 
    .. code-block:: python
 
-      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data to create axes grid
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data over axes grid
          x="petal_width", y="petal_length",
          col="species",  # put each species in its own outset
          hue="species",   # make different color marquees
