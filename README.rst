@@ -79,7 +79,7 @@ b) Create ``OutsetGrid``, Inferred Zoom Areas
 
    .. code:: python
 
-      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data over axes grid
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet over axes grid
          x="petal_width", y="petal_length",
          col="species",  # create zoom panel for each species
          hue="species",  # color marquee annotations by species
@@ -101,7 +101,7 @@ c) Overlay Zoom Panels as Insets
 
    .. code-block:: python
 
-      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet data over axes grid
+      grid = otst.OutsetGrid(data=sns.load_dataset("iris").dropna(),  # facet over axes grid
          x="petal_width", y="petal_length",
          col="species",  # put each species in its own outset
          hue="species",   # make different color marquees
