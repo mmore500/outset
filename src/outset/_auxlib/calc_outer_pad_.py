@@ -29,6 +29,7 @@ def _calc_pad_x(ax: mpl_axes.Axes, x_axfrac: float) -> float:
         x_axfrac = 0.5
     pad_x = x_axfrac * np.ptp(ax.get_xlim()) / (1 - x_axfrac * 2)
     assert np.isclose((np.ptp(ax.get_xlim()) + 2 * pad_x) * x_axfrac, pad_x)
+    assert np.isfinite(pad_x)
     return pad_x
 
 
@@ -38,6 +39,7 @@ def _calc_pad_y(ax: mpl_axes.Axes, y_axfrac: float) -> float:
         y_axfrac = 0.5
     pad_y = y_axfrac * np.ptp(ax.get_ylim()) / (1 - y_axfrac * 2)
     assert np.isclose((np.ptp(ax.get_ylim()) + 2 * pad_y) * y_axfrac, pad_y)
+    assert np.isfinite(pad_y)
     return pad_y
 
 

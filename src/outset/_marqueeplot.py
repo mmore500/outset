@@ -245,6 +245,8 @@ def _prepad_axlim(
     if ax is None:
         ax = plt.gca()
 
+    assert not any(data[x].isna()) and not any(data[y].isna())
+
     # precalculate frames with inner padding
     framex_values, framey_values = [], []
     for _, subset in robust_groupby(data, by=[outset, hue], sort=False):
@@ -285,6 +287,7 @@ def _prepad_axlim(
         ax.set_ylim(min(*framey_values, y0), max(*framey_values, y1))
 
     pad_x, pad_y = calc_outer_pad(ax, frame_outer_pad, frame_outer_pad_unit)
+    assert np.isfinite(pad_x), np.isfinite(pad_y)
     if len(data):
         lowerx, upperx = (
             np.min(framex_values) - pad_x,
