@@ -4,7 +4,6 @@ import typing
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
-from typing import Optional, Any, Dict
 
 
 def regplot(
@@ -12,10 +11,10 @@ def regplot(
     *,
     x: str,
     y: str,
-    hue: Optional[str] = None,
-    hue_order: Optional[Any] = None,
-    ax: Optional[plt.Axes] = None,
-    **kwargs: Dict[str, Any],
+    hue: typing.Optional[str] = None,
+    hue_order: typing.Optional[typing.Any] = None,
+    ax: typing.Optional[plt.Axes] = None,
+    **kwargs: dict,
 ) -> plt.Axes:
     """Plot regressions with seaborn's regplot on a pandas DataFrame.
 
@@ -33,7 +32,7 @@ def regplot(
         The order to plot the `hue` levels, if `hue` is not None.
     ax : Optional[plt.Axes], default None
         The matplotlib Axes object to draw the plot onto, if provided.
-    **kwargs
+    **kwargs : dict
         Additional keyword arguments forward to seaborn's regplot.
 
     Returns
