@@ -124,6 +124,16 @@ def marqueeplot(
     if hue is not None and color is not None:
         raise ValueError(f"cannot specify both hue={hue} and color={color}")
 
+    if x not in data or y not in data:
+        raise ValueError(
+            f"data does not contain both coordinate columns x={x} and y={y}; "
+            f"data.columns={[*data]}",
+        )
+    if any(data[x].isna()):
+        raise ValueError(f"col x={x} contains {data[x].isna().sum()} na values")
+    if any(data[y].isna()):
+        raise ValueError(f"col y={y} contains {data[y].isna().sum()} na values")
+
     if isinstance(mark_glyph, type):
         mark_glyph = mark_glyph()
 
