@@ -307,5 +307,10 @@ def _prepad_axlim(
         uppery = max(uppery, ax.get_ylim()[1])
 
     # apply axis limit to incorporate outer padding
+    if lowerx == upperx:  # prevent singularity
+        lowerx, upperx = lowerx - 0.05, upperx + 0.05
     ax.set_xlim(lowerx, upperx)
+
+    if lowery == uppery:  # prevent singularity
+        lowery, uppery = lowery - 0.05, uppery + 0.05
     ax.set_ylim(lowery, uppery)

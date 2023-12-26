@@ -389,9 +389,15 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             ax = kwargs.get("ax", plt.gca())
             xs, ys = data[x].dropna(), data[y].dropna()
             if len(xs):
-                ax.set_xlim(xs.min(), xs.max())
+                lowerx, upperx = xs.min(), xs.max()
+                if lowerx == upperx:
+                    lowerx, upperx = lowerx - 0.05, upperx + 0.05
+                ax.set_xlim(lowerx, upperx)
             if len(ys):
-                ax.set_ylim(ys.min(), ys.max())
+                lowery, uppery = ys.min(), ys.max()
+                if lowery == uppery:
+                    lowery, uppery = lowery - 0.05, uppery + 0.05
+                ax.set_ylim(lowery, uppery)
 
         self.map_dataframe_outset(initialize_axlims)
 
