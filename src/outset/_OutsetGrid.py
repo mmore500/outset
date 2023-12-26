@@ -7,6 +7,7 @@ import frozendict
 from matplotlib import axes as mpl_axes
 from matplotlib import patches as mpl_patches
 from matplotlib import pyplot as plt
+import numpy as np
 import opytional as opyt
 import pandas as pd
 import seaborn as sns
@@ -765,10 +766,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
         xlabels = [ax.get_xlabel() for ax in self.axes.flat]
         ylabels = [ax.get_ylabel() for ax in self.axes.flat]
         super().map_dataframe(plotter, *args, **kwargs)
-        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+        if (
+            np.array_equal(kwargs.get("x", None), self._x_var)
+            and self._x_var is not None
+        ):
             for ax, xlabel in zip(self.axes.flat, xlabels):
                 ax.set_xlabel(xlabel)
-        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+        if (
+            np.array_equal(kwargs.get("y", None), self._y_var)
+            and self._y_var is not None
+        ):
             for ax, ylabel in zip(self.axes.flat, ylabels):
                 ax.set_ylabel(ylabel)
         return self
@@ -820,9 +827,15 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 self.source_axes.get_ylabel(),
             )
             plotter(self.__data, *args, ax=self.source_axes, **kwargs)
-            if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+            if (
+                np.array_equal(kwargs.get("x", None), self._x_var)
+                and self._x_var is not None
+            ):
                 self.source_axes.set_xlabel(xlabel)
-            if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+            if (
+                np.array_equal(kwargs.get("y", None), self._y_var)
+                and self._y_var is not None
+            ):
                 self.source_axes.set_ylabel(ylabel)
         self._finalize_grid()
         return self
@@ -928,10 +941,16 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
                 plotter(*args, **kwargs)
             ax.set_xlim(*xlim)
             ax.set_ylim(*ylim)
-        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+        if (
+            np.array_equal(kwargs.get("x", None), self._x_var)
+            and self._x_var is not None
+        ):
             for ax, xlabel in zip(self.axes.flat, xlabels):
                 ax.set_xlabel(xlabel)
-        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+        if (
+            np.array_equal(kwargs.get("y", None), self._y_var)
+            and self._y_var is not None
+        ):
             for ax, ylabel in zip(self.axes.flat, ylabels):
                 ax.set_ylabel(ylabel)
         self._finalize_grid()
@@ -982,8 +1001,14 @@ class OutsetGrid(sns.axisgrid.FacetGrid):
             plt.sca(ax)
             plotter(*args, **kwargs)
         self._finalize_grid()
-        if kwargs.get("x", None) == self._x_var and self._x_var is not None:
+        if (
+            np.array_equal(kwargs.get("x", None), self._x_var)
+            and self._x_var is not None
+        ):
             self.source_axes.set_xlabel(xlabel)
-        if kwargs.get("y", None) == self._y_var and self._y_var is not None:
+        if (
+            np.array_equal(kwargs.get("y", None), self._y_var)
+            and self._y_var is not None
+        ):
             self.source_axes.set_ylabel(ylabel)
         return self
