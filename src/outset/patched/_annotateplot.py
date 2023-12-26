@@ -14,7 +14,7 @@ def annotateplot(
     y: str,
     text: str,
     ax: typing.Optional[plt.Axes] = None,
-    adjust_text_kws: typing.Mapping = frozendict(),
+    adjusttext_kws: typing.Mapping = frozendict(),
     **kwargs: dict,
 ) -> plt.Axes:
     """Annotate a plot coordinates with text labels, then apply adjustText to
@@ -32,7 +32,7 @@ def annotateplot(
         The name of the column in `data` to use for text values.
     ax : Optional[plt.Axes], default None
         The matplotlib Axes object to draw the plot onto, if provided.
-    adjust_text_kws : Mapping, default {}
+    adjusttext_kws : Mapping, default {}
         Additional keyword arguments forward to adjustText.
     **kwargs : dict
         Additional keyword arguments forward to seaborn's regplot.
@@ -49,10 +49,13 @@ def annotateplot(
     if ax is None:
         ax = plt.gca()
 
+    kwargs.pop("legend", None)
+    kwargs.pop("label", None)
+
     texts = [
         ax.text(row[x], row[y], row[text], **kwargs)
         for _idx, row in data.iterrows()
     ]
-    adjust_text(texts, ax=ax, **adjust_text_kws)
+    adjust_text(texts, ax=ax, **adjusttext_kws)
 
     return ax
