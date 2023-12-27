@@ -64,7 +64,7 @@ def inset_outsets(
         raise ValueError("OutsetGrid missing source axes to inset outset axes")
 
     if isinstance(insets, str):
-        insets = layout_corner_insets(outset_grid._ncol - 1, insets)
+        insets = layout_corner_insets(len(outset_grid.outset_axes), insets)
 
     outset_grid.figure.tight_layout()
 
