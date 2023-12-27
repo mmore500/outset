@@ -66,6 +66,13 @@ def inset_outsets(
     if isinstance(insets, str):
         insets = layout_corner_insets(len(outset_grid.outset_axes), insets)
 
+    if len(insets) != len(outset_grid.outset_axes):
+        raise ValueError(
+            "Num specified insets must equal number outset axes; "
+            f"{len(insets)} insets were specified "
+            f"for {len(outset_grid.outset_axes)} outset axes.",
+        )
+
     outset_grid.figure.tight_layout()
 
     # Shrink axes to fit the source axes
