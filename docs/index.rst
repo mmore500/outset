@@ -13,6 +13,8 @@ Overview
    index
    gallery
    quickstart
+   example-rain
+   example-wealth
    api
    contributing
    package
