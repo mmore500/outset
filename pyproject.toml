@@ -346,7 +346,7 @@ overgeneral-exceptions= [
 ]
 
 [bumpver]
-current_version = "v0.1.5"
+current_version = "v0.1.6"
 version_pattern = "vMAJOR.MINOR.PATCH"
 commit = true
 tag = true
