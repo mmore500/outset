@@ -218,7 +218,7 @@ If outset is used in scientific publication, please cite it as
     }
 
 Consider also citing `matplotlib <https://matplotlib.org/stable/users/project/citing.html>`__ and `seaborn <https://seaborn.pydata.org/citing.html>`__ .
-And don't forget to leave a `⭐ on GitHub <https://github.com/mmore500/outset/stargazers>`__!
+And don't forget to leave a `star on GitHub <https://github.com/mmore500/outset/stargazers>`__!
 
 Contributing
 ------------
