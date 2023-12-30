@@ -15,8 +15,8 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
     increases the width of the x-axis. If it is greater, the height of the
     y-axis is increased.
 
-    Note that axes limits are only ever widened. Axes widening is performed
-    symmetrically.
+    Note that axes limits are only ever extended. Data limit extension is
+    performed symmetrically.
     """
     before_aspect = calc_aspect(ax)
     if 0.99 < aspect / before_aspect < 1.01:
