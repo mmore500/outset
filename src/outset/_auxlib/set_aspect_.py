@@ -27,6 +27,9 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
 
     before_ratio = before_height / before_width
     ax.set_aspect(aspect, adjustable="datalim")
+    ax.apply_aspect()
+    assert [*ax.get_xlim(), *ax.get_ylim()] != [x0_, x1_, y0_, y1_]
+    assert np.isclose(ax.get_aspect(), aspect)
     after_ratio = np.ptp(ax.get_ylim()) / np.ptp(ax.get_xlim())
 
     # manual touch-up to ensure growth (not shrink) that is symmetrical
@@ -44,6 +47,7 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
         pad = (after_width - before_width) / 2
         assert pad >= 0
         ax.set_xlim(x0_ - pad, x1_ + pad)
+        assert ax.get_xlim() != (x0_, x1_)
         ax.set_ylim(y0_, y1_)
     elif after_ratio > before_ratio:
         # plot is too wide so we need to increase the height.
@@ -54,10 +58,13 @@ def set_aspect(ax: mpl_axes.Axes, aspect: float) -> None:
         assert pad >= 0
         ax.set_xlim(x0_, x1_)
         ax.set_ylim(y0_ - pad, y1_ + pad)
+        assert ax.get_ylim() != (y0_, y1_)
     else:
         assert False
 
     # check postconditions...
+    if before_ratio != after_ratio:
+        assert [*ax.get_xlim(), *ax.get_ylim()] != [x0_, x1_, y0_, y1_]
     # ...targeted aspect ratio was achieved
     # ...axes limit pad-out was outwards and symmetrical
     (x0, x1), (y0, y1) = ax.get_xlim(), ax.get_ylim()
