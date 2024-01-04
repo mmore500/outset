@@ -17,7 +17,7 @@ babel==2.14.0
 bleach==6.1.0
     # via nbconvert
 cartopy==0.22.0
-    # via -r requirements.in
+    # via -r docs/requirements.in
 certifi==2023.11.17
     # via
     #   pyproj
@@ -56,18 +56,18 @@ idna==3.6
 imagesize==1.4.1
     # via sphinx
 ipykernel==6.27.1
-    # via -r requirements.in
+    # via -r docs/requirements.in
 ipython==8.18.1
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   ipykernel
 ipython-genutils==0.2.0
-    # via -r requirements.in
+    # via -r docs/requirements.in
 jedi==0.19.1
     # via ipython
 jinja2==3.0.3
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   nbconvert
     #   nbsphinx
     #   sphinx
@@ -79,7 +79,7 @@ jupyter-client==8.6.0
     # via
     #   ipykernel
     #   nbclient
-jupyter-core==5.5.1
+jupyter-core==5.7.0
     # via
     #   ipykernel
     #   jupyter-client
@@ -95,7 +95,7 @@ markupsafe==2.1.3
     # via jinja2
 matplotlib==3.8.2
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   cartopy
     #   seaborn
 matplotlib-inline==0.1.6
@@ -108,7 +108,7 @@ nbclient==0.5.13
     # via nbconvert
 nbconvert==6.4.2
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   nbsphinx
 nbformat==5.9.2
     # via
@@ -116,14 +116,14 @@ nbformat==5.9.2
     #   nbconvert
     #   nbsphinx
 nbsphinx==0.9.3
-    # via -r requirements.in
+    # via -r docs/requirements.in
 nest-asyncio==1.5.8
     # via
     #   ipykernel
     #   nbclient
 numpy==1.26.2
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   cartopy
     #   contourpy
     #   matplotlib
@@ -133,7 +133,7 @@ numpy==1.26.2
     #   seaborn
     #   shapely
 owslib==0.29.3
-    # via -r requirements.in
+    # via -r docs/requirements.in
 packaging==23.2
     # via
     #   cartopy
@@ -142,7 +142,7 @@ packaging==23.2
     #   sphinx
 pandas==2.1.4
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   seaborn
 pandocfilters==1.5.0
     # via nbconvert
@@ -168,9 +168,9 @@ pygments==2.17.2
     #   nbconvert
     #   sphinx
 pykdtree==1.3.10
-    # via -r requirements.in
+    # via -r docs/requirements.in
 pypandoc-binary==1.12
-    # via -r requirements.in
+    # via -r docs/requirements.in
 pyparsing==3.1.1
     # via matplotlib
 pyproj==3.6.1
@@ -206,9 +206,9 @@ rpds-py==0.15.2
     #   jsonschema
     #   referencing
 scipy==1.11.4
-    # via -r requirements.in
+    # via -r docs/requirements.in
 seaborn==0.13.0
-    # via -r requirements.in
+    # via -r docs/requirements.in
 shapely==2.0.2
     # via cartopy
 six==1.16.0
@@ -220,7 +220,7 @@ snowballstemmer==2.2.0
     # via sphinx
 sphinx==7.2.6
     # via
-    #   -r requirements.in
+    #   -r docs/requirements.in
     #   nbsphinx
     #   sphinx-copybutton
     #   sphinx-rtd-theme
@@ -231,9 +231,9 @@ sphinx==7.2.6
     #   sphinxcontrib-qthelp
     #   sphinxcontrib-serializinghtml
 sphinx-copybutton==0.5.2
-    # via -r requirements.in
+    # via -r docs/requirements.in
 sphinx-rtd-theme==2.0.0
-    # via -r requirements.in
+    # via -r docs/requirements.in
 sphinxcontrib-applehelp==1.0.7
     # via sphinx
 sphinxcontrib-devhelp==1.0.5
