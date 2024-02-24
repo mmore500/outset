@@ -198,8 +198,8 @@ Available Styling Extensions
 .. _TweakSpreadArea: https://mmore500.com/outset/_autosummary/outset.tweak.TweakSpreadArea.html
 
 
-Citation
---------
+Citing
+------
 
 If outset is used in scientific publication, please cite it as
 
