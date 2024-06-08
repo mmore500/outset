@@ -201,7 +201,7 @@ Available Styling Extensions
 Citing
 ------
 
-If outset is used in scientific publication, please cite it as
+If outset is used in a scholarly work, please cite it as
 
     Matthew Andres Moreno. (2023). mmore500/outset. Zenodo. https://doi.org/10.5281/zenodo.10426106
 
